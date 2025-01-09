@@ -1,0 +1,606 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+          content="Multipurpose, super flexible, powerful, clean modern responsive bootstrap 5 admin template">
+    <meta name="keywords"
+          content="admin template, ra-admin admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="la-themes">
+    <link rel="icon" href="assets/images/logo/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/images/logo/favicon.png" type="image/x-icon">
+
+    <title>Result processsing system</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&display=swap" rel="stylesheet">
+
+    <!--font-awesome-css-->
+    <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.css">
+
+    <!--notifications-css-->
+    <link rel="stylesheet" type="text/css" href="assets/vendor/notifications/toastify.min.css">
+
+    <!-- tabler icons-->
+    <link rel="stylesheet" type="text/css" href="assets/vendor/tabler-icons/tabler-icons.css">
+
+    <!--flag Icon css-->
+    <link rel="stylesheet" type="text/css" href="assets/vendor/flag-icons-master/flag-icon.css">
+    
+    <!-- filepond css -->
+    <link rel="stylesheet" href="assets/vendor/filepond/filepond.css">
+    <link rel="stylesheet" href="assets/vendor/filepond/image-preview.min.css">
+
+
+    <!-- Bootstrap css-->
+    <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap/bootstrap.min.css">
+
+    <!-- simplebar css-->
+    <link rel="stylesheet" type="text/css" href="assets/vendor/simplebar/simplebar.css">
+
+    <!-- Data Table css-->
+    <link rel="stylesheet" type="text/css" href="assets/vendor/datatable/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendor/datatable/datatable2/buttons.dataTables.min.css">
+
+    <!-- App css-->
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+    <!-- Responsive css-->
+    <link rel="stylesheet" type="text/css" href="assets/css/responsive.css">
+</head>
+
+
+</head>
+
+<body>
+  
+  <div class="loader-wrapper">
+    <div class="loader_16"></div>
+  </div>
+<div class="app-wrapper">
+
+   <!-- Menu Navigation starts -->
+   <nav>
+    <div class="app-logo">
+     <span class="bg-light-primary toggle-semi-nav">
+        <i class="ti ti-chevrons-right f-s-20"></i>
+      </span>
+    </div>
+    <div class="app-nav" id="app-simple-bar">
+      <ul class="main-nav p-0 mt-2">
+        <li class="no-sub">
+          <a class="" href="dashboard.html">
+            <i class="ph-duotone  ph-house-line"></i>dashboard
+          </a>
+        </li>
+          <li class="no-sub">
+            <a class="" href="resultupload.html">
+              <i class="ph-duotone  ph-squares-four"></i> Result Upload
+            </a>
+          </li>
+            <li class="no-sub">
+              <a class="" href="previewresult.html">
+                <i class="ph-duotone  ph-squares-four"></i> Preview Result
+              </a>
+            </li>
+       
+        <li class="no-sub">
+          <a class="" href="">
+            <i class="ph-duotone  ph-squares-four"></i> Menu
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="menu-navs">
+      <span class="menu-previous"><i class="ti ti-chevron-left"></i></span>
+      <span class="menu-next"><i class="ti ti-chevron-right"></i></span>
+    </div>
+  </nav>
+    <!-- Menu Navigation ends -->
+
+    <div class="app-content">
+ <!-- Header Section starts -->
+ <header class="header-main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-6 col-sm-4 d-flex align-items-center header-left p-0">
+        <span class="header-toggle me-3">
+          <i class="ph ph-circles-four"></i>
+        </span>
+      </div>
+
+      <div class="col-6 col-sm-8 d-flex align-items-center justify-content-end header-right p-0">
+
+        <ul class="d-flex align-items-center">
+
+          <li class="header-cloud">
+            
+            <div class="offcanvas offcanvas-end header-cloud-canvas" tabindex="-1" id="cloudoffcanvasTops"
+              aria-labelledby="cloudoffcanvasTops">
+              <div class="offcanvas-body p-0">
+                <div class="cloud-body">
+
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <li class="header-profile">
+            <a href="#" class="d-block head-icon" role="button" data-bs-toggle="offcanvas"
+              data-bs-target="#profilecanvasRight" aria-controls="profilecanvasRight">
+              <img src="assets/images/avtar/woman.jpg" alt="avtar" class="b-r-10 h-35 w-35">
+            </a>
+
+            <div class="offcanvas offcanvas-end header-profile-canvas" tabindex="-1" id="profilecanvasRight"
+              aria-labelledby="profilecanvasRight">
+              <div class="offcanvas-body app-scroll">
+                <ul class="">
+                  <li>
+                    <div class="d-flex-center">
+                      <span class="h-45 w-45 d-flex-center b-r-10 position-relative">
+                        <img src="assets/images/avtar/woman.jpg" alt="" class="img-fluid b-r-10">
+                      </span>
+                    </div>
+                    <div class="text-center mt-2">
+                      <h6 class="mb-0"> Laura Monaldo</h6>
+                      <p class="f-s-12 mb-0 text-secondary">lauradesign@gmail.com</p>
+                    </div>
+                  </li>
+
+                  <li class="app-divider-v dotted py-1"></li>
+                  <li>
+                    <a class="mb-0 text-danger" href="" target="_blank">
+                      <i class="ph-duotone  ph-sign-out pe-1 f-s-20"></i> Log Out
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- Header Section ends -->
+
+        <!-- Body main section starts -->
+         
+
+       
+        <main>
+         <!-- Add Departments Form start -->
+            <div class="col-12">
+
+            <div class="container-fluid">
+                <!-- ready to use table start -->
+                <div class="row">
+                    <!-- student list tabel 2-->
+
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Students List</h5>
+                            </div>
+
+                            <div class="col-12">
+                              <div class="card">
+                                <div class="card-header d-flex flex-column gap-2">
+                                  <h5>Upload Department level Result </h5>
+                                </div>
+                                <div class="card-body">
+                                  <form class="row g-3 needs-validation" novalidate>
+                                   
+                                    <div class="col-md-3">
+                                      <label class="form-label">Session</label>
+                                           <select class="form-select" id="validationCustom04" required>
+                                                <option selected disabled value="">Choose...</option>
+                                                 <option value="10">2024/2025</option>
+                                                <option value="9">2023/2024</option>
+                                          </select>
+                                              <div class="invalid-feedback">
+                                                Please select a valid Session.
+                                                </div>
+                                             </div>
+              
+                                    <div class="col-md-3">
+                                      <label for="validationCustom04" class="form-label">Semester</label>
+                                        <select class="form-select" id="validationCustom04" required>
+                                          <option selected disabled value="">Choose...</option>
+                                          <option value="1">First</option>
+                                          <option value="2">Second</option>
+                                        </select>
+                                      <div class="invalid-feedback">
+                                        Please select a valid semester.
+                                      </div>
+                                    </div>
+              
+                                    <div class="col-md-3">
+                                      <label for="validationCustom04" class="form-label">Level</label>
+                                      <select class="form-select" id="validationCustom04" required>
+                                        <option selected disabled value="">Choose...</option>
+                                        <option value="1">100 level</option>
+                                        <option value="2">200 level</option>
+                                      </select>
+                                      <div class="invalid-feedback">
+                                        Please select a valid level.
+                                      </div>
+                                    </div>
+              
+                                    <div class="col-md-3">
+                                      <label for="validationCustom04" class="form-label">Course</label>
+                                      <select class="form-select" id="validationCustom04" required>
+                                          <option selected disabled value="">Choose...</option>
+                                          <option value="csc 101">Csc 101</option>
+                                          <option value="csc 102">Csc 102</option>
+                                      </select>
+                                      <div class="invalid-feedback">
+                                        Please select a valid course.
+                                      </div>
+                                    </div>
+                                     <div class="col-12">
+                                      <div class="text-end">
+                                          <button type="submit" class="btn btn-primary">Submit</button>
+                                          
+                                      </div>
+                                  </div>
+                                  </form>
+                                </div>
+                              </div> 
+                            </div>
+                                <!-- Add Departments Form end -->
+
+                            <div class="card-body p-0">
+                                <div class="app-scroll table-responsive app-datatable-default">
+                                    <table id="exampledatatable1" class="w-100 display student-list-table table table-bordered table-striped align-middle">
+                                        <thead>
+                                        <tr>
+                                            <th>
+                                                <input class="form-check-input mt-0" type="checkbox" id="select-all">
+                                            </th>
+                                            <th>Name</th>
+                                            <th>CSC 101</th>
+                                            <th>CSC 102</th>
+                                            <th>CSS 103</th>
+                                            <th>CSC 104</th>
+                                            <th>MTH 101</th>
+                                            <th>MTH 111</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <input class="form-check-input mt-0" type="checkbox">
+                                            </td>
+                                            <td>
+                                                John Deo Enejor
+                                            </td>
+                                            <td>B</td>
+                                            <td>A</td>
+                                            <td>D</td>
+                                            <td>C</td>
+                                            <td>B</td>
+                                            <td>A</td>
+                                            <td>
+                                              <div class="btn-group dropdown-icon-none">
+                                                  <button
+                                                          class="btn border-0 icon-btn b-r-4 dropdown-toggle active"
+                                                          type="button" data-bs-toggle="dropdown"
+                                                          data-bs-auto-close="true" aria-expanded="false">
+                                                      <i class="ti ti-dots-vertical"></i>
+                                                  </button>
+
+                                                  <ul class="dropdown-menu">
+                                                      <li><a class="dropdown-item" href="#"class="btn btn-success icon-btn b-r-4" data-bs-toggle="modal"
+                                                            data-bs-target="#editCardModal">
+                                                      <i class="ti ti-edit"></i> Edit </a></li>
+
+                                                      <li><a class="dropdown-item" href="#"class="btn btn-danger icon-btn b-r-4 delete-btn" data-bs-toggle="modal" 
+                                                        data-bs-target="#apiDeleteModal">
+                                                      <i class="ti ti-trash"></i> Delete </a></li>
+                                                  </ul>
+                                              </div>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input class="form-check-input mt-0" type="checkbox">
+                                            </td>
+                                            <td>
+                                                Ayodeji Samuel
+                                            </td>
+                                            <td>B</td>
+                                            <td>A</td>
+                                            <td>D</td>
+                                            <td>C</td>
+                                            <td>B</td>
+                                            <td>A</td>
+                                            <td>
+                                                <div class="btn-group dropdown-icon-none">
+                                                    <button
+                                                            class="btn border-0 icon-btn b-r-4 dropdown-toggle active"
+                                                            type="button" data-bs-toggle="dropdown"
+                                                            data-bs-auto-close="true" aria-expanded="false">
+                                                        <i class="ti ti-dots-vertical"></i>
+                                                    </button>
+
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="#"class="btn btn-success icon-btn b-r-4" data-bs-toggle="modal"
+                                                              data-bs-target="#editCardModal">
+                                                        <i class="ti ti-edit"></i> Edit </a></li>
+
+                                                        <li><a class="dropdown-item" href="#"class="btn btn-danger icon-btn b-r-4 delete-btn" data-bs-toggle="modal" 
+                                                          data-bs-target="#apiDeleteModal">
+                                                        <i class="ti ti-trash"></i> Delete </a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ready to use table end -->
+            </div>
+
+              <!-- delete-modal start  -->
+              <div class="modal fade" id="apiDeleteModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      <img src="assets/images/icons/delete-icon.png" alt="" class="img-fluid">
+                      <div class="text-center">
+                        <h4 class="text-danger f-w-600">Are You Sure?</h4>
+                        <p class="text-secondary f-s-16">You won't be able to revert this!</p>
+                      </div>
+
+                      <div class="text-center mt-3">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="confirmDelete">Yes,Delet it</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- delete-modal-end-->
+
+              <!-- edit modal-1 start -->
+              <div class="modal fade" id="editCardModal" tabindex="-1" aria-labelledby="editCardModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                      <h1 class="modal-title fs-5 text-white" id="editCardModalLabel">Edit Advance Table</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="ticket-form">
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="mb-3">
+                              <label class="form-label">Name</label>
+                              <input type="text" class="form-control" placeholder="Performance Issue">
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <div class="mb-3">
+                              <label class="form-label">Leader</label>
+                              <input type="text" class="form-control" placeholder="Michelle House">
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label  class="form-label">Client</label>
+                              <input type="text" class="form-control" placeholder="james">
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label class="form-label">Status</label>
+                              <select class="form-select">
+                                <option selected="">Select Status</option>
+                                <option value="open">open</option>
+                                <option value="inprogress">inprogress</option>
+                                <option value="closed">closed</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label class="form-label">Start Date</label>
+                              <input type="date" class="form-control" name="trip-start">
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label class="form-label">End Date</label>
+                              <input type="date" class="form-control">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-light-primary"  data-bs-dismiss="modal">Save changes</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <!-- edit model end  -->
+
+              <!-- edit modal-2 start -->
+              <div class="modal fade" id="editCard2Modal" tabindex="-1" aria-labelledby="editCard2ModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                      <h1 class="modal-title fs-5 text-white" id="editCard2ModalLabel">Edit Advance Table</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="ticket-form">
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="mb-3">
+                              <label class="form-label">Employee Name</label>
+                              <input type="text" class="form-control" placeholder="Performance Issue">
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <div class="mb-3">
+                              <label class="form-label">Position</label>
+                              <input type="text" class="form-control" placeholder="Michelle House">
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label  class="form-label">Email</label>
+                              <input type="text" class="form-control" placeholder="alison@gmail.com">
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label class="form-label">Status</label>
+                              <select class="form-select">
+                                <option selected="">Select Status</option>
+                                <option value="open">open</option>
+                                <option value="inprogress">inprogress</option>
+                                <option value="closed">closed</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label class="form-label">salary</label>
+                              <input type="text" class="form-control" placeholder="$2000">
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label class="form-label">End Date</label>
+                              <input type="date" class="form-control">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-light-primary"  data-bs-dismiss="modal">Save changes</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <!-- edit model end  -->
+
+            </div>
+            <!-- Advance Table end -->
+          </div>
+        </main>
+        <!-- Body main section ends -->
+
+        <!-- tap on top -->
+        <div class="go-top">
+          <span class="progress-value">
+            <i class="ti ti-arrow-up"></i>
+          </span>
+        </div>
+
+        
+      </div>
+    </div>
+  </div>
+
+
+
+        </main>
+        <!-- Body main section ends -->
+
+        <!-- tap on top -->
+        <div class="go-top">
+                <span class="progress-value">
+                    <i class="ti ti-arrow-up"></i>
+                </span>
+        </div>
+
+        <!-- Footer Section starts-->
+        <footer>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-9 col-12">
+                        <ul class="footer-text">
+                            <li>
+                                <p class="mb-0">Copyright © 2024 All rights reserved</p>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                  </div>
+            </div>
+        </footer>
+        <!-- Footer Section ends-->
+
+    </div>
+
+</div>
+
+
+<!--customizer-->
+<div id="customizer"></div>
+
+<!-- latest jquery-->
+<script src="assets/vendor/notifications/toastify-js.js"></script>
+
+<!-- latest jquery-->
+<script src="assets/js/jquery-3.6.3.min.js"></script>
+
+<script src="assets/vendor/datatable/jquery-3.5.1.js"></script>
+
+<!-- latest jquery-->
+<script src="assets/vendor/datatable/jquery.dataTables.min.js"></script>
+
+<!-- Bootstrap js-->
+<script src="assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+<!-- Simple bar js-->
+<script src="assets/vendor/simplebar/simplebar.js"></script>
+
+<!-- phosphor js -->
+<script src="assets/vendor/phosphor/phosphor.js"></script>
+
+<!-- filepond -->
+<script src="assets/vendor/filepond/file-encode.min.js"></script>
+<script src="assets/vendor/filepond/validate-size.min.js"></script>
+<script src="assets/vendor/filepond/validate-type.js"></script>
+<script src="assets/vendor/filepond/filepond.min.js"></script>
+
+<!-- js -->
+<script src="assets/js/ready_to_use_form.js"></script>
+<script src="assets/js/file_upload.js"></script>
+<!--js-->
+<script src="assets/js/formvalidation.js"></script>
+
+
+<!-- data table js-->
+<script src="assets/js/ready_to_use_table.js"></script>
+
+<!-- App js-->
+<script src="assets/js/script.js"></script>
+
+<!-- Customizer js-->
+<script src="assets/js/customizer.js"></script>
+
+</body>
+
+</html>

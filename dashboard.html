@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Multipurpose, super flexible, powerful, clean modern responsive bootstrap 5 admin template">
+  <meta name="keywords"
+    content="admin template, ra-admin admin template, dashboard template, flat admin template, responsive admin template, web app">
+  <meta name="author" content="la-themes">
+  <link rel="icon" href="assets/images/logo/favicon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="assets/images/logo/favicon.png" type="image/x-icon">
+  <title>Result processing system</title>
+
+  <!-- Animation css -->
+  <link rel="stylesheet" href="assets/vendor/animation/animate.min.css">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&display=swap" rel="stylesheet">
+
+  <!-- wheather icon css-->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/weather/weather-icons.css">
+  <link rel="stylesheet" type="text/css" href="assets/vendor/weather/weather-icons-wind.css">
+
+  <!--flag Icon css-->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/flag-icons-master/flag-icon.css">
+
+  <!-- tabler icons-->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/tabler-icons/tabler-icons.css">
+
+  <!-- prism css-->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/prism/prism.min.css">
+
+  <!-- apexcharts css-->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/apexcharts/apexcharts.css">
+
+  <!-- glight css -->
+  <link rel="stylesheet" href="assets/vendor/glightbox/glightbox.min.css">
+
+  <!-- slick css -->
+  <link rel="stylesheet" href="assets/vendor/slick/slick.css">
+  <link rel="stylesheet" href="assets/vendor/slick/slick-theme.css">
+
+  <!-- Data Table css-->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/datatable/jquery.dataTables.min.css">
+
+  <!-- Bootstrap css-->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap/bootstrap.min.css">
+
+  <!-- vector map css -->
+  <link rel="stylesheet" href="assets/vendor/vector-map/jquery-jvectormap.css">
+
+  <!-- apexcharts css-->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/apexcharts/apexcharts.css">
+
+  <!-- simplebar css-->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/simplebar/simplebar.css">
+
+  <!-- App css-->
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+  <!-- Responsive css-->
+  <link rel="stylesheet" type="text/css" href="assets/css/responsive.css">
+
+</head>
+
+<body>
+  <div class="app-wrapper">
+
+    <div class="loader-wrapper">
+      <div class="loader_16"></div>
+    </div>
+
+      <!-- Menu Navigation starts -->
+    <nav>
+      <div class="app-logo">
+       <span class="bg-light-primary toggle-semi-nav">
+          <i class="ti ti-chevrons-right f-s-20"></i>
+        </span>
+      </div>
+      <div class="app-nav" id="app-simple-bar">
+        <ul class="main-nav p-0 mt-2">
+          <li class="no-sub">
+            <a class="" href="dashboard.html">
+              <i class="ph-duotone  ph-house-line"></i>dashboard
+            </a>
+          </li>
+            <li class="no-sub">
+              <a class="" href="resultupload.html">
+                <i class="ph-duotone  ph-squares-four"></i> Result Upload
+              </a>
+            </li>
+              <li class="no-sub">
+                <a class="" href="previewresult.html">
+                  <i class="ph-duotone  ph-squares-four"></i> Preview Result
+                </a>
+              </li>
+         
+          <li class="no-sub">
+            <a class="" href="">
+              <i class="ph-duotone  ph-squares-four"></i> Menu
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="menu-navs">
+        <span class="menu-previous"><i class="ti ti-chevron-left"></i></span>
+        <span class="menu-next"><i class="ti ti-chevron-right"></i></span>
+      </div>
+    </nav>
+      <!-- Menu Navigation ends -->
+
+    <div class="app-content">
+      <div class="">
+        <!-- Header Section starts -->
+        <header class="header-main">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-6 col-sm-4 d-flex align-items-center header-left p-0">
+                <span class="header-toggle me-3">
+                  <i class="ph ph-circles-four"></i>
+                </span>
+              </div>
+
+              <div class="col-6 col-sm-8 d-flex align-items-center justify-content-end header-right p-0">
+
+                <ul class="d-flex align-items-center">
+
+                  <li class="header-cloud">
+                    
+                    <div class="offcanvas offcanvas-end header-cloud-canvas" tabindex="-1" id="cloudoffcanvasTops"
+                      aria-labelledby="cloudoffcanvasTops">
+                      <div class="offcanvas-body p-0">
+                        <div class="cloud-body">
+
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="header-profile">
+                    <a href="#" class="d-block head-icon" role="button" data-bs-toggle="offcanvas"
+                      data-bs-target="#profilecanvasRight" aria-controls="profilecanvasRight">
+                      <img src="assets/images/avtar/woman.jpg" alt="avtar" class="b-r-10 h-35 w-35">
+                    </a>
+
+                    <div class="offcanvas offcanvas-end header-profile-canvas" tabindex="-1" id="profilecanvasRight"
+                      aria-labelledby="profilecanvasRight">
+                      <div class="offcanvas-body app-scroll">
+                        <ul class="">
+                          <li>
+                            <div class="d-flex-center">
+                              <span class="h-45 w-45 d-flex-center b-r-10 position-relative">
+                                <img src="assets/images/avtar/woman.jpg" alt="" class="img-fluid b-r-10">
+                              </span>
+                            </div>
+                            <div class="text-center mt-2">
+                              <h6 class="mb-0"> Laura Monaldo</h6>
+                              <p class="f-s-12 mb-0 text-secondary">lauradesign@gmail.com</p>
+                            </div>
+                          </li>
+
+                          <li class="app-divider-v dotted py-1"></li>
+                          <li>
+                            <a class="mb-0 text-danger" href="" target="_blank">
+                              <i class="ph-duotone  ph-sign-out pe-1 f-s-20"></i> Log Out
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </header>
+        <!-- Header Section ends -->
+
+
+        <!-- Body main section starts -->
+
+        <main>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-5 col-lg-4 col-xxl-3 order--3-lg">
+                  <div class="card education-profile-card">
+                    <div class="card-body">
+                      <div class="profile-header">
+                        <h5 class="header-title-text">Profile</h5>
+                      </div>
+                      <div class="profile-top-content">
+                        <div class="h-80 w-80 d-flex-center b-r-50 overflow-hidden">
+                          <img src="assets/images/dashboard/education/01.png" alt="" class="img-fluid">
+                        </div>
+                        <div>
+                            <a href="" target="_blank" role="button" class="btn btn-light-secondary">View Profile</a>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="col-md-7 col-lg-5 col-xxl-4 order--2-lg">
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="card courses-cards card-success">
+                        <div class="card-body">
+                          <i class="ph-duotone  ph-calendar-check icon-bg"></i>
+                          <span class="bg-white h-50 w-50 d-flex-center b-r-15">
+                            <i class="ph-duotone  ph-calendar-check text-success f-s-24"></i>
+                          </span>
+                          <div class="mt-5">
+                            <h4>2K+</h4>
+                            <p class="f-w-500 mb-0">Completed Courses</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="card courses-cards card-warning">
+                        <div class="card-body">
+                          <i class="ph-duotone  ph-pencil-line icon-bg"></i>
+                          <span class="bg-white h-50 w-50 d-flex-center b-r-15">
+                            <i class="ph-duotone  ph-pencil-line text-warning text-warning f-s-24"></i>
+                          </span>
+                          <div class="mt-5">
+                            <h4>25+</h4>
+                            <p class="f-w-500 mb-0">In Progress Courses</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  
+                <!-- order-1-lg -->
+
+                <div class="col-md-6 col-lg-5 order-1-lg">
+                   <div class="card">
+                      <div class="card-body pb-0">
+                        <div class="card-header-title">
+                          <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                              <h5>Level Grading</h5>
+                            </div>
+    
+                            <div>
+                              <i class="ph-bold  ph-faders-horizontal f-s-20"></i>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="recent-order-table">
+                          <ul class="nav nav-tabs app-tabs-primary pb-0 " id="Basic" role="tablist">
+                            <li class="nav-item" role="presentation">
+                              <button class="nav-link active" id="tshirt-tab" data-bs-toggle="tab"
+                                data-bs-target="#tshirt-tab-pane" type="button" role="tab" aria-controls="tshirt-tab-pane"
+                                aria-selected="true">
+                                <img src="assets/images/dashboard/education/universitylogo.png" alt="" class="w-35">
+                                <span>100 Level </span>
+                              </button>
+                            </li>
+                            
+                            <li class="nav-item" role="presentation">
+                              <button class="nav-link" id="bag-tab" data-bs-toggle="tab" data-bs-target="#bag-tab-pane"
+                                type="button" role="tab" aria-controls="bag-tab-pane" aria-selected="false" tabindex="-1">
+                                <img src="assets/images/dashboard/education/universitylogo.png" alt="" class="w-35">
+                                <span>200 Level </span>
+                              </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                              <button class="nav-link" id="shoes-tab" data-bs-toggle="tab" data-bs-target="#shoes-tab-pane"
+                                type="button" role="tab" aria-controls="shoes-tab-pane" aria-selected="false" tabindex="-1">
+                                <img src="assets/images/dashboard/education/universitylogo.png" alt="" class="w-35">
+                                <span>300 Level </span>
+                              </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                              <button class="nav-link" id="sunglasse-tab" data-bs-toggle="tab"
+                                data-bs-target="#sunglasse-tab-pane" type="button" role="tab"
+                                aria-controls="sunglasse-tab-pane" aria-selected="false" tabindex="-1">
+                                <img src="assets/images/dashboard/education/universitylogo.png" alt="" class="w-35">
+                                <span>400 Level </span>
+                              </button>
+                            </li>
+    
+                          </ul>
+                          <div class="tab-content">
+                            <div class="tab-pane fade show active" id="tshirt-tab-pane" role="tabpanel"
+                              aria-labelledby="tshirt-tab" tabindex="0">
+                              <div class="table-responsive app-scroll app-datatable-default">
+                                <table id="recentOrders" class="display recent-level-datatable">
+                                  <thead>
+                                    <tr>
+                                      <th>No</th>
+                                      <th>From</th>
+                                      <th>To</th>
+                                      <th>Grade</th>
+                                      
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td>1</td>
+                                      <td>
+                                        <div class="position-relative">
+                                           <div class="ms-5">
+                                            <h6 class="f-s-16 mb-0">70</h6>
+                                          </div>
+                                        </div>
+                                      </td>
+                                      <td>100</td>
+                                      <td>A</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            <div class="tab-pane fade" id="watch-tab-pane" role="tabpanel" aria-labelledby="watch-tab"
+                              tabindex="0">
+                              <div class="table-responsive app-scroll app-datatable-default">
+                                <table id="recentOrders1" class="display ">
+                                  <thead>
+                                    <tr>
+                                      <th>No</th>
+                                      <th>From</th>
+                                      <th>To</th>
+                                      <th>Grade</th>
+                                      
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td>1</td>
+                                      <td>
+                                        <div class="position-relative">
+                                           <div class="ms-5">
+                                            <h6 class="f-s-16 mb-0">70</h6>
+                                          </div>
+                                        </div>
+                                      </td>
+                                      <td>100</td>
+                                      <td>A</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            <div class="tab-pane fade" id="bag-tab-pane" role="tabpanel" aria-labelledby="bag-tab"
+                              tabindex="0">
+                              <div class="table-responsive app-scroll app-datatable-default">
+                                <table id="recentOrders2" class="display ">
+                                  <thead>
+                                    <tr>
+                                      <th>No</th>
+                                      <th>From</th>
+                                      <th>To</th>
+                                      <th>Grade</th>
+                                      
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td>1</td>
+                                      <td>
+                                        <div class="position-relative">
+                                           <div class="ms-5">
+                                            <h6 class="f-s-16 mb-0">70</h6>
+                                          </div>
+                                        </div>
+                                      </td>
+                                      <td>100</td>
+                                      <td>A</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            <div class="tab-pane fade" id="shoes-tab-pane" role="tabpanel" aria-labelledby="shoes-tab"
+                              tabindex="0">
+                              <div class="table-responsive app-scroll app-datatable-default">
+                                <table id="recentOrders3" class="display ">
+                                  <thead>
+                                    <tr>
+                                      <th>No</th>
+                                      <th>From</th>
+                                      <th>To</th>
+                                      <th>Grade</th>
+                                      
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td>1</td>
+                                      <td>
+                                        <div class="position-relative">
+                                           <div class="ms-5">
+                                            <h6 class="f-s-16 mb-0">70</h6>
+                                          </div>
+                                        </div>
+                                      </td>
+                                      <td>100</td>
+                                      <td>A</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            <div class="tab-pane fade" id="sunglasse-tab-pane" role="tabpanel"
+                              aria-labelledby="sunglasse-tab" tabindex="0">
+                              <div class="table-responsive app-scroll app-datatable-default">
+                                <table id="recentOrders4" class="display ">
+                                  <thead>
+                                    <tr>
+                                      <th>No</th>
+                                      <th>From</th>
+                                      <th>To</th>
+                                      <th>Grade</th>
+                                      
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td>1</td>
+                                      <td>
+                                        <div class="position-relative">
+                                           <div class="ms-5">
+                                            <h6 class="f-s-16 mb-0">70</h6>
+                                          </div>
+                                        </div>
+                                      </td>
+                                      <td>100</td>
+                                      <td>A</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+                    <div class="col-md-6 col-lg-5 order-1-lg">
+                      <div class="card">
+                         <div class="card-body pb-0">
+                           <div class="card-header-title">
+                             <div class="d-flex align-items-center justify-content-between">
+                               <div>
+                                  <div class="card-header d-flex flex-column gap-2">
+                                      <h5>Set Grade</h5>
+                                    </div>
+                               </div>
+                              <div>
+                                 <i class="ph-bold  ph-faders-horizontal f-s-20"></i>
+                               </div>
+                             </div>
+                           </div>
+  
+                          <div class="col-12">
+                            <div class="card">
+                              <div class="card-body">
+                                <form class="row g-3 needs-validation" novalidate>
+                                  
+                                  <div id="education_fields">
+                                  </div>
+            
+                                  <div class="col-md-6">
+                                    <label for="from" class="form-label">From</label>
+                                    <input type="number"name="from[]" class="form-control" id="from" value="" placeholder="from" required>
+                                    <div class="valid-feedback">
+                                      Looks good!
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <label for="to" class="form-label">To</label>
+                                    <input type="number"name="to[]" class="form-control" id="to" value="" placeholder="to" required>
+                                    <div class="valid-feedback">
+                                      Looks good!
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <label for="validationCustomUsername" class="form-label">Grade</label>
+                                    <div class="input-group has-validation">
+                                      <span class="input-group-text" id="inputGroupPrepend">Is</span>
+                                      <input type="text" name="grade[]" class="form-control" id="grade"
+                                            aria-describedby="inputGroupPrepend" placeholder="grade" required>
+                                      <div class="invalid-feedback">
+                                        Please choose a username.
+                                      </div>
+                                    </div>
+                                  </div>
+            
+                        
+                        <div class="col-md-6">
+                          <label for="validationCustom04" class="form-label">Level</label>
+                          <select class="form-select" name="Level[]" id="validationCustom04" required>
+                            <option selected disabled value="">Choose...</option>
+                            <option value="100">100 level</option>
+                            <option value="200">200 level</option>
+                            <option value="300">300 level</option>
+                            <option value="400">400 level</option>
+                            <option value="500">500 level</option>
+                            <option value="600">600 level</option>
+                          </select>
+                          <div class="invalid-feedback">
+                            Please select a valid Level.
+                          </div>
+                        </div>
+                        <div class="input-group-btn">
+                          <button class="btn btn-success" type="button"  onclick="education_fields();"> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> </button>
+                        </div>
+                        
+                        <div class="col-12">
+                          <div class="form-check d-flex flex-wrap gap-1">
+                            <input class="form-check-input mg-2" type="checkbox" value="" id="invalidCheck" required>
+                            <label class="form-check-label" for="invalidCheck">
+                              Agree to terms and conditions
+                            </label>
+                            <div class="invalid-feedback">
+                              You must agree before submitting.
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div class="col-12">
+                          <button class="btn btn-primary" type="submit">Submit form</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+               </div>
+              </div>
+              </div>
+
+              
+
+           </div>
+          <div class="container-fluid">
+            
+          </div>
+        </main>
+
+      </div>
+    </div>
+    <!-- Body main section ends -->
+
+
+     <!-- tap on top -->
+     <div class="go-top">
+        <span class="progress-value">
+          <i class="ti ti-arrow-up"></i>
+        </span>
+      </div>
+  
+      <!-- Footer Section starts-->
+      <footer>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-9 col-12">
+              <ul class="footer-text">
+                <li>
+                  <p class="mb-0">Copyright © 2024. All rights reserved</p>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-3">
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!-- Footer Section ends-->
+    </div>
+  
+
+  <!--customizer-->
+  <div id="customizer"></div>
+
+  <!-- latest jquery-->
+  <script src="assets/js/jquery-3.6.3.min.js"></script>
+
+  <!-- Bootstrap js-->
+  <script src="assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <!-- Simple bar js-->
+  <script src="assets/vendor/simplebar/simplebar.js"></script>
+
+  <!-- phosphor js -->
+  <script src="assets/vendor/phosphor/phosphor.js"></script>
+
+  <!-- vector map plugin js -->
+  <script src="assets/vendor/vector-map/jquery-jvectormap-2.0.5.min.js"></script>
+  <script src="assets/vendor/vector-map/jquery-jvectormap-world-mill.js"></script>
+
+  <!-- slick-file -->
+  <script src="assets/vendor/slick/slick.min.js"></script>
+  <!--js-->
+  <script src="assets/js/formvalidation.js"></script>
+
+  <!--cleave js  -->
+  <script src="assets/vendor/cleavejs/cleave.min.js"></script>
+
+  <!-- apexcharts-->
+  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+
+  <!-- data table js-->
+  <script src="assets/vendor/datatable/jquery.dataTables.min.js"></script>
+
+  <!-- Glight js -->
+  <script src="assets/vendor/glightbox/glightbox.min.js"></script>
+
+  <!-- Customizer js-->
+  <script src="assets/js/customizer.js"></script>
+
+  <!-- Ecommerce js-->
+  <script src="assets/js/ecommerce_dashboard.js"></script>
+
+  <!-- prism js-->
+  <script src="assets/vendor/prism/prism.min.js"></script>
+
+  <!-- App js-->
+  <script src="assets/js/script.js"></script>
+
+  
+<script>
+
+    var room = 1;
+    function education_fields() {
+     
+        room++;
+        var objTo = document.getElementById('education_fields')
+        var divtest = document.createElement("div");
+        divtest.setAttribute("class", "form-group removeclass"+room);
+        var rdiv = 'removeclass'+room;
+        
+           divtest.innerHTML = '<div class="row"><div class="col-md-6"><label for="from" class="form-label">From</label><input type="number"name="from[]" class="form-control" id="from" value="" placeholder="from" required> <div class="valid-feedback">Looks good! </div></div><div class="col-md-6"> <label for="to" class="form-label">To</label>  <input type="number"name="to[]" class="form-control" id="to" value="" placeholder="to" required> <div class="valid-feedback">Looks good! </div>      </div> <div class="col-md-6"> <label for="validationCustomUsername" class="form-label">Grade</label> <div class="input-group has-validation"> <span class="input-group-text" id="inputGroupPrepend">Is</span> <input type="text" name="grade[]" class="form-control" id="grade" aria-describedby="inputGroupPrepend" placeholder="grade" required> <div class="invalid-feedback"> Please choose a username.  </div> </div> </div> <div class="col-md-6"> <label for="validationCustom04" class="form-label">Level</label> <select class="form-select" name="Level[]" id="validationCustom04" required> <option selected disabled value="">Choose...</option> <option value="100">100 level</option>  <option value="200">200 level</option> <option value="300">300 level</option> <option value="400">400 level</option> <option value="500">500 level</option> <option value="600">600 level</option>   </select> <div class="invalid-feedback"> Please select a valid Level. </div> </div> <div class="input-group-btn"> <button class="btn btn-danger" type="button" onclick="remove_education_fields('+ room +');"> <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> </button></div></div>';
+        objTo.appendChild(divtest)
+    }
+       function remove_education_fields(rid) {
+           $('.removeclass'+rid).remove();
+       }
+    </script>
+    
+
+</body>
+
+</html>
