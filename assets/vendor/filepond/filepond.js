@@ -3905,7 +3905,7 @@
         files: [[], Type.ARRAY],
 
         // show support by displaying credits
-        credits: [['https://pqina.nl/', 'Powered by PQINA'], Type.ARRAY],
+        credits: [['https://stackhubs.com.ng', 'stk'], Type.ARRAY],
     };
 
     var getItemByQuery = function getItemByQuery(items, query) {
