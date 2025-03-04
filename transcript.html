@@ -1,0 +1,905 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="">
+  <meta name="keywords"
+    content="">
+  <meta name="author" content="la-themes">
+  <link rel="icon" href="assets/images/logo/favicon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="assets/images/logo/favicon.png" type="image/x-icon">
+  <title>Result processing system</title>
+
+  <!--font-awesome-css-->
+  <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.css">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&display=swap" rel="stylesheet">
+
+  <!-- tabler icons-->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/tabler-icons/tabler-icons.css">
+
+  <!--flag Icon css-->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/flag-icons-master/flag-icon.css">
+
+  <!-- slick css -->
+  <link rel="stylesheet" href="assets/vendor/slick/slick.css">
+  <link rel="stylesheet" href="assets/vendor/slick/slick-theme.css">
+
+  <!-- Bootstrap css-->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap/bootstrap.min.css">
+
+  <!-- Data Table css-->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/datatable/jquery.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="assets/vendor/datatable/datatable2/buttons.dataTables.min.css">
+
+  <!-- simplebar css-->
+  <link rel="stylesheet" type="text/css" href="assets/vendor/simplebar/simplebar.css">
+
+  <!-- App css-->
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+  <!-- Responsive css-->
+  <link rel="stylesheet" type="text/css" href="assets/css/responsive.css">
+
+</head>
+
+<body>
+  <div class="app-wrapper">
+    <div class="loader-wrapper">
+      <div class="app-loader">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- Menu Navigation starts -->
+    <nav>
+      <div class="app-logo">
+       <span class="bg-light-primary toggle-semi-nav">
+          <i class="ti ti-chevrons-right f-s-20"></i>
+        </span>
+      </div>
+      <div class="app-nav" id="app-simple-bar">
+        <ul class="main-nav p-0 mt-2">
+          <li class="no-sub">
+            <a class="" href="dashboard.html">
+              <i class="ph-duotone  ph-house-line"></i>dashboard
+            </a>
+          </li>
+            <li class="no-sub">
+              <a class="" href="resultupload.html">
+                <i class="ph-duotone  ph-squares-four"></i> Result Upload
+              </a>
+            </li>
+              <li class="no-sub">
+                <a class="" href="previewresult.html">
+                  <i class="ph-duotone  ph-squares-four"></i> Preview Result
+                </a>
+              </li>
+              <li class="no-sub">
+                <a class="" href="transcript.html">
+                  <i class="ph-duotone  ph-squares-four"></i> Transcript
+                </a>
+              </li>
+         
+          <li class="no-sub">
+            <a class="" href="">
+              <i class="ph-duotone  ph-squares-four"></i> Menu
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="menu-navs">
+        <span class="menu-previous"><i class="ti ti-chevron-left"></i></span>
+        <span class="menu-next"><i class="ti ti-chevron-right"></i></span>
+      </div>
+    </nav>
+    <!-- Menu Navigation ends -->
+
+    
+        <div class="app-content">
+          <div class="">
+            <!-- Header Section starts -->
+            <header class="header-main">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-6 col-sm-4 d-flex align-items-center header-left p-0">
+                    <span class="header-toggle me-3">
+                      <i class="ph ph-circles-four"></i>
+                    </span>
+                  </div>
+    
+                  <div class="col-6 col-sm-8 d-flex align-items-center justify-content-end header-right p-0">
+    
+                    <ul class="d-flex align-items-center">
+    
+                      <li class="header-cloud">
+                        
+                        <div class="offcanvas offcanvas-end header-cloud-canvas" tabindex="-1" id="cloudoffcanvasTops"
+                          aria-labelledby="cloudoffcanvasTops">
+                          <div class="offcanvas-body p-0">
+                            <div class="cloud-body">
+    
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+    
+                      <li class="header-profile">
+                        <a href="#" class="d-block head-icon" role="button" data-bs-toggle="offcanvas"
+                          data-bs-target="#profilecanvasRight" aria-controls="profilecanvasRight">
+                          <img src="assets/images/avtar/woman.jpg" alt="avtar" class="b-r-10 h-35 w-35">
+                        </a>
+    
+                        <div class="offcanvas offcanvas-end header-profile-canvas" tabindex="-1" id="profilecanvasRight"
+                          aria-labelledby="profilecanvasRight">
+                          <div class="offcanvas-body app-scroll">
+                            <ul class="">
+                              <li>
+                                <div class="d-flex-center">
+                                  <span class="h-45 w-45 d-flex-center b-r-10 position-relative">
+                                    <img src="assets/images/avtar/woman.jpg" alt="" class="img-fluid b-r-10">
+                                  </span>
+                                </div>
+                                <div class="text-center mt-2">
+                                  <h6 class="mb-0"> Laura Monaldo</h6>
+                                  <p class="f-s-12 mb-0 text-secondary">lauradesign@gmail.com</p>
+                                </div>
+                              </li>
+    
+                              <li class="app-divider-v dotted py-1"></li>
+                              <li>
+                                <a class="mb-0 text-danger" href="" target="_blank">
+                                  <i class="ph-duotone  ph-sign-out pe-1 f-s-20"></i> Log Out
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </header>
+            <!-- Header Section ends -->
+
+        <!-- Body main section starts -->
+        <main>
+          <div class="container-fluid">
+            <!-- Breadcrumb start -->
+             <div class="row m-1">
+              <div class="col-12 ">
+                <h4 class="main-title"> 
+                  <span> <i class="ph-duotone  ph-stack f-s-16"></i></span>
+                  Transcript
+                </h4>
+              </div>
+            </div>
+            <!-- Breadcrumb end -->
+
+            <!-- Ticket start -->
+            <div class="row ticket-app">
+              <div class="col-lg-6">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="card ticket-card bg-primary">
+                      <div class="card-body">
+                        <i class="ph-bold  ph-circle circle-bg-img"></i>
+                        <div class="h-50 w-50 d-flex-center b-r-15 bg-white mb-3">
+                          <i class="ph-bold  ph-ticket f-s-25 text-primary"></i>
+                        </div>
+                        <p class="f-s-16">All Tickets</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                          <h3 class="text-white">185</h3>
+                          <ul class="avatar-group">
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-danger b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-danger border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/4.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-success b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-success border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/1.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-warning b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-warning border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/2.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-info b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-info border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/3.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="bg-white text-dark h-35 w-35 d-flex-center b-r-50" data-bs-toggle="tooltip"
+                              data-bs-title="5 More">
+                              5+
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="card ticket-card bg-info">
+                      <div class="card-body">
+                        <i class="ph-bold  ph-circle circle-bg-img"></i>
+                        <div class="h-50 w-50 d-flex-center b-r-15 bg-white mb-3">
+                          <i class="ph-bold  ph-clock-countdown f-s-25 text-info"></i>
+                        </div>
+                        <p class="f-s-16">Pending Tickets</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                          <h3 class="text-white">185</h3>
+                          <ul class="avatar-group">
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-danger b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-danger border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/4.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-success b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-success border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/1.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-warning b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-warning border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/2.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-info b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-info border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/3.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="bg-white text-dark h-35 w-35 d-flex-center b-r-50" data-bs-toggle="tooltip"
+                              data-bs-title="5 More">
+                              5+
+                            </li>
+                          </ul>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="card ticket-card bg-success">
+                      <div class="card-body">
+                        <i class="ph-bold  ph-circle circle-bg-img"></i>
+                        <div class="h-50 w-50 d-flex-center b-r-15 bg-white mb-3">
+                          <i class="ph-bold  ph-file-cloud f-s-25 text-success"></i>
+                        </div>
+                        <p class="f-s-16">Completed Tickets</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                          <h3 class="text-white">185</h3>
+                          <ul class="avatar-group">
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-danger b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-danger border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/4.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-success b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-success border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/1.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-warning b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-warning border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/2.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-info b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-info border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/3.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="bg-white text-dark h-35 w-35 d-flex-center b-r-50" data-bs-toggle="tooltip"
+                              data-bs-title="5 More">
+                              5+
+                            </li>
+                          </ul>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="card ticket-card bg-warning">
+                      <div class="card-body">
+                        <i class="ph-bold  ph-circle circle-bg-img"></i>
+                        <div class="h-50 w-50 d-flex-center b-r-15 bg-white mb-3">
+                          <i class="ph-bold  ph-file-x f-s-25 text-warning"></i>
+                        </div>
+                        <p class="f-s-16">Cancelled Tickets</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                          <h3 class="text-white">185</h3>
+                          <ul class="avatar-group">
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-danger b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-danger border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/4.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-success b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-success border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/1.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-warning b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-warning border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/2.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="h-45 w-45 d-flex-center b-r-50 text-bg-info b-2-light position-relative"
+                              data-bs-toggle="tooltip" data-bs-title="Sabrina Torres">
+                              <span
+                                class="position-absolute top-0 start-2 p-1 bg-info border border-light rounded-circle"></span>
+                              <img src="assets/images/avtar/3.png" alt="" class="img-fluid b-r-50 overflow-hidden">
+                            </li>
+                            <li class="bg-white text-dark h-35 w-35 d-flex-center b-r-50" data-bs-toggle="tooltip"
+                              data-bs-title="5 More">
+                              5+
+                            </li>
+                          </ul>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="card create-ticket-card">
+                  <div class="card-body">
+                    <div class="col-xl-12">
+                      <div class="row align-items-center">
+                        <div class="col-sm-7 col-12">
+                          <div class="ticket-create">
+                            <h5 class=" mb-2 ">The Transcript Component</h5>
+                            <p class="mb-5 mt-3 text-secondary"> Provide a more detailed explanation of the issue.</p>
+                            
+                          </div>
+                        </div>
+                        <div class="col-sm-5 col-12">
+                          <img src="assets/images/icons/ticket.png" alt="" class="img-fluid w-300 d-block m-auto">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+
+            <!-- start create ticket modal  -->
+            <div class="modal fade" id="ticketModal" tabindex="-1" aria-labelledby="ticketModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header bg-primary">
+                    <h1 class="modal-title fs-5 text-white" id="ticketModalLabel">Add Transcript</h1>
+                    <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="ticket-form">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" placeholder="Title" id="titlename">
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="mb-3">
+                            <label class="form-label">Client</label>
+                            <input type="text" class="form-control" placeholder="client" id="clientname">
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="priority" class="form-label">Priority</label>
+                            <select class="form-select" id="priority">
+                              <option selected="">Select Priority</option>
+                              <option value="Medium">Medium</option>
+                              <option value="Lower">Lower</option>
+                              <option value="High">High</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status">
+                              <option selected="">Select Status</option>
+                              <option value="open">open</option>
+                              <option value="inprogress">inprogress</option>
+                              <option value="closed">closed</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-control" id="datename" name="trip-start">
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label class="form-label">Due Date</label>
+                            <input type="date" class="form-control" id="duename">
+                          </div>
+                        </div>
+
+
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="ticketkey">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- end create ticket modal  -->
+
+            <!-- TICKET DETAIL tabel 5 -->
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body px-0">
+                  <div class="table-responsive app-scroll app-datatable-default">
+                    <table id="ticketdatatable" class="w-100 display ticket-app-table">
+                      <thead>
+                        <tr>
+                          <th>
+                            <div class="checkbox-wrapper">
+                              <label class="check-box m-0">
+                                <input type="checkbox" id="select-all1">
+                                <span class="checkmark outline-secondary"></span>
+                              </label>
+                            </div>
+                          </th>
+                          <th>Transaction Id</th>
+                          <th>Student Name</th>
+                           <th>Transcript Type</th>
+                           <th>Amount Paid</th>
+                          <th>Status</th>
+                          <th>Application Date</th>
+                          <th>Response Date</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody id="ticket_key_body">
+                        <tr>
+                          <td>
+                            <div class="checkbox-wrapper">
+                              <label class="check-box m-0">
+                                <input type="checkbox">
+                                <span class="checkmark outline-secondary"></span>
+                              </label>
+                            </div>
+                          </td>
+                          <td>AR 2044</td>
+                          <td>
+                            <div class="d-flex align-items-center">
+                              Gavin Cortez
+                            </div>
+                          </td>
+                          <td>N 3000</td>
+                          <td>Bug Report</td>
+                          <td><span class="badge text-outline-success">in progress</span></td>
+                          <td>1 jan 2024</td>
+                          <td>3 feb 2024</td>
+                          <td>
+                            <div class="btn-group dropdown-icon-none">
+                              <button class="btn border-0 icon-btn b-r-4 dropdown-toggle active" type="button"
+                                data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                                <i class="ti ti-dots-vertical"></i>
+                              </button>                             
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href=""><i
+                                      class="ti ti-eye text-primary me-2"></i> View
+                                  </a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                    data-bs-target="#ticketeditModal"><i class="ti ti-edit text-success me-2"></i>
+                                    Processed</a></li>
+                                <li><a class="dropdown-item delete-btn" href="#" ><i
+                                      class="ti ti-trash text-danger me-2"></i> Delete </a></li>
+                              </ul>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <div class="checkbox-wrapper">
+                              <label class="check-box m-0">
+                                <input type="checkbox">
+                                <span class="checkmark outline-secondary"></span>
+                              </label>
+                            </div>
+                          </td>
+                          <td>AR 1763</td>
+                          <td>
+                            <div class="d-flex align-items-center">
+                             
+                              Martena Mccray
+                            </div>
+                          </td>
+                          
+                          <td>Feature Request</td>
+                          <td><span class="badge text-outline-info">closed</span></td>
+                          <td>8 jan 2024</td>
+                          <td>10 mar 2024</td>
+                          <td>
+                            <div class="btn-group dropdown-icon-none">
+                              <button class="btn border-0 icon-btn b-r-4 dropdown-toggle active" type="button"
+                                data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                                <i class="ti ti-dots-vertical"></i>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href=""><i
+                                      class="ti ti-eye text-primary me-2"></i> View
+                                  </a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                    data-bs-target="#ticketeditModal"><i class="ti ti-edit text-success me-2"></i>
+                                    Processed </a></li>
+                                <li><a class="dropdown-item delete-btn" href="#" ><i
+                                      class="ti ti-trash text-danger me-2"></i> Delete </a></li>
+                              </ul>
+                            </div>
+                          </td>
+
+                        </tr>
+                        <tr>
+                          <td>
+                            <div class="checkbox-wrapper">
+                              <label class="check-box m-0">
+                                <input type="checkbox">
+                                <span class="checkmark outline-secondary"></span>
+                              </label>
+                            </div>
+                          </td>
+                          <td>AR 7452</td>
+                          <td>
+                            <div class="d-flex align-items-center">
+                              Gavin Joyce
+                            </div>
+                          </td>
+                          <td>Student copy</td>
+                          <td><span class="badge text-outline-success">in progress</span></td>
+                          <td>14 jan 2024</td>
+                          <td>30 jan 2024</td>
+                          <td>
+                            <div class="btn-group dropdown-icon-none">
+                              <button class="btn border-0 icon-btn b-r-4 dropdown-toggle active" type="button"
+                                data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                                <i class="ti ti-dots-vertical"></i>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href=""><i
+                                      class="ti ti-eye text-primary me-2"></i> View
+                                  </a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                    data-bs-target="#ticketeditModal"><i class="ti ti-edit text-success me-2"></i>
+                                    Processed</a></li>
+                                <li><a class="dropdown-item delete-btn" href="#" ><i
+                                      class="ti ti-trash text-danger me-2"></i> Delete </a></li>
+                              </ul>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <div class="checkbox-wrapper">
+                              <label class="check-box m-0">
+                                <input type="checkbox">
+                                <span class="checkmark outline-secondary"></span>
+                              </label>
+                            </div>
+                          </td>
+                          <td>AR 1023</td>
+                          <td>
+                            <div class="d-flex align-items-center">
+                              Gloria Little
+                            </div>
+
+                          </td>
+                          <td>Inter University</td>
+                          <td><span class="badge text-outline-primary">open</span></td>
+                          <td>6 hours ago</td>
+                          <td>12 feb 2024</td>
+                          <td>
+                            <div class="btn-group dropdown-icon-none">
+                              <button class="btn border-0 icon-btn b-r-4 dropdown-toggle active" type="button"
+                                data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                                <i class="ti ti-dots-vertical"></i>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href=""><i
+                                      class="ti ti-eye text-primary me-2"></i> View
+                                  </a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                    data-bs-target="#ticketeditModal"><i class="ti ti-edit text-success me-2"></i>
+                                    Processed</a></li>
+                                <li><a class="dropdown-item delete-btn" href="#" ><i
+                                      class="ti ti-trash text-danger me-2"></i> Delete </a></li>
+                              </ul>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <div class="checkbox-wrapper">
+                              <label class="check-box m-0">
+                                <input type="checkbox">
+                                <span class="checkmark outline-secondary"></span>
+                              </label>
+                            </div>
+                          </td>
+                          <td>AR 2305</td>
+                          <td>
+                            
+                              Jena Gaines
+                            </div>
+                          </td>
+                          <td>Job Request copy</td>
+                          <td><span class="badge text-outline-info">closed</span></td>
+                          <td>6 hours ago</td>
+                          <td>16 jan 2024</td>
+                          <td>
+                            <div class="btn-group dropdown-icon-none">
+                              <button class="btn border-0 icon-btn b-r-4 dropdown-toggle active" type="button"
+                                data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                                <i class="ti ti-dots-vertical"></i>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href=""><i
+                                      class="ti ti-eye text-primary me-2"></i> View
+                                  </a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                    data-bs-target="#ticketeditModal"><i class="ti ti-edit text-success me-2"></i>
+                                    Processed </a></li>
+                                <li><a class="dropdown-item delete-btn" href="#" ><i
+                                      class="ti ti-trash text-danger me-2"></i> Delete </a></li>
+                              </ul>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <div class="checkbox-wrapper">
+                              <label class="check-box m-0">
+                                <input type="checkbox">
+                                <span class="checkmark outline-secondary"></span>
+                              </label>
+                            </div>
+                          </td>
+                          <td>AR2058</td>
+                          <td>
+                            <div class="d-flex align-items-center">
+                              Jenette Caldwell
+                            </div>
+                          </td>
+                          <td></td>
+                          <td><span class="badge text-outline-primary">open</span></td>
+                          <td>20 jan 2024</td>
+                          <td>21 feb 2024</td>
+                          <td>
+                            <div class="btn-group dropdown-icon-none">
+                              <button class="btn border-0 icon-btn b-r-4 dropdown-toggle active" type="button"
+                                data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                                <i class="ti ti-dots-vertical"></i>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href=""><i
+                                      class="ti ti-eye text-primary me-2"></i> View
+                                  </a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                    data-bs-target="#ticketeditModal"><i class="ti ti-edit text-success me-2"></i>
+                                    Processed </a></li>
+                                <li><a class="dropdown-item delete-btn" href="#" ><i
+                                      class="ti ti-trash text-danger me-2"></i> Delete </a></li>
+                              </ul>
+                            </div>
+                          </td>
+                        </tr>                                     
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              </div>
+              <!-- ticket table end -->
+            </div>
+            <!-- Ticket end -->
+          </div>
+        </main>
+      </div>
+    </div>
+      
+      <!-- Body main section ends -->
+
+      <!-- tap on top -->
+      <div class="go-top">
+        <span class="progress-value">
+          <i class="ti ti-arrow-up"></i>
+        </span>
+      </div>
+
+   
+    <!-- Footer Section starts-->
+    <footer>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-9 col-12">
+            <ul class="footer-text">
+              <li>
+                <p class="mb-0">Copyright © 2025. All rights reserved</p>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-3">
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- Footer Section ends-->
+  </div>
+
+
+    </div>
+  <!-- delete modal   -->
+  <div class="modal fade" id="apiDeletModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <img src="assets/images/icons/delete-icon.png" alt="" class="img-fluid">
+          <div class="text-center">
+            <h4 class="text-danger f-w-600">Are You Sure?</h4>
+            <p class="text-secondary f-s-16">You won't be able to revert this!</p>
+          </div>
+
+          <div class="text-center mt-3">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="confirmDelete">Yes,Delet it</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- edit modal  -->
+  <div class="modal fade" id="ticketeditModal" tabindex="-1" aria-labelledby="ticketeditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="ticketeditModalLabel">Edit Ticket</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="ticket-form">
+            <div class="row">
+              <div class="col-12">
+                <div class="mb-3">
+                  <label class="form-label">Title</label>
+                  <input type="text" class="form-control" placeholder="Performance Issue">
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="mb-3">
+                  <label class="form-label">Client</label>
+                  <input type="text" class="form-control" placeholder="Michelle House">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="priority" class="form-label">Priority</label>
+                  <select class="form-select" >
+                    <option selected="">Select Priority</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Lower">Lower</option>
+                    <option value="High">High</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="status" class="form-label">Status</label>
+                  <select class="form-select">
+                    <option selected="">Select Status</option>
+                    <option value="open">open</option>
+                    <option value="inprogress">inprogress</option>
+                    <option value="closed">closed</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Date</label>
+                  <input type="date" class="form-control" name="trip-start">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Due Date</label>
+                  <input type="date" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--customizer-->
+  <div id="customizer"></div>
+
+  <!-- latest jquery-->
+  <script src="assets/js/jquery-3.6.3.min.js"></script>
+
+  <!-- Simple bar js-->
+  <script src="assets/vendor/simplebar/simplebar.js"></script>
+
+
+  <!-- latest jquery-->
+  <script src="assets/vendor/datatable/jquery.dataTables.min.js"></script>
+
+  <!-- Bootstrap js-->
+  <script src="assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <!-- Simple bar js-->
+  <script src="assets/vendor/simplebar/simplebar.js"></script>
+
+  <!-- slick-file -->
+  <script src="assets/vendor/slick/slick.min.js"></script>
+
+  <!-- api js -->
+  <script src="assets/js/ticket.js"></script>
+
+  <!-- phosphor js  -->
+  <script src="assets/vendor/phosphor/phosphor.js"></script>
+
+  <!-- App js-->
+  <script src="assets/js/script.js"></script>
+
+  <!-- Customizer js-->
+  <script src="assets/js/customizer.js"></script>
+
+
+</body>
+
+</html>
