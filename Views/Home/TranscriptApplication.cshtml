@@ -1,0 +1,210 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Transcript Application">
+  <meta name="keywords" content="Transcript, Application, University">
+  <meta name="author" content="la-themes">
+  <link rel="icon" href="../assets/images/logo/favicon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="assets/images/logo/favicon.png" type="image/x-icon">
+
+  <title>Transcript Application</title>
+
+  <!--font-awesome-css-->
+  <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.css">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&display=swap" rel="stylesheet">
+
+  <!-- tabler icons-->
+  <link rel="stylesheet" type="text/css" href="../assets/vendor/tabler-icons/tabler-icons.css">
+
+  <!-- Bootstrap css-->
+  <link rel="stylesheet" type="text/css" href="../assets/vendor/bootstrap/bootstrap.min.css">
+
+  <!-- App css-->
+  <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
+
+  <!-- Responsive css-->
+  <link rel="stylesheet" type="text/css" href="../assets/css/responsive.css">
+
+</head>
+
+<body>
+  <div class="app-wrapper d-block">
+    <div class="">
+      <!-- Body main section starts -->
+      <main class="w-100 p-0">
+        <!-- Transcript Application start -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 p-5">
+                    <div class="bg-white p-5">
+                      <div class="form_container">
+                        <form class="app-form" id="transcriptForm">
+                            <div class="mb-3 text-center">
+                                <h3>Transcript Application</h3>
+                                <p class="f-s-12 text-secondary">Please fill out the form to complete your transcript application.</p>
+                            </div>
+
+                            <!-- Two-Column Layout -->
+                            <div class="row">
+                                <!-- Left Column -->
+                                <div class="col-md-6">
+                                    <!-- Transaction ID (Pre-populated and Read-only) -->
+                                    <div class="mb-3">
+                                        <label for="transactionId" class="form-label">Transaction ID</label>
+                                        <input type="text" class="form-control" id="transactionId" name="transactionId" readonly>
+                                    </div>
+
+                                    <!-- Full Name -->
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name" required>
+                                    </div>
+
+                                    <!-- Matriculation Number -->
+                                    <div class="mb-3">
+                                        <label for="matNo" class="form-label">Matriculation Number</label>
+                                        <input type="text" class="form-control" id="matNo" name="matNo" placeholder="Enter your matriculation number" required>
+                                    </div>
+
+                                    <!-- Email Address -->
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" required>
+                                    </div>
+
+                                    <!-- Phone Number -->
+                                    <div class="mb-3">
+                                        <label for="phoneNo" class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-control" id="phoneNo" name="phoneNo" placeholder="Enter your phone number" required>
+                                    </div>
+                                </div>
+
+                                <!-- Right Column -->
+                                <div class="col-md-6">
+                                    <!-- Program -->
+                                    <div class="mb-3">
+                                        <label for="program" class="form-label">Program</label>
+                                        <input type="text" class="form-control" id="program" name="program" placeholder="Enter your program" required>
+                                    </div>
+
+                                    <!-- Destination Name -->
+                                    <div class="mb-3">
+                                        <label for="destinationName" class="form-label">Destination Name</label>
+                                        <input type="text" class="form-control" id="destinationName" name="destinationName" placeholder="Enter destination name" required>
+                                    </div>
+
+                                    <!-- Destination Email -->
+                                    <div class="mb-3">
+                                        <label for="destinationEmail" class="form-label">Destination Email</label>
+                                        <input type="email" class="form-control" id="destinationEmail" name="destinationEmail" placeholder="Enter destination email" required>
+                                    </div>
+
+                                    <!-- Transcript Type -->
+                                    <div class="mb-3">
+                                        <label for="type" class="form-label">Transcript Type</label>
+                                        <input type="type" class="form-control" id="type" name="type" value="@ViewBag.type" readonly required>
+                                    </div>
+
+                                    <!-- Additional Notes -->
+                                    <div class="mb-3">
+                                        <label for="note" class="form-label">Additional Notes</label>
+                                        <textarea id="note" class="form-control" name="note" rows="4" placeholder="Enter any additional notes"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button (Full Width) -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="ti ti-send"></i> Submit Application
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Transcript Application end -->
+      </main>
+      <!-- Body main section ends -->
+    </div>
+  </div>
+  <!-- latest jquery-->
+  <script src="../assets/js/jquery-3.6.3.min.js"></script>
+
+  <!-- Bootstrap js-->
+  <script src="../assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Extract the transactionId (orderId) from the URL query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const transactionId = urlParams.get('orderId');
+
+    // Pre-populate the Transaction ID field
+    if (transactionId) {
+        document.getElementById('transactionId').value = transactionId;
+    } else {
+        alert('Transaction ID not found. Please return to the payment page.');
+    }
+
+    // Handle form submission
+    document.getElementById('transcriptForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // Gather form data
+        const formData = {
+            transactionId: document.getElementById('transactionId').value,
+            name: document.getElementById('name').value,
+            matNo: document.getElementById('matNo').value,
+            email: document.getElementById('email').value,
+            phoneNo: document.getElementById('phoneNo').value,
+            program: document.getElementById('program').value,
+            destinationName: document.getElementById('destinationName').value,
+            destinationEmail: document.getElementById('destinationEmail').value,
+            type: document.getElementById('type').value,
+            note: document.getElementById('note').value,
+        };
+
+        // Submit the form data to your backend API
+        fetch('/api/transcript/application', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to submit application');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('Application submitted successfully!');
+            window.location.href = '/success'; // Redirect to a success page
+        })
+        .catch(error => {
+            console.error('Error submitting application:', error);
+            alert('An error occurred. Please try again.');
+        });
+    });
+  </script>
+</body>
+
+</html>

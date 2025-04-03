@@ -1,0 +1,91 @@
+@model IEnumerable<rps.Models.TranscriptApplication>
+@{
+    ViewData["Title"] = "Transcripts";
+}
+<div class="app-wrapper">
+    <div class="app-content">
+        <!-- Body main section starts -->
+            <main>
+            <div class="container-fluid">
+                <!-- Breadcrumb start -->
+                <div class="row m-1">
+                    <div class="col-12 ">
+                        <h4 class="main-title">Transcript Management</h4> 
+                    </div>
+                </div>
+                <!-- Breadcrumb end -->
+
+                <!-- ready to use table start -->
+                <div class="row">
+                    <!-- student list tabel 2-->
+
+                    <div class="col-12">
+                        <div class="card">
+                            
+                            <div class="card-body p-0">
+                                <div class="app-scroll table-responsive app-datatable-default">
+                                    <table id="exampledatatable1" class="w-100 display student-list-table table table-bordered table-striped align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Program</th>
+                                                <th>Mat No</th>
+                                                <th>Destination</th>
+                                                <th>ID</th>
+                                                <th>Type</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach (var transcript in Model)
+                                        { 
+                                            <tr>
+                                               <td>@transcript.Name</td>
+                                                <td>@transcript.Program</td>
+                                                <td>@transcript.MatNo</td>
+                                                <td>@transcript.DestinationEmail</td>
+                                                <td>@transcript.TransactionId</td>
+                                                <td>@transcript.Type</td>
+                                                <td>@transcript.Status</td>
+                                                <td>
+                                                    <div class="btn-group dropdown-icon-none">
+                                                        <button
+                                                                class="btn border-0 icon-btn b-r-4 dropdown-toggle active"
+                                                                type="button" data-bs-toggle="dropdown"
+                                                                data-bs-auto-close="true" aria-expanded="false">
+                                                            <i class="ti ti-dots-vertical"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            @* <li>
+                                                                <a class="dropdown-item" href="/"><i
+                                                                    class="ti ti-eye"></i> View </a>
+                                                            </li> *@
+                                                            <li>
+                                                                <a class="dropdown-item" href="/api/transcript/generate"><i
+                                                                    class="ti ti-file"></i> Generate </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                         }
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 
+
+                </div>
+                <!-- ready to use table end -->
+            </div>
+            </main>
+        <!-- Body main section ends -->
+    </div>
+</div>
+
+<!--customizer-->
+<div id="customizer"></div>

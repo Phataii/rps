@@ -1,0 +1,50 @@
+@model RolesViewModel
+@{
+    ViewData["Title"] = "Roles";
+}
+<div class="app-wrapper">
+    <div class="app-content">
+        <!-- Body main section starts -->
+        <main>
+            <div class="container">
+                <div class="row">
+                     <h2 class="mb-3">Manage Result System</h2>
+                    <div class="col-md-4">
+                        <div class="card courses-cards card-warning">
+                            <div class="card-body">
+                            <i class="ph-duotone ph-pencil-line icon-bg"></i>
+                            <span class="bg-white h-50 w-50 d-flex-center b-r-15">
+                                <a href="remarks">
+                                <i class="ph-duotone ph-pencil-line text-warning f-s-24"></i>
+                                </a>
+                            </span>
+                            <div class="mt-5">
+                                <h4>@ViewBag.transcripts</h4>
+                                <p class="f-w-500 mb-0">Set Remarks</p>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card courses-cards card-warning">
+                            <div class="card-body">
+                            <i class="ph-duotone ph-pencil-line icon-bg"></i>
+                            <span class="bg-white h-50 w-50 d-flex-center b-r-15">
+                                <a href="admin/transcripts">
+                                <i class="ph-duotone ph-pencil-line text-warning f-s-24"></i>
+                                </a>
+                            </span>
+                            <div class="mt-5">
+                                <h4>@ViewBag.transcripts</h4>
+                                <p class="f-w-500 mb-0">Pending Transcript(s)</p>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </main>
+    </div>
+    <!-- Body main section ends -->
+</div>

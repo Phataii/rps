@@ -1,0 +1,195 @@
+@model TranscriptApplication
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Application Progress";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .progress-container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        .progress-tracker {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 2rem 0;
+        }
+        .progress-step {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .progress-step .step-icon {
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            background: #e9ecef;
+            color: #6c757d;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+        .progress-step.active .step-icon {
+            background: #4CAF50;
+            color: #fff;
+        }
+        .progress-step.completed .step-icon {
+            background: #28a745;
+            color: #fff;
+        }
+        .progress-tracker::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #e9ecef;
+            z-index: 0;
+        }
+        .progress-tracker .progress-bar {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            height: 4px;
+            background: #28a745;
+            z-index: 1;
+            transition: width 0.3s ease;
+        }
+        .status-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+        .status-card:hover {
+            transform: translateY(-5px);
+        }
+        .status-card h5 {
+            color: #4CAF50;
+            margin-bottom: 1rem;
+        }
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-successful {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress-container">
+            <h2 class="text-center mb-4">Transcript Application Progress</h2>
+
+            <!-- Progress Tracker -->
+            <div class="progress-tracker">
+                <div class="progress-step completed">
+                    <div class="step-icon"><i class="fas fa-check"></i></div>
+                    <small>Payment</small>
+                </div>
+                <div class="progress-step @(Model.Status == TranscriptStatus.Pending ? "active" : Model.Status == TranscriptStatus.Approved ? "completed" : "")">
+                    <div class="step-icon"><i class="fas fa-file-alt"></i></div>
+                    <small>Processing</small>
+                </div>
+                <div class="progress-step @(Model.Status == TranscriptStatus.Approved ? "completed" : "")">
+                    <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                    <small>Completed</small>
+                </div>
+                <div class="progress-bar" style="width: @(Model.Status == TranscriptStatus.Pending ? "33%" : Model.Status == TranscriptStatus.Approved ? "100%" : "0%");"></div>
+            </div>
+
+            <!-- Application Details -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="status-card">
+                        <h5>Application Details</h5>
+                        <p><strong>Transaction ID:</strong> @Model.TransactionId</p>
+                        <p><strong>Name:</strong> @Model.Name</p>
+                        <p><strong>Matriculation Number:</strong> @Model.MatNo</p>
+                        <p><strong>Email:</strong> @Model.Email</p>
+                        <p><strong>Phone Number:</strong> @Model.PhoneNo</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="status-card">
+                        <h5>Status</h5>
+                        <p><strong>Program:</strong> @Model.Program</p>
+                        <p><strong>Destination Name:</strong> @Model.DestinationName</p>
+                        <p><strong>Destination Email:</strong> @Model.DestinationEmail</p>
+                        <p><strong>Transcript Type:</strong> @Model.Type</p>
+                        <p><strong>Status:</strong> <span class="status-badge @GetStatusBadgeClass(Model.Status)">@Model.Status</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Notes -->
+            <div class="status-card">
+                <h5>Additional Notes</h5>
+                <p>@(string.IsNullOrEmpty(Model.Note) ? "N/A" : Model.Note)</p>
+            </div>
+
+            <!-- Back Button -->
+            <div class="text-center mt-4">
+                <a href="/transcripts" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+@functions {
+    public string GetStatusBadgeClass(TranscriptStatus status)
+    {
+        switch (status)
+        {
+            case TranscriptStatus.Pending:
+                return "status-pending";
+            case TranscriptStatus.Approved:
+                return "status-successful";
+            case TranscriptStatus.Rejected:
+                return "status-failed";
+            default:
+                return "status-pending";
+        }
+    }
+}

@@ -1,0 +1,188 @@
+@model UserRolesViewModel
+@{
+    ViewData["Title"] = "User Roles";
+}
+@* @model IEnumerable<rps.Models.UserRole> *@
+<div class="app-wrapper">
+    <div class="app-content">
+        <!-- Body main section starts -->
+        <main>
+            <div class="container">
+                <h2 class="mb-3">User Role Management</h2>
+            
+                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addRoleModal">Add New User to Role</button>
+                
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var user in Model.UserRoles)
+                        {
+                            <tr>
+                                <td>@user.Users.Email</td>
+                                <td>@user.RoleName.RoleName</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal" 
+                                            data-id="@user.Id" data-user="@user.Users.Email">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal for Adding New User -->
+            <div class="modal fade" id="addRoleModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalTitle">Add User to Role</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="roleForm">
+                                 <div class="mb-3">
+                                    <label for="userSelect" class="form-label">Select User:</label>
+                                    <select id="userSelect" class="form-select">
+                                        <option value="">-- Select User --</option>
+                                        @foreach (var user in Model.Users)
+                                        {
+                                            <option value="@user.Id">@user.Name</option> 
+                                        }
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="roleSelect" class="form-label">Select Role:</label>
+                                    <select id="roleSelect" class="form-select">
+                                        <option value="">-- Select Role --</option>
+                                        @foreach (var role in Model.Roles)
+                                        {
+                                            <option value="@role.Id">@role.RoleName</option>
+                                        }
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-success">Save</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Edit User Modal -->
+            <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editUserModalLabel">Change user role</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editUserForm">
+                                <input type="hidden" id="editUserId" name="Id">
+                                <div class="mb-3">
+                                    <label for="user" class="form-label">User</label>
+                                    <input type="text" disabled class="form-control" id="user" name="user" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="roleId" class="form-label">Role</label>
+                                    <select id="roleId" class="form-select">
+                                        <option value="">-- Select Role --</option>
+                                        @foreach (var role in Model.Roles)
+                                        {
+                                            <option value="@role.Id">@role.RoleName</option>
+                                        }
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- Body main section ends -->
+</div>
+  
+<script>
+    document.getElementById("roleForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        
+        let user = document.getElementById("userSelect").value;
+        let role = document.getElementById("roleSelect").value;
+        
+        let data = { user, role };
+        
+        try {
+            let response = await fetch("/api/auth/add-user-to-role", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to create role');
+            }
+
+            const result = await response.json();
+            alert('User has been added to role!');
+            window.location.reload();
+        } catch (error) {
+            console.error("Error adding role:", error);
+            alert("Error connecting to server");
+        }
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var editUserModal = document.getElementById("editUserModal");
+        editUserModal.addEventListener("show.bs.modal", function (event) {
+            var button = event.relatedTarget; // Button that triggered the modal
+            var userId = button.getAttribute("data-id");
+            var userEmail = button.getAttribute("data-user");
+
+            // Populate the modal fields
+            document.getElementById("editUserId").value = userId;
+            document.getElementById("user").value = userEmail;
+        });
+    });
+</script>
+
+<script>
+    document.getElementById("editUserForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        
+        let id = document.getElementById("editUserId").value;
+        let role = document.getElementById("roleId").value;
+
+        let data = { id, role };
+        console.log(data)
+        try {
+            let response = await fetch("/api/auth/edit-user-role", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update role');
+            }
+
+            const result = await response.json();
+            alert("User role updated successfully!");
+            window.location.reload(); // Refresh page
+        } catch (error) {
+            console.error("Error updating role:", error);
+            alert("Error connecting to the server");
+        }
+    });
+</script>

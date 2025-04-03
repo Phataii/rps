@@ -1,0 +1,186 @@
+@model UsersVM
+<div class="app-wrapper">
+    <div class="app-content">
+        <!-- Body main section starts -->
+        <main>
+           <div class="container">
+                <h1>User Management</h1>
+
+                <!-- Add User Button -->
+                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                    Add New User
+                </button>
+               
+                <!-- User List Table -->
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Is Active</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
+                                <td>@user.Name</td>
+                                <td>@user.Email</td>
+                                <td>@user.DepartmentName</td>
+                                <td>@(user.IsActive ==true ? "Yes" : "No")</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal" 
+                                            data-id="@user.Id" data-name="@user.Name" data-email="@user.Email">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Add User Modal -->
+            <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                       <form id="userForm">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <select class="form-select" id="name" name="name" required>
+                                    <option selected disabled value="">Choose...</option>
+                                    @foreach (var staff in Model.Staff)
+                                    {
+                                        <option value="@staff.Id" 
+                                                data-email="@staff.SchoolEmail"
+                                                data-department="@staff.DepartmentName"
+                                                data-departmentId="@staff.DepartmentId"
+                                                data-faculty="@staff.FacultyId">
+                                            @staff.Fullname
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required readonly>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="department" class="form-label">Department</label>
+                                <input type="text" class="form-control" id="department" name="department" required readonly>
+                                <input type="text" class="form-control" id="departmentId" name="departmentId" required readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="faculty" class="form-label">Faculty</label>
+                                <input type="text" class="form-control" id="faculty" name="faculty" required readonly>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit User Modal -->
+            <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editUserForm">
+                                <input type="hidden" id="editUserId" name="Id">
+                                <div class="mb-3">
+                                    <label for="user" class="form-label">User</label>
+                                    <input type="text" class="form-control" id="user" name="user" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editUserEmail" class="form-label">Role</label>
+                                    <input type="email" class="form-control" id="editUserEmail" name="Email" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- Body main section ends -->
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+   <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById('userForm');
+
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const nameSelect = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const departmentInput = document.getElementById('department');
+            const departmentIdInput = document.getElementById('departmentId');
+            const facultyInput = document.getElementById('faculty');
+
+            // Ensure a name is selected
+            if (!nameSelect.value) {
+                alert("Please select a user.");
+                return;
+            }
+
+            // Prepare the data to send
+            const userData = {
+                id: nameSelect.value, // Sending ID instead of name value
+                name: nameSelect.options[nameSelect.selectedIndex].text,
+                email: emailInput.value,
+                department: departmentInput.value,
+                departmentId: departmentIdInput.value,
+                facultyId: facultyInput.value
+            };
+
+            try {
+                const response = await fetch('/api/auth/add-user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Failed to create user');
+                }
+
+                alert(result.message || 'User created successfully!');
+                window.location.reload();
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        // Populate form fields when selecting a user
+        document.getElementById('name').addEventListener('change', function () {
+            const selectedOption = this.options[this.selectedIndex];
+            
+            document.getElementById('email').value = selectedOption.getAttribute('data-email') || "";
+            document.getElementById('department').value = selectedOption.getAttribute('data-department') || "";
+            document.getElementById('departmentId').value = selectedOption.getAttribute('data-departmentId') || "";
+            document.getElementById('faculty').value = selectedOption.getAttribute('data-faculty') || "";
+        });
+    });
+</script>

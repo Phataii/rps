@@ -1,0 +1,88 @@
+@model IEnumerable<rps.Models.Result>
+@{
+    ViewData["Title"] = "Department";
+}
+<div class="app-wrapper">
+    <div class="app-content">
+        <!-- Body main section starts -->
+            <main>
+            <div class="container-fluid">
+                <!-- Breadcrumb start -->
+                <div class="row m-1">
+                    <div class="col-12 ">
+                        <h4 class="main-title">Results for Department: @ViewBag.DepartmentName</h4> 
+                    </div>
+                </div>
+                <!-- Breadcrumb end -->
+                 <form method="get">
+                    <input type="hidden" name="dptId" value="@ViewBag.DepartmentId" />
+                    <label for="level">Filter by Level:</label>
+                    <select class="form-control mb-3" style="width: 200px;" name="levelId" id="level" onchange="this.form.submit()">
+                        <option value="">All Levels</option>
+                        @foreach (var level in ViewBag.Levels)
+                        {
+                            <option value="@level" selected="@(Context.Request.Query["levelId"] == level.ToString())">@level</option>
+                        }
+                    </select>
+                </form>
+    
+                <!-- ready to use table start -->
+                <div class="row">
+                    <!-- student list tabel 2-->
+
+                    <div class="col-12">
+                        <div class="card">
+                            
+                            <div class="card-body p-0">
+                                <div class="app-scroll table-responsive app-datatable-default">
+                                    <table id="exampledatatable1" class="w-100 display student-list-table table table-bordered table-striped align-middle">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th> <!-- Serial Number Column -->
+                                            <th>Mat. No.</th>
+                                            <th>Course</th>
+                                            <th>CA</th>
+                                            <th>Exam</th>
+                                            <th>Total</th>
+                                            <th>Grade</th>
+                                            <th>Carryover</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                var serialNumber = 1; // Initialize serial number
+                                            }
+                                            @foreach (var result in Model)
+                                            {
+                                                <tr>
+                                                    <td>@serialNumber</td> <!-- Display Serial Number -->
+                                                    <td>@result.StudentId</td>
+                                                    <td>@result.CourseId</td>
+                                                    <td>@result.CA</td>
+                                                    <td>@result.Exam</td>
+                                                    <td>@result.Total</td>
+                                                    <td>@result.Grade</td>
+                                                    <td>@(result.IsCO ? "Yes" : "No")</td>
+                                                </tr>
+                                                serialNumber++; // Increment serial number
+                                            }
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 
+
+                </div>
+                <!-- ready to use table end -->
+            </div>
+            </main>
+        <!-- Body main section ends -->
+    </div>
+</div>
+
+<!--customizer-->
+<div id="customizer"></div>
+           

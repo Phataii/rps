@@ -1,0 +1,133 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .success-container {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #4CAF50;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            color: #333;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .ref-number {
+            background: #e8f5e9;
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            color: #2e7d32;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+        }
+        .ref-number:hover {
+            background: #c8e6c9;
+        }
+        .tooltip {
+            visibility: hidden;
+            background-color: #4CAF50;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 0.3rem;
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .ref-number.copied .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        .ok-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .ok-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <h1>Payment Successful!</h1>
+        <p>Click the Reference to copy it.<br>Click "OK" to start application.</p>
+        <div class="ref-number" onclick="copyReference()">
+            Reference: <strong id="refNumber"></strong>
+            <span class="tooltip">Copied!</span>
+        </div>
+        <button class="ok-button" onclick="redirectToApplication()">OK</button>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const reference = urlParams.get('reference');
+
+        if (reference) {
+            document.getElementById('refNumber').textContent = reference;
+        } else {
+            document.getElementById('refNumber').textContent = 'N/A';
+        }
+
+        function copyReference() {
+            const refElement = document.getElementById('refNumber');
+            const refContainer = refElement.parentElement;
+            const textArea = document.createElement("textarea");
+            textArea.value = refElement.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+
+            refContainer.classList.add("copied");
+            setTimeout(() => {
+                refContainer.classList.remove("copied");
+            }, 2000);
+        }
+
+        function redirectToApplication() {
+            if (reference) {
+                window.location.href = `/transcript/application?orderId=${reference}`;
+            } else {
+                alert('Reference number not found. Please contact support.');
+            }
+        }
+    </script>
+</body>
+</html>

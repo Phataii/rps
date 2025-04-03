@@ -1,0 +1,285 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="">
+  <meta name="keywords"
+    content="">
+  <meta name="author" content="la-themes">
+  <link rel="icon" href="../assets/images/logo/favicon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="assets/images/logo/favicon.png" type="image/x-icon">
+
+  <title>Transcript - EUI RPS</title>
+
+  <!--font-awesome-css-->
+  <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.css">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&display=swap" rel="stylesheet">
+
+  <!-- tabler icons-->
+  <link rel="stylesheet" type="text/css" href="../assets/vendor/tabler-icons/tabler-icons.css">
+
+  <!-- Bootstrap css-->
+  <link rel="stylesheet" type="text/css" href="../assets/vendor/bootstrap/bootstrap.min.css">
+
+  <!-- App css-->
+  <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
+
+  <!-- Responsive css-->
+  <link rel="stylesheet" type="text/css" href="../assets/css/responsive.css">
+
+</head>
+
+<body>
+  <div class="app-wrapper d-block">
+    <div class="">
+      <!-- Body main section starts -->
+      <main class="w-100 p-0">
+        <!-- Login to your Account start -->
+        <div class="container-fluid">
+            <div class="row">
+              <!-- First Column: Pay for Official Transcript -->
+              
+              <div class="col-12 col-md-6 p-0">
+                <div class="login-form-container">
+                    <div class="form_container">
+                        <div class="mb-3 text-center">
+                            <h3>Transcript Application Instructions</h3>
+                            <p class="f-s-12 text-secondary">Follow these steps to apply for your transcript.</p>
+                        </div>
+
+                        <!-- Instructions List -->
+                        <div class="mb-4">
+                            <ol class="list-group list-group-numbered">
+                                <li class="list-group-item">
+                                    <strong>Step 1:</strong> Select and pay for your desired transcript type .
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Step 2:</strong> Copy your transaction id to enable you process your Application with it.
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Step 3:</strong> Click the button below, enter your academic details and submit.
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Step 4:</strong> Track your transcript progress using your transaction id.
+                                </li>
+                                @* <li class="list-group-item">
+                                    <strong>Step 5:</strong> Download or request for your transcript to be sent to your preferred destination.
+                                </li> *@
+                            </ol>
+                        </div>
+
+                        <!-- Call-to-Action Button -->
+                        @* <div class="mb-3 text-center">
+                            <a href="/transcripts" role="button" class="btn btn-primary w-56">
+                                <i class="ti ti-book text-white"></i> Start/Track Transcript Application
+                            </a>
+                        </div> *@
+                        <div class="mb-3 text-center">
+                            <a role="button" data-bs-toggle="modal" data-bs-target="#myModal"  class="btn btn-primary w-56">
+                                <i class="ti ti-pencil text-white"></i> Start/Track Transcript Application
+                            </a>
+                        </div>
+
+                        <!-- Optional: Additional Help Link -->
+                        <div class="mb-3 text-center">
+                            <a href="/help" class="text-secondary f-s-12">Need Help? Contact Support</a>
+                        </div>
+                    </div>
+                </div>
+              </div>
+
+              <!-- Second Column: Login to Your Account -->
+              <div class="col-12 col-md-6 p-0">
+                  <div class="login-form-container">
+                      <div class="form_container">
+                         <form class="app-form">
+                            <div class="mb-3 text-center">
+                                <h3>Pay for Official Transcript</h3>
+                                <p class="f-s-12 text-secondary">Get started with the result portal, and enjoy the experience.</p>
+                            </div>
+
+                            <!-- Email Input Field -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                            </div>
+
+                            <!-- Transcript Type Dropdown -->
+                            <div class="mb-3">
+                                <label for="type" class="form-label">Select Transcript</label>
+                                <select id="type" class="form-control" onchange="updateAmount()">
+                                    <option value="scholarship">Transcript (Scholarship)</option>
+                                    <option value="graduate">Transcript (Graduate)</option>
+                                    <option value="transfer">Transcript (Transfer to other universities)</option>
+                                    <option value="pg">PG Transcript</option>
+                                    <option value="student_copy">Transcript (Student Copy)</option>
+                                </select>
+                            </div>
+
+                            <!-- Amount Field (Dynamically Updated) -->
+                            <div class="mb-3">
+                                <label for="amount" class="form-label">Amount to Pay</label>
+                                <input type="text" class="form-control" id="amount" readonly>
+                            </div>
+
+                            <!-- Reference Number Field (Timestamp) -->
+                            <div class="mb-3">
+                                <label for="refNo" class="form-label">Reference Number</label>
+                                <input type="text" class="form-control" id="refNo" readonly>
+                            </div>
+
+                            <!-- Pay Button -->
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-primary w-100" onclick="payWithPaystack()">
+                                    <i class="ti ti-send"></i> Pay
+                                </button>
+                            </div>
+                        </form>
+                      </div>
+                  </div>
+              </div>
+
+          </div>
+        </div>
+        <!-- Login to your Account end -->
+      </main>
+      <!-- Body main section ends -->
+    </div>
+  </div>
+
+
+
+
+                    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel">Insert your transaction reference</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="/api/transcript/start-or-track-transcript" method="post">
+                                        <div class="mb-3">
+                                            @* <label for="name" class="form-label">Score</label> *@
+                                            <input type="text" class="form-control" id="refNo" name="refNo" placeholder="REF-20250303-12345">
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-primary">Track</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+  <!-- latest jquery-->
+  <script src="../assets/js/jquery-3.6.3.min.js"></script>
+
+  <!-- Bootstrap js-->
+  <script src="../assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+
+
+  <!-- JavaScript to Update Amount and Generate Reference Number -->
+<!-- Include Paystack Inline JS -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<!-- JavaScript to Update Amount, Generate Reference Number, and Handle Paystack Payment -->
+<script>
+    // Function to update the amount based on the selected transcript type
+    function updateAmount() {
+        const transcriptType = document.getElementById("type").value;
+        const amounts = {
+            scholarship: 500000, // Amount in kobo (₦5,000)
+            graduate: 700000,   // Amount in kobo (₦7,000)
+            transfer: 1000000,  // Amount in kobo (₦10,000)
+            pg: 1500000,        // Amount in kobo (₦15,000)
+            student_copy: 300000 // Amount in kobo (₦3,000)
+        };
+        document.getElementById("amount").value = `₦${(amounts[transcriptType] / 100).toLocaleString()}`;
+    }
+
+    // Function to generate a timestamp-based reference number
+    function generateRef() {
+        const now = new Date();
+        const ref = `REF-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+        document.getElementById("refNo").value = ref;
+    }
+
+    // Function to initialize Paystack payment
+   async function payWithPaystack() {
+    const email = document.getElementById("email").value;
+    const amount = document.getElementById("amount").value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+    const ref = document.getElementById("refNo").value;
+
+    if (!email || !amount || !ref) {
+        alert("Please fill in all fields before proceeding.");
+        return;
+    }
+
+    // Prepare the data to submit to your API
+    const formData = {
+        email: email,
+        amount: amount,
+        refNo: ref,
+        type: document.getElementById("type").value
+    };
+
+    try {
+        // Submit the form data to your API
+        const response = await fetch('/api/transcript/paystack-form', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to submit form data');
+        }
+
+        const result = await response.json();
+        console.log('Form data submitted successfully:', result);
+
+        // If the API call is successful, proceed with Paystack payment
+        const handler = PaystackPop.setup({
+            key: 'pk_test_18de9362e665b126982fc285e8f819fd74862be6', // Replace with your Paystack public key
+            email: email,
+            amount: amount * 100, // Convert amount to kobo
+            ref: ref,
+            currency: 'NGN',
+            callback: function (response) {
+                window.location.href = `/api/transcript/success?reference=${response.reference}`;
+                @* alert("Payment successful! Reference: " + response.reference); *@
+                // You can redirect the user or perform other actions here
+            },
+            onClose: function () {
+                alert("Payment window closed.");
+            },
+        });
+        handler.openIframe();
+    } catch (error) {
+        console.error('Error submitting form data:', error);
+        alert('An error occurred while submitting the form. Please try again.');
+    }
+}
+    // Initialize the amount and reference fields on page load
+    document.addEventListener("DOMContentLoaded", function () {
+        updateAmount();
+        generateRef();
+    });
+</script>
+</body>
+
+</html>

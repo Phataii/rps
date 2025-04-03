@@ -1,0 +1,100 @@
+@model RolesViewModel
+@{
+    ViewData["Title"] = "Roles";
+}
+<div class="app-wrapper">
+    <div class="app-content">
+        <!-- Body main section starts -->
+        <main>
+            <div class="container">
+                <h2 class="mb-3">Role Management</h2>
+           
+                <p>Email: @Model.User.Email</p>
+
+                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addRoleModal">Add New Role</button>
+                 <a href="/user-roles">
+                    <button type="button" class="btn btn-primary mb-3">
+                    Manage User Roles
+                    </button>
+                </a>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Role Id</th>
+                                <th>Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var role in Model.Roles)
+                        {
+                            <tr>
+                                <td>@role.Id</td>
+                                <td>@role.RoleName</td>
+                                <td>
+                                    Delete
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal for Adding New User -->
+            <div class="modal fade" id="addRoleModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalTitle">Add New Role</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="roleForm">
+                                <div class="mb-3">
+                                    <label for="roleName" class="form-label">Role Name</label>
+                                    <input type="text" class="form-control" id="roleName" required>
+                                </div>
+                                <button type="submit" class="btn btn-success">Save</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+           
+        </main>
+    </div>
+    <!-- Body main section ends -->
+</div>
+  
+<script>
+    document.getElementById("roleForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        
+        let name = document.getElementById("roleName").value;
+        
+        let roleData = { name };
+        
+        try {
+            let response = await fetch("/api/auth/create-role", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(roleData)
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to create role');
+            }
+
+            const result = await response.json();
+            alert('Role added!');
+            window.location.reload();
+        } catch (error) {
+            console.error("Error adding role:", error);
+            alert("Error connecting to server");
+        }
+    });
+</script>

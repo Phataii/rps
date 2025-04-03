@@ -1,0 +1,139 @@
+@model IEnumerable<rps.Models.FacultyBatch>
+@{
+    ViewData["Title"] = "Faculty";
+}
+<div class="app-wrapper">
+    <div class="app-content">
+        <!-- Body main section starts -->
+        <main>
+            <div class="container-fluid">
+                <!-- Breadcrumb start -->
+                <div class="row m-1">
+                    <div class="col-12">
+                        <div class="row">
+                            @if (TempData["message"] != null)
+                            {
+                                <div class="alert alert-success">@TempData["message"]</div>
+                            }
+                            @if (TempData["error"] != null)
+                            {
+                                <div class="alert alert-danger">@TempData["error"]</div>
+                            }
+                            </div>
+                        <h4 class="main-title">My Departments</h4>
+                    </div>
+                </div>
+                <!-- Breadcrumb end -->
+
+                <!-- Bootstrap Tabs -->
+                <ul class="nav nav-tabs" id="facultyTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pending-tab" data-bs-toggle="tab" href="#pending" role="tab" aria-controls="pending" aria-selected="true">Pending</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="approved-tab" data-bs-toggle="tab" href="#approved" role="tab" aria-controls="approved" aria-selected="false">Approved</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="subject-tab" data-bs-toggle="tab" href="#subject" role="tab" aria-controls="subject" aria-selected="false">Subject to Correction</a>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="facultyTabsContent">
+                    @foreach (var status in new[] { "Pending", "Approved", "Subject" })
+                    {
+                        <div class="tab-pane fade @(status == "Pending" ? "show active" : "")" id="@status.Replace(" ", "").ToLower()" role="tabpanel">
+                            <div class="card">
+                                <div class="card-body p-0">
+                                    <div class="app-scroll app-datatable-default">
+                                        <table class="w-100 display student-list-table table table-bordered table-striped align-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th> <!-- Serial Number Column -->
+                                                    <th>Department</th>
+                                                    <th>Semester</th>
+                                                    <th>Session</th>
+                                                    @* <th>No. Of Courses</th> *@
+                                                    <th>Dean Status</th>
+                                                    <th>Senate Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    var serialNumber = 1; // Initialize serial number
+                                                }
+                                                @foreach (var result in Model.Where(x => x.Status == status))
+                                                {
+                                                    <tr>
+                                                        <td>@serialNumber</td> <!-- Display Serial Number -->
+                                                        <td>@result.DepartmentName</td>
+                                                        <td>@(result.Semester == 1 ? "First" : "Second")</td>
+                                                        <td>@result.Sessions.Name</td>
+                                                        @* <td>
+                                                            @ViewBag.number
+                                                        </td> *@
+                                                        <td>@result.Status</td>
+                                                        <td>@result.Registry</td>
+                                                        <td>
+                                                            <div class="btn-group dropdown-icon-none">
+                                                                <button
+                                                                        class="btn border-0 icon-btn b-r-4 dropdown-toggle active"
+                                                                        type="button" data-bs-toggle="dropdown"
+                                                                        data-bs-auto-close="true" aria-expanded="false">
+                                                                    <i class="ti ti-dots-vertical"></i>
+                                                                </button>
+                                                                <ul class="dropdown-menu" style="height: 100px;">
+                                                                    @if(@result.Status == "Approved"){
+                                                                        <li><a class="dropdown-item" href="/preview-result?departmentId=@result.DepartmentId&session=@result.Session&semester=@result.Semester&level=1&dptN=@result.DepartmentName"><i
+                                                                            class="ti ti-file"></i> Spreadsheet Preview </a></li>
+                                                                    }
+                                                                    
+                                                                    <li><a class="dropdown-item" href="/departmental-result?reference=@result.DepartmentName">
+                                                                            <i class="ti ti-eye"></i> View</a></li>
+
+                                                                    <li>
+                                                                         @if(@result.Status == "Approved"){
+                                                                            <form action="/api/result/dean-approval" method="POST" style="display:inline;">
+                                                                                <input type="hidden" name="dptId" value="@result.DepartmentId">
+                                                                                <input type="hidden" name="session" value="@result.Session">
+                                                                                <input type="hidden" name="status" value="Pending">
+                                                                                <button type="submit" class="dropdown-item border-0 bg-transparent">
+                                                                                    <i class="ti ti-x"></i> Decline
+                                                                                </button>
+                                                                            </form>
+                                                                            }else{
+                                                                                <form action="/api/result/dean-approval" method="POST" style="display:inline;">
+                                                                                <input type="hidden" name="dptId" value="@result.DepartmentId">
+                                                                                <input type="hidden" name="session" value="@result.Session">
+                                                                                <input type="hidden" name="status" value="Approved">
+                                                                                <button type="submit" class="dropdown-item border-0 bg-transparent">
+                                                                                    <i class="ti ti-check"></i> Approve
+                                                                                </button>
+                                                                            </form>
+                                                                            }
+                                                                    </li>
+
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    serialNumber++; // Increment serial number
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <!-- Tabs end -->
+            </div>
+        </main>
+        <!-- Body main section ends -->
+    </div>
+</div>
+
+<!-- Customizer -->
+<div id="customizer"></div>

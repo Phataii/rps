@@ -1,0 +1,67 @@
+@model IEnumerable<rps.Models.ActivityLog>
+@{
+    ViewData["Title"] = "Logs";
+}
+<div class="app-wrapper">
+    <div class="app-content">
+        <!-- Body main section starts -->
+            <main>
+                <div class="container-fluid">
+                    <!-- Breadcrumb start -->
+                    <div class="row m-1">
+                        <div class="col-12 ">
+                            <h4 class="main-title">System Activity Logs </h4> 
+                        </div>
+                    </div>
+                    <!-- Breadcrumb end -->
+
+                    <!-- ready to use table start -->
+                    <div class="row">
+                        <!-- student list tabel 2-->
+
+                        <div class="col-12">
+                            <div class="card">
+                                
+                                <div class="card-body p-0">
+                                    <div class="app-scroll table-responsive app-datatable-default">
+                                       <table id="exampledatatable1" class="w-100 display student-list-table table table-bordered table-striped align-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th> <!-- Serial Number Column -->
+                                                    <th>User Name</th>
+                                                    <th>Action</th>
+                                                    <th>Date Of Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    var serialNumber = 1; // Initialize serial number
+                                                }
+                                                @foreach (var log in Model)
+                                                { 
+                                                    <tr>
+                                                        <td>@serialNumber</td> <!-- Display Serial Number -->
+                                                        <td>@log.UserName</td>
+                                                        <td>@log.Action</td>
+                                                        <td>@log.CreatedDate</td>
+                                                    </tr>
+                                                    serialNumber++; // Increment serial number
+                                                }
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+
+                    </div>
+                </div>
+            </main>
+        <!-- Body main section ends -->
+    </div>
+</div>
+
+<!--customizer-->
+<div id="customizer"></div>

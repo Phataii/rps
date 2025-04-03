@@ -1,0 +1,165 @@
+@model IEnumerable<rps.Models.Result>
+@{
+    ViewData["Title"] = "Result Details";
+    var userRole = Context.Request.Cookies["UserRole"];
+}
+
+<div class="app-wrapper">
+    <div class="app-content">
+        <!-- Body main section starts -->
+            <main>
+                <!-- Add Departments Form start -->
+                <div class="container-fluid">
+                    <!-- ready to use table start -->
+                    <div class="row">
+                        <!-- student list tabel 2-->
+
+                      <div class="col-10 mx-auto" id="printableCard">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="container mx-auto text-center border-b-2 pb-4">
+                                        <h4 class="text-lg font-semibold">EDO STATE UNIVERSITY UZAIRUE</h4>
+                                        <h5 class="text-md font-medium">FACULTY OF ________________________________</h5>
+                                        <h5 class="text-md font-medium">DEPARTMENT OF @ViewBag.dpt</h5>
+                                        <h5 class="text-lg font-bold mt-2">EXAMINATION SCORE SHEET</h5>
+                                        <h6 class="text-md font-medium">@ViewBag.session Session</h6>
+                                        
+                                        <div class="mt-4 text-sm">
+                                            <p><strong>Course Code:</strong> @ViewBag.course &nbsp; | &nbsp; <strong>Course Title:</strong> _______________________________________</p>
+                                            <p><strong>Department:</strong> @ViewBag.dpt &nbsp; | &nbsp; <strong>Level:</strong> @ViewBag.level &nbsp; | &nbsp; <strong>Credit Units:</strong> ____</p>
+                                            <p><strong>Total Number of Students:</strong> @ViewBag.count &nbsp; | &nbsp; <strong>Examination Date:</strong> _____________</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="app-scroll table-responsive app-datatable-default">
+                                        <table class="w-100 display student-list-table table table-bordered align-middle">
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Matric No.</th>
+                                                <th>Student Name</th>
+                                                <th>CA(30)</th>
+                                                <th>Exam(70)</th>
+                                                <th>Total(100)</th>
+                                                <th>Grade</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    var serialNumber = 1;
+                                                }
+                                                @foreach (var result in Model)
+                                                { 
+                                                    <tr>
+                                                        <td>@serialNumber</td>
+                                                        <td>@result.StudentId</td>
+                                                        <td>@result.StudentName</td>
+                                                        <td>@result.CA</td>
+                                                        <td>@result.Exam</td>
+                                                        <td>@result.Total</td>
+                                                        <td>@result.Grade</td>
+                                                    </tr>
+                                                    serialNumber++;
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    @* <table class="border-collapse border border-gray-800 text-sm mx-auto mt-4 mb-10">
+                                        <thead>
+                                            <tr class="bg-gray-200">
+                                                <th class="border border-gray-800 px-4 py-2">Grade</th>
+                                                <th class="border border-gray-800 px-4 py-2">Number of Students</th>
+                                                <th class="border border-gray-800 px-4 py-2">% No. of Students</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td class="border px-4 py-1 text-center">A</td><td class="border px-4 py-1 text-center">1</td><td class="border px-4 py-1 text-center">1.37%</td></tr>
+                                            <tr><td class="border px-4 py-1 text-center">B</td><td class="border px-4 py-1 text-center">2</td><td class="border px-4 py-1 text-center">2.74%</td></tr>
+                                            <tr><td class="border px-4 py-1 text-center">C</td><td class="border px-4 py-1 text-center">14</td><td class="border px-4 py-1 text-center">19.18%</td></tr>
+                                            <tr><td class="border px-4 py-1 text-center">D</td><td class="border px-4 py-1 text-center">7</td><td class="border px-4 py-1 text-center">9.59%</td></tr>
+                                            <tr><td class="border px-4 py-1 text-center">E</td><td class="border px-4 py-1 text-center">45</td><td class="border px-4 py-1 text-center">61.64%</td></tr>
+                                            <tr><td class="border px-4 py-1 text-center">F</td><td class="border px-4 py-1 text-center">5</td><td class="border px-4 py-1 text-center">5.48%</td></tr>
+                                            <tr class="font-bold"><td class="border px-4 py-1 text-center">Grand Total</td><td class="border px-4 py-1 text-center">74</td><td class="border px-4 py-1 text-center">100.00%</td></tr>
+                                        </tbody>
+                                    </table> *@
+
+                                    <div class="footer text-center mt-28">
+                                        <div class="mx-auto">________________________________</div>
+                                        @* <p class="font-semibold">Dr. A. S. Makinde</p>
+                                        <p class="text-sm">Chief Lecturer</p> *@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Print Button -->
+                        <div class="text-center mt-4">
+                            <button onclick="printCard()" class="px-4 py-2 bg-blue-500 text-white rounded-md">Print</button>
+                        </div>
+                    
+                        <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalLabel">Upgrade @ViewBag.course for this student</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="/api/result/upgradeSingleResult" method="post">
+                                            <input type="text" class="form-control" id="resultId" name="id" hidden readonly>
+                                            <input type="text" class="form-control" value="@ViewBag.course" id="course" name="course" hidden readonly>
+                                            <input type="text" class="form-control" id="uploader" name="uploader" hidden readonly>
+                                            <div class="mb-3">
+                                                <label for="studentName" class="form-label">Mat. No.</label>
+                                                <input type="text" class="form-control" id="studentName" name="studentId" readonly>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="score" class="form-label">Score</label>
+                                                <input type="text" class="form-control" id="score" name="score" placeholder="Score to upgrade with">
+                                            </div>
+                                            
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ready to use table end -->
+                </div>
+            </main>
+        <!-- Body main section ends -->
+    </div>
+</div>
+
+<!--customizer-->
+<div id="customizer"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Listen for the modal trigger button click
+        $('a[data-bs-target="#myModal"]').on('click', function () {
+            // Get the student name from the data attribute
+            var studentName = $(this).data('student-name');
+             var resultId = $(this).data('result-id'); // this is the row id in the result table
+             var uploader = $(this).data('uploader');
+            // Update the modal's input field with the student name
+            $('#studentName').val(studentName);
+            $('#resultId').val(resultId);
+            $('#uploader').val(uploader);
+        });
+    });
+</script>
+ <!-- JavaScript for Printing -->
+<script>
+    function printCard() {
+        var content = document.getElementById("printableCard").innerHTML;
+        var originalContent = document.body.innerHTML;
+        
+        document.body.innerHTML = content; // Replace the entire body with only the printable content
+        window.print(); // Trigger print dialog
+        document.body.innerHTML = originalContent; // Restore original content
+        location.reload(); // Reload page to restore JavaScript functionality
+    }
+</script>

@@ -1,0 +1,228 @@
+@* @model IEnumerable<rps.Models.Roles> *@
+
+<div class="app-wrapper">
+    <div class="app-content">
+        <!-- Body main section starts -->
+        <main>
+            <div class="container">
+                <div class="container-fluid">
+                    <!-- Breadcrumb start -->
+                    <div class="row m-1">
+                        <div class="col-12 ">
+                            <h4 class="main-title">Upload preview table </h4> 
+                        </div>
+                    </div>
+                    <!-- Breadcrumb end -->
+
+                    <!-- ready to use table start -->
+                    <div class="row">
+                        <!-- student list tabel 2-->
+
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <small>(Select the course to preview)</small>
+                                </div>
+
+                                <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                    <form class="row g-3 needs-validation" novalidate>
+                                    
+                                        <div class="col-md-3">
+                                        <label class="form-label">Session</label>
+                                            <select class="form-select" id="validationCustom04" required>
+                                                    <option selected disabled value="">Choose...</option>
+                                                    <option value="10">2024/2025</option>
+                                                    <option value="9">2023/2024</option>
+                                            </select>
+                                                <div class="invalid-feedback">
+                                                    Please select a valid Session.
+                                                    </div>
+                                                </div>
+                
+                                        <div class="col-md-3">
+                                        <label for="validationCustom04" class="form-label">Semester</label>
+                                            <select class="form-select" id="validationCustom04" required>
+                                            <option selected disabled value="">Choose...</option>
+                                            <option value="1">First</option>
+                                            <option value="2">Second</option>
+                                            </select>
+                                        <div class="invalid-feedback">
+                                            Please select a valid semester.
+                                        </div>
+                                        </div>
+                
+                                        <div class="col-md-3">
+                                        <label for="validationCustom04" class="form-label">Level</label>
+                                        <select class="form-select" id="validationCustom04" required>
+                                            <option selected disabled value="">Choose...</option>
+                                            <option value="1">100 level</option>
+                                            <option value="2">200 level</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Please select a valid level.
+                                        </div>
+                                        </div>
+                
+                                        <div class="col-md-3">
+                                        <label for="validationCustom04" class="form-label">Course</label>
+                                        <select class="form-select" id="validationCustom04" required>
+                                            <option selected disabled value="">Choose...</option>
+                                            <option value="csc 101">Csc 101</option>
+                                            <option value="csc 102">Csc 102</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Please select a valid course.
+                                        </div>
+                                        </div>
+                                        <div class="col-12">
+                                        <div class="text-end">
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            
+                                        </div>
+                                    </div>
+                                    </form>
+                                    </div>
+                                </div> 
+                                </div>
+                                    <!-- Add Departments Form end -->
+
+
+
+
+
+                                <div class="card-body p-0">
+                                    <div class="app-scroll table-responsive app-datatable-default">
+                                        <table id="exampledatatable1" class="w-100 display student-list-table table table-bordered table-striped align-middle">
+                                            <thead>
+                                            <tr>
+                                                <th>
+                                                    <input class="form-check-input mt-0" type="checkbox" id="select-all">
+                                                </th>
+                                                <th>Name</th>
+                                                <th>Score</th>
+                                                <th>Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <input class="form-check-input mt-0" type="checkbox">
+                                                </td>
+                                                <td>
+                                                    John Deo Enejor
+                                                </td>
+                                                <td>75</td>
+                                                
+                                                <td>
+                                                    <div class="btn-group dropdown-icon-none">
+                                                        <button
+                                                                class="btn border-0 icon-btn b-r-4 dropdown-toggle active"
+                                                                type="button" data-bs-toggle="dropdown"
+                                                                data-bs-auto-close="true" aria-expanded="false">
+                                                            <i class="ti ti-dots-vertical"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item" href="#"><i
+                                                                    class="ti ti-edit"></i> Edit </a></li>
+                                                            <li><a class="dropdown-item" href="#"><i
+                                                                    class="ti ti-trash"></i> Delete </a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input class="form-check-input mt-0" type="checkbox">
+                                                </td>
+                                                <td>
+                                                    Ayodeji Samuel
+                                                </td>
+                                                <td>89</td>
+                                                
+                                                <td>
+                                                    <div class="btn-group dropdown-icon-none">
+                                                        <button
+                                                                class="btn border-0 icon-btn b-r-4 dropdown-toggle active"
+                                                                type="button" data-bs-toggle="dropdown"
+                                                                data-bs-auto-close="true" aria-expanded="false">
+                                                            <i class="ti ti-dots-vertical"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item" href="#"><i
+                                                                    class="ti ti-edit"></i> Edit </a></li>
+                                                            <li><a class="dropdown-item" href="#"><i
+                                                                    class="ti ti-trash"></i> Delete </a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+
+                    </div>
+                    <!-- ready to use table end -->
+                </div>
+            </div>
+
+            <!-- Modal for Adding New User -->
+            <div class="modal fade" id="addRoleModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalTitle">Add New Role</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="roleForm">
+                                <div class="mb-3">
+                                    <label for="roleName" class="form-label">Role Name</label>
+                                    <input type="text" class="form-control" id="roleName" required>
+                                </div>
+                                <button type="submit" class="btn btn-success">Save</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+    <!-- Body main section ends -->
+</div>
+  
+<script>
+    document.getElementById("roleForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        
+        let name = document.getElementById("roleName").value;
+        
+        let roleData = { name };
+        
+        try {
+            let response = await fetch("/api/auth/create-role", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(roleData)
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to create role');
+            }
+
+            const result = await response.json();
+            alert('Role added!');
+            window.location.reload();
+        } catch (error) {
+            console.error("Error adding role:", error);
+            alert("Error connecting to server");
+        }
+    });
+</script>

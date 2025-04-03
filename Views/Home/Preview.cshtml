@@ -1,0 +1,220 @@
+@model IEnumerable<StudentResultViewModel>
+@{
+    ViewData["Title"] = "Department";
+}
+
+<div class="app-wrapper">
+    <div class="app-content">
+        <!-- Body main section starts -->
+        <main>
+            <div class="container-fluid">
+                <h4 class="mb-4">Results Spreadsheet</h4>
+                @if (ViewData["Message"] != null)
+                {
+                    <div class="alert alert-warning">@ViewData["Message"]</div>
+                }
+
+                <!-- Filter Form -->
+                <!-- Filter Form -->
+                <form id="filterForm" method="get" action="preview-result" class="mb-4">
+                    <div class="row">
+                        <input value="@ViewBag.dpt" hidden name="departmentId">
+                        <input value="@ViewBag.dptN" hidden name="dptN">
+                        <!-- Session Dropdown -->
+                        <div class="col-md-3">
+                            <label for="session" class="form-label">Session</label>
+                            <select id="session" name="session" class="form-select" onchange="submitForm()">
+                                @foreach (var session in ViewBag.session)
+                                {
+                                    <option value="@session.Id" selected="@(session.Id.ToString() == Context.Request.Query["session"])">@session.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Level Dropdown -->
+                        <div class="col-md-3">
+                            <label for="level" class="form-label">Level</label>
+                            <select id="level" name="level" class="form-select" onchange="submitForm()">
+                                <option value="1" selected="@(Context.Request.Query["level"] == "1")">100</option>
+                                <option value="2" selected="@(Context.Request.Query["level"] == "2")">200</option>
+                                <option value="3" selected="@(Context.Request.Query["level"] == "3")">300</option>
+                                <option value="4" selected="@(Context.Request.Query["level"] == "4")">400</option>
+                                <option value="5" selected="@(Context.Request.Query["level"] == "5")">500</option>
+                                <option value="6" selected="@(Context.Request.Query["level"] == "6")">600</option>
+                                <option value="7" selected="@(Context.Request.Query["level"] == "7")">700</option>
+                                <option value="8" selected="@(Context.Request.Query["level"] == "8")">800</option>
+                                <option value="9" selected="@(Context.Request.Query["level"] == "9")">900</option>
+                                <option value="10" selected="@(Context.Request.Query["level"] == "10")">MPHIL/PHD</option>
+                                <option value="11" selected="@(Context.Request.Query["level"] == "11")">Conversion</option>
+                                <option value="12" selected="@(Context.Request.Query["level"] == "12")">Jupeb</option>
+                            </select>
+                        </div>
+
+                        <!-- Semester Dropdown -->
+                        <div class="col-md-3">
+                            <label for="semester" class="form-label">Semester</label>
+                            <select id="semester" name="semester" class="form-select" onchange="submitForm()">
+                                <option value="1" selected="@(Context.Request.Query["semester"] == "1")">First Semester</option>
+                                <option value="2" selected="@(Context.Request.Query["semester"] == "2")">Second Semester</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Tab Content -->
+                <div class="tab-content mt-3" id="resultTabsContent" style="overflow-x: auto;">
+                    <table class="table table-bordered table-striped align-middle text-center">
+                        <thead class="table-header-rotated">
+                            <tr>
+                                 <th>#</th> <!-- Serial Number Column -->
+                                <th class="fixed-width">MATRIC No.</th> <!-- Student Matric Number -->
+                                <th class="fixed-width">STUDENT NAME (Surname First)</th>
+                                @if (Model != null && Model.Any()){
+                                    @foreach (var course in Model.SelectMany(s => s.Courses ?? new List<CourseResultViewModel>())
+                                                                .Select(c => new { c.CourseCode, c.CourseTitle }) // Select as an anonymous object
+                                                                .Distinct()){
+                                        var courseUnit = Model.SelectMany(s => s.Courses ?? new List<CourseResultViewModel>())
+                                                            .FirstOrDefault(c => c.CourseCode == course.CourseCode)?.CreditUnit ?? 0; // Get Credit Unit
+                                        <th>
+                                            <div><span>@course.CourseCode: @course.CourseTitle</span></div>
+                                            <hr>
+                                            <i class="small text-muted">@courseUnit</i>
+                                        </th> <!-- Course Headers -->
+                                    }
+                                }
+                                else
+                                {
+                                    <th colspan="100%" class="text-center">No courses available</th>
+                                }
+                                <th><div><span>Total Credit Failed/@(TempData["semester"]?.ToString() == "1" ? "1st Semester" : TempData["semester"]?.ToString() == "2" ? "2nd Semester" : "Semester: " + TempData["semester"])</span></div></th>
+                                <th><div><span>Total Credit Passed/@(TempData["semester"]?.ToString() == "1" ? "1st Semester" : TempData["semester"]?.ToString() == "2" ? "2nd Semester" : "Semester: " + TempData["semester"])</span></div></th>
+                                <th><div><span>Total Credit/@(TempData["semester"]?.ToString() == "1" ? "1st Semester" : TempData["semester"]?.ToString() == "2" ? "2nd Semester" : "Semester: " + TempData["semester"]) </span></div></th>
+                                <th><div><span>GPA/ @(TempData["semester"]?.ToString() == "1" ? "1st Semester" : TempData["semester"]?.ToString() == "2" ? "2nd Semester" : "Semester: " + TempData["semester"])</span></div></th>
+                               <th style="white-space: nowrap; width: 1%;">Remark (Carry Over(s))</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var serialNumber = 1; // Initialize serial number
+                                var remarkText = "-"; // Default remark
+                            }
+                             @if (Model != null && Model.Any()){
+                                    @foreach (var student in Model){
+                                        <tr>
+                                            <td>@serialNumber</td> <!-- Display Serial Number -->
+                                            <td class="fixed-width">@student.MatNumber</td> <!-- Student Matric Number -->
+                                            <td class="fixed-width">
+                                                @{
+                                                    var nameParts = student.StudentName?.Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+
+                                                    var firstName = nameParts.Length > 0 ? nameParts[0].ToUpper() : student.StudentName?.ToUpper() ?? "N/A";
+                                                    var otherNames = nameParts.Length > 1 
+                                                        ? string.Join(" ", nameParts.Skip(1).Where(n => n.Length > 0).Select(n => char.ToUpper(n[0]) + n.Substring(1).ToLower())) 
+                                                        : "";
+                                                }
+                                                <b>@firstName</b> @otherNames
+                                            </td>
+
+
+                                            
+                                            @foreach (var courseCode in Model.SelectMany(s => s.Courses).Select(c => c.CourseCode).Distinct())
+                                            {
+                                                var courseResult = student.Courses.FirstOrDefault(c => c.CourseCode == courseCode);
+                                                <td class="@(courseResult?.Total < 40 ? "table-danger" : "")">
+                                                    @if (courseResult != null)
+                                                    {
+                                                        <div>@courseResult.Total@courseResult.GradeName</div>
+                                                        
+                                                    }
+                                                    else
+                                                    {
+                                                        <div>-</div>
+                                                    }
+                                                </td>
+                                            }
+
+                                            <td>@student.Courses.Where(c => c.Total < 40).Sum(c => c.CreditUnit)</td> <!-- Unit Failed -->
+                                            <td>@student.Courses.Where(c => c.Total >= 40).Sum(c => c.CreditUnit)</td> <!-- Unit Passed -->
+                                            <td>@student.TotalCreditUnits</td> <!-- Total Credit Units -->
+                                            <td>
+                                               @{
+                                                var totalWeightedPoints = student.Courses.Sum(c => c.CreditUnit * c.GradePoint);
+                                                var totalUnits = student.TotalCreditUnits;
+                                                var gpa = totalUnits > 0 ? (totalWeightedPoints / totalUnits) : 0;
+                                            }
+                                            @($"{gpa:0.00}") <!-- Display GPA with two decimal places -->
+
+                                            </td>
+                                            @foreach (var remark in student.Remarks)
+                                            {
+                                                if (student.Courses.Any(c => c.Total >= remark.From && c.Total <= remark.To))
+                                                {
+                                                    <td>
+                                                        @remark.RemarkSlug
+
+                                                        @* Get all failed course codes *@
+                                                        @{
+                                                            var failedCourses = student.Courses
+                                                                .Where(c => c.Total < 40)
+                                                                .Select(c => c.CourseCode)
+                                                                .Distinct()
+                                                                .ToList();
+                                                        }
+
+                                                        @* Display them inline if there are any *@
+                                                        @if (failedCourses.Any())
+                                                        {
+                                                            <span style="display: inline;"> ( @string.Join(", ", failedCourses) )</span>
+                                                        }
+                                                    </td>
+                                                    break;
+                                                }
+                                            }
+
+                                            
+                                        </tr>
+                                        serialNumber++; // Increment serial number
+                                    }
+                                }
+                                else
+                                {
+                                    <th colspan="100%" class="text-center">No courses available</th>
+                                }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        <!-- Body main section ends -->
+    </div>
+</div>
+
+<style>
+    .table-header-rotated th {
+        height: 500px;
+        white-space: nowrap;
+    }
+
+    .table-header-rotated th div {
+        transform: rotate(-90deg);
+    }
+
+    .table-header-rotated th span {
+        display: inline-block;
+        width: 10px;
+        text-align: left;
+    }
+
+    .fixed-width {
+        width: 100px; /* Adjust as needed */
+    }
+
+    .table-danger {
+        background-color: #ffcccc; /* Light red for failed grades */
+    }
+</style>
+<script>
+    function submitForm() {
+        document.getElementById('filterForm').submit();
+    }
+</script>
