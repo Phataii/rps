@@ -110,3 +110,5 @@
 /Users/home/Documents/archive/rps/bin/Debug/net6.0/System.Text.Encoding.CodePages.dll
 /Users/home/Documents/archive/rps/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Security.Cryptography.Pkcs.dll
 /Users/home/Documents/archive/rps/bin/Debug/net6.0/runtimes/win/lib/net6.0/System.Text.Encoding.CodePages.dll
+/Users/home/Documents/archive/rps/bin/Debug/net6.0/DotNetEnv.dll
+/Users/home/Documents/archive/rps/bin/Debug/net6.0/Sprache.dll

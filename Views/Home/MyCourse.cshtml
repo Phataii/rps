@@ -1,6 +1,6 @@
 @model IEnumerable<rps.Models.Result>
 @{
-    ViewData["Title"] = "Result Details";
+    ViewData["Title"] = "Course Clean Sheet";
     var userRole = Context.Request.Cookies["UserRole"];
 }
 
@@ -31,30 +31,63 @@
                                         </div>
                                     </div>
 
+                                   @{
+                                        var serialNumber = 1;
+
+                                        // Create a dictionary to count grades
+                                        var gradeCounts = new Dictionary<string, int>();
+
+                                        // Initialize expected grades
+                                        var possibleGrades = new List<string> { "A", "B", "C", "D", "E", "F" };
+                                        foreach (var grade in possibleGrades)
+                                        {
+                                            gradeCounts[grade] = 0;
+                                        }
+
+                                        // Count grades from the model
+                                        foreach (var result in Model)
+                                        {
+                                            if (gradeCounts.ContainsKey(result.Grade))
+                                            {
+                                                gradeCounts[result.Grade]++;
+                                            }
+                                            else
+                                            {
+                                                // If there's an unexpected grade, you can either ignore or add it
+                                                gradeCounts[result.Grade] = 1;
+                                            }
+                                        }
+
+                                        int totalStudents = gradeCounts.Values.Sum();
+                                        int failedStudents = gradeCounts.ContainsKey("F") ? gradeCounts["F"] : 0;
+                                        int passedStudents = totalStudents - failedStudents;
+                                    }
+                                    @{
+                                        int totalNoStudents = Model.Count();
+                                        double totalScores = Model.Sum(result => result.Total);
+                                        double averageScore = totalStudents > 0 ? (double)totalScores / totalStudents : 0;
+                                    }
                                     <div class="app-scroll table-responsive app-datatable-default">
                                         <table class="w-100 display student-list-table table table-bordered align-middle">
                                             <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Matric No.</th>
-                                                <th>Student Name</th>
-                                                <th>CA(30)</th>
-                                                <th>Exam(70)</th>
-                                                <th>Total(100)</th>
-                                                <th>Grade</th>
-                                            </tr>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Matric No.</th>
+                                                    <th>Student Name</th>
+                                                    <th>CA(30)</th>
+                                                    <th>Exam(70)</th>
+                                                    <th>Total(100)</th>
+                                                    <th>Grade</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
-                                                @{
-                                                    var serialNumber = 1;
-                                                }
                                                 @foreach (var result in Model)
-                                                { 
+                                                {
                                                     <tr>
                                                         <td>@serialNumber</td>
                                                         <td>@result.StudentId</td>
                                                         <td>@result.StudentName</td>
-                                                        <td>@result.CA</td>
+                                                        <td>@(@result.CA + @result.Upgrade)</td>
                                                         <td>@result.Exam</td>
                                                         <td>@result.Total</td>
                                                         <td>@result.Grade</td>
@@ -64,38 +97,85 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    @{
+                                        var groupedResults = Model
+                                            .GroupBy(r => r.Grade)
+                                            .Select(g => new {
+                                                Grade = g.Key,
+                                                StudentCount = g.Count(),
+                                                TotalScore = g.Sum(r => r.Total)
+                                            })
+                                            .OrderBy(g => g.Grade)
+                                            .ToList();
 
-                                    @* <table class="border-collapse border border-gray-800 text-sm mx-auto mt-4 mb-10">
+                                        var grades = string.Join(",", groupedResults.Select(g => $"'{g.Grade}'"));
+                                        var studentCounts = string.Join(",", groupedResults.Select(g => g.StudentCount));
+                                    }
+                                    <div>
+                                        
+                                    </div>
+                                    <canvas id="gradeChart" width="400" height="200" class="mx-auto mt-8"></canvas>
+       
+                                    <table class="border-collapse border border-gray-800 text-sm mx-auto mt-4">
                                         <thead>
                                             <tr class="bg-gray-200">
-                                                <th class="border border-gray-800 px-4 py-2">Grade</th>
-                                                <th class="border border-gray-800 px-4 py-2">Number of Students</th>
-                                                <th class="border border-gray-800 px-4 py-2">% No. of Students</th>
+                                                <th class="border border-gray-800 px-4 py-2">Details</th>
+                                                @foreach (var grade in possibleGrades)
+                                                {
+                                                    <th class="border border-gray-800 px-4 py-2 text-center">@grade</th>
+                                                }
+                                                <th class="border border-gray-800 px-4 py-2 text-center font-bold">Grand Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr><td class="border px-4 py-1 text-center">A</td><td class="border px-4 py-1 text-center">1</td><td class="border px-4 py-1 text-center">1.37%</td></tr>
-                                            <tr><td class="border px-4 py-1 text-center">B</td><td class="border px-4 py-1 text-center">2</td><td class="border px-4 py-1 text-center">2.74%</td></tr>
-                                            <tr><td class="border px-4 py-1 text-center">C</td><td class="border px-4 py-1 text-center">14</td><td class="border px-4 py-1 text-center">19.18%</td></tr>
-                                            <tr><td class="border px-4 py-1 text-center">D</td><td class="border px-4 py-1 text-center">7</td><td class="border px-4 py-1 text-center">9.59%</td></tr>
-                                            <tr><td class="border px-4 py-1 text-center">E</td><td class="border px-4 py-1 text-center">45</td><td class="border px-4 py-1 text-center">61.64%</td></tr>
-                                            <tr><td class="border px-4 py-1 text-center">F</td><td class="border px-4 py-1 text-center">5</td><td class="border px-4 py-1 text-center">5.48%</td></tr>
-                                            <tr class="font-bold"><td class="border px-4 py-1 text-center">Grand Total</td><td class="border px-4 py-1 text-center">74</td><td class="border px-4 py-1 text-center">100.00%</td></tr>
+                                            <tr>
+                                                <td class="border px-4 py-1 font-bold">No. of Students</td>
+                                                @foreach (var grade in possibleGrades)
+                                                {
+                                                    var count = gradeCounts.ContainsKey(grade) ? gradeCounts[grade] : 0;
+                                                    <td class="border px-4 py-1 text-center">@count</td>
+                                                }
+                                                <td class="border px-4 py-1 text-center font-bold">@totalStudents</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border px-4 py-1 font-bold">% No. of Students</td>
+                                                @foreach (var grade in possibleGrades)
+                                                {
+                                                    var count = gradeCounts.ContainsKey(grade) ? gradeCounts[grade] : 0;
+                                                    var percentage = totalStudents > 0 ? (count * 100.0 / totalStudents).ToString("0.00") : "0.00";
+                                                    <td class="border px-4 py-1 text-center">@percentage%</td>
+                                                }
+                                                <td class="border px-4 py-1 text-center font-bold">100.00%</td>
+                                            </tr>
                                         </tbody>
-                                    </table> *@
+                                    </table>
 
-                                    <div class="footer text-center mt-28">
-                                        <div class="mx-auto">________________________________</div>
-                                        @* <p class="font-semibold">Dr. A. S. Makinde</p>
-                                        <p class="text-sm">Chief Lecturer</p> *@
+
+                                    <div class="" style="margin-top: 50px; margin-bottom: 20px;">
+                                        <p>Total Number of Students: @totalStudents </p>
+                                        <p>Total Number of Students that passed: @passedStudents </p>
+                                        <p>Total Number of Students that failed: @failedStudents </p>
+                                        <p>Average Score: @averageScore.ToString("0.00") </p>
                                     </div>
+                                   <div class="footer text-center" style="margin-top: 50px; margin-bottom: 20px;">
+                                    <!-- Signature Upload -->
+                                    <input type="file" accept="image/*" id="signatureUpload" class="mb-4" onchange="previewSignature(this)">
+                                    
+                                    <!-- Signature Preview -->
+                                    <div id="signaturePreview" class="mx-auto mt-28 cursor-pointer" onclick="triggerUpload()" style="min-height: 60px;">
+                                        ______________________________________
+                                    </div>
+
+                                    <!-- Lecturer Name -->
+                                    <p class="font-semibold mt-2">@ViewBag.lecturer</p>
+                                </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Print Button -->
                         <div class="text-center mt-4">
-                            <button onclick="printCard()" class="px-4 py-2 bg-blue-500 text-white rounded-md">Print</button>
+                            <button onclick="printCard()" class="px-4 py-2 bg-secondary text-white rounded-md">Print</button>
                         </div>
                     
                         <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -161,5 +241,68 @@
         window.print(); // Trigger print dialog
         document.body.innerHTML = originalContent; // Restore original content
         location.reload(); // Reload page to restore JavaScript functionality
+    }
+</script>
+
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('gradeChart').getContext('2d');
+    const gradeChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [@Html.Raw(grades)], // Grades on X-axis
+            datasets: [{
+                label: 'No. of Students',
+                data: [@Html.Raw(studentCounts)], // No. of students on Y-axis
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'No. of Students'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Grade'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Grade Distribution'
+                }
+            }
+        }
+    });
+</script>
+
+<script>
+    function previewSignature(input) {
+        const preview = document.getElementById('signaturePreview');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                // Hide the file input
+                input.style.display = "none";
+
+                // Set preview image
+                preview.innerHTML = `<img src="${e.target.result}" alt="Signature" style="max-height: 60px; margin-top: -40px;" />`;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function triggerUpload() {
+        const input = document.getElementById('signatureUpload');
+        input.click();
     }
 </script>

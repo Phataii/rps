@@ -1,6 +1,6 @@
 @model IEnumerable<StudentResultViewModel>
 @{
-    ViewData["Title"] = "Department";
+    ViewData["Title"] = "Spreadsheet";
 }
 
 <div class="app-wrapper">
@@ -18,8 +18,8 @@
                 <!-- Filter Form -->
                 <form id="filterForm" method="get" action="preview-result" class="mb-4">
                     <div class="row">
-                        <input value="@ViewBag.dpt" hidden name="departmentId">
-                        <input value="@ViewBag.dptN" hidden name="dptN">
+                        <input value="@ViewBag.dpt" hidden name="refId">
+                        <input value="@ViewBag.dptN" hidden name="reference">
                         <!-- Session Dropdown -->
                         <div class="col-md-3">
                             <label for="session" class="form-label">Session</label>
@@ -62,11 +62,11 @@
                 </form>
 
                 <!-- Tab Content -->
-                <div class="tab-content mt-3" id="resultTabsContent" style="overflow-x: auto;">
+                <div class="tab-content mt-3" id="printableCard" style="overflow-x: auto;">
                     <table class="table table-bordered table-striped align-middle text-center">
                         <thead class="table-header-rotated">
                             <tr>
-                                 <th>#</th> <!-- Serial Number Column -->
+                                <th>#</th> <!-- Serial Number Column -->
                                 <th class="fixed-width">MATRIC No.</th> <!-- Student Matric Number -->
                                 <th class="fixed-width">STUDENT NAME (Surname First)</th>
                                 @if (Model != null && Model.Any()){
@@ -137,20 +137,21 @@
                                             <td>@student.Courses.Where(c => c.Total >= 40).Sum(c => c.CreditUnit)</td> <!-- Unit Passed -->
                                             <td>@student.TotalCreditUnits</td> <!-- Total Credit Units -->
                                             <td>
-                                               @{
-                                                var totalWeightedPoints = student.Courses.Sum(c => c.CreditUnit * c.GradePoint);
-                                                var totalUnits = student.TotalCreditUnits;
-                                                var gpa = totalUnits > 0 ? (totalWeightedPoints / totalUnits) : 0;
-                                            }
-                                            @($"{gpa:0.00}") <!-- Display GPA with two decimal places -->
-
+                                                @{
+                                                    // Make sure all numbers involved are treated as doubles
+                                                    double totalWeightedPoints = student.Courses.Sum(c => (double)c.CreditUnit * (double)c.GradePoint);
+                                                    double totalUnits = student.TotalCreditUnits;
+                                                    double gpa = totalUnits > 0 ? (totalWeightedPoints / totalUnits) : 0.0;
+                                                }
+                                                @gpa.ToString("F2")
                                             </td>
+
                                             @foreach (var remark in student.Remarks)
                                             {
                                                 if (student.Courses.Any(c => c.Total >= remark.From && c.Total <= remark.To))
                                                 {
                                                     <td>
-                                                        @remark.RemarkSlug
+                                                        @* @remark.RemarkSlug  Display only body Second semester *@
 
                                                         @* Get all failed course codes *@
                                                         @{
@@ -164,7 +165,7 @@
                                                         @* Display them inline if there are any *@
                                                         @if (failedCourses.Any())
                                                         {
-                                                            <span style="display: inline;"> ( @string.Join(", ", failedCourses) )</span>
+                                                            <small style="display: inline;"> @string.Join(", ", failedCourses)</small>
                                                         }
                                                     </td>
                                                     break;
@@ -182,10 +183,30 @@
                                 }
                         </tbody>
                     </table>
+                     <div class="footer text-center mt-5 mb-5">
+                        <div class="row justify-content-between">
+                            <div class="col-md-4">
+                                <div class="mt-5">________________________________</div>
+                                <p class="font-weight-bold mt-2">Dean</p>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mt-5">________________________________</div>
+                                <p class="font-weight-bold mt-2">HOD</p>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mt-5">________________________________</div>
+                                <p class="font-weight-bold mt-2">Level Adviser</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
         <!-- Body main section ends -->
+        <!-- Print Button -->
+                        <div class="text-center mt-4">
+                            <button onclick="printCard()" class="px-4 py-2 bg-blue-500 text-white rounded-md">Print</button>
+                        </div>
     </div>
 </div>
 
@@ -216,5 +237,16 @@
 <script>
     function submitForm() {
         document.getElementById('filterForm').submit();
+    }
+</script>
+<script>
+    function printCard() {
+        var content = document.getElementById("printableCard").innerHTML;
+        var originalContent = document.body.innerHTML;
+        
+        document.body.innerHTML = content; // Replace the entire body with only the printable content
+        window.print(); // Trigger print dialog
+        document.body.innerHTML = originalContent; // Restore original content
+        location.reload(); // Reload page to restore JavaScript functionality
     }
 </script>

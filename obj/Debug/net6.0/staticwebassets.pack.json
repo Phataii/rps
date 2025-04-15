@@ -9,6 +9,10 @@
       "PackagePath": "staticwebassets/.DS_Store"
     },
     {
+      "Id": "/Users/home/Documents/archive/rps/wwwroot/assets/.DS_Store",
+      "PackagePath": "staticwebassets/assets/.DS_Store"
+    },
+    {
       "Id": "/Users/home/Documents/archive/rps/wwwroot/assets/css/0dd1beebea590e49bc76.jpg",
       "PackagePath": "staticwebassets/assets/css/0dd1beebea590e49bc76.jpg"
     },
@@ -10901,6 +10905,10 @@
       "PackagePath": "staticwebassets/assets/icon/sprite.svg"
     },
     {
+      "Id": "/Users/home/Documents/archive/rps/wwwroot/assets/images/.DS_Store",
+      "PackagePath": "staticwebassets/assets/images/.DS_Store"
+    },
+    {
       "Id": "/Users/home/Documents/archive/rps/wwwroot/assets/images/avtar/woman.jpg",
       "PackagePath": "staticwebassets/assets/images/avtar/woman.jpg"
     },
@@ -11943,6 +11951,10 @@
     {
       "Id": "/Users/home/Documents/archive/rps/wwwroot/assets/scss/style.scss",
       "PackagePath": "staticwebassets/assets/scss/style.scss"
+    },
+    {
+      "Id": "/Users/home/Documents/archive/rps/wwwroot/assets/tc.pdf",
+      "PackagePath": "staticwebassets/assets/tc.pdf"
     },
     {
       "Id": "/Users/home/Documents/archive/rps/wwwroot/assets/vendor/animated_icon/iconify-icon.min.js",

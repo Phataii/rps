@@ -15,7 +15,7 @@ namespace rps.Services
             _context = context;
         }
 
-        public async Task<string> UploadGradesFromCsvAsync(IFormFile file, string dpt)
+        public async Task<string> UploadGradesFromCsvAsync(IFormFile file, string type, string approvedby)
         {
             if (file == null || file.Length == 0)
             {
@@ -32,11 +32,13 @@ namespace rps.Services
                     var grades = records.Select(record => new Grade
                     {
                         //DepartmentId = departmentId,
-                        Type = dpt, // Type of grade; PG or MBBS
+                        Type = type, // Type of grade; PG or MBBS
                         GradeName = record?.GradeName?.ToUpper(),
                         GradePoint = record.GradePoint,
                         MinScore = record.MinScore,
                         MaxScore = record.MaxScore,
+                        Approved = true,
+                        ApprovedBy = approvedby,
                         CreatedAt = DateTime.Now,
                     }).ToList();
 
@@ -50,6 +52,21 @@ namespace rps.Services
             {
                 return $"Error uploading CSV: {ex.Message}";
             }
+        }
+
+        
+        public bool UpdateGrade(Grade model)
+        {
+        var existing = _context.Grades.FirstOrDefault(g => g.Id == model.Id);
+        if (existing == null)
+            return false;
+
+        existing.MinScore = model.MinScore;
+        existing.MaxScore = model.MaxScore;
+        existing.GradeName = model.GradeName;
+
+        _context.SaveChanges();
+        return true;
         }
         public async Task<List<Grade>> GradeStatus(int departmentId, bool status, string approvedBy)
         {
@@ -170,6 +187,21 @@ namespace rps.Services
                 return $"Error uploading CSV: {ex.Message}";
             }
         }
+        // public async Task<string> Update([FromBody] GradeUpdateDto model)
+        // {
+            
+
+        //     var grade = _context.Grades.Find(model.Id);
+        //     if (grade == null) return NotFound();
+
+        //     grade.GradeName = model.GradeName;
+        //     grade.MinScore = model.MinScore;
+        //     grade.MaxScore = model.MaxScore;
+
+        //     _context.SaveChanges();
+        //     return Ok();
+        // }
+
 
     }
 

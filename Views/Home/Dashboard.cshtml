@@ -1,7 +1,7 @@
 @{
-   ViewData["Title"] = "Dashboard";
-     var userRoleEncoded = Context.Request.Cookies["UserRole"]; // Get encoded role from cookie
-     var userRole = !string.IsNullOrEmpty(userRoleEncoded) ? Uri.UnescapeDataString(userRoleEncoded) : "";
+    ViewData["Title"] = "Dashboard";
+    var userRoleEncoded = Context.Request.Cookies["UserRole"]; // Get encoded role from cookie
+    var userRole = !string.IsNullOrEmpty(userRoleEncoded) ? Uri.UnescapeDataString(userRoleEncoded) : "";
 }
 @model Dashboard
 <div class="app-wrapper">
@@ -19,42 +19,42 @@
           }
         </div>
 
-        <!-- First Row: Profile & CSV Form -->
         <div class="row">
-         <div class="row">
-            <div class="col-md-4">
-              <div class="card education-profile-card">
-                <div class="card-body">
-                  <div class="profile-header">
-                    <h5 class="header-title-text">Profile</h5>
+          <div class="col-md-4">
+            <div class="card education-profile-card">
+              <div class="card-body">
+                <div class="profile-header">
+                  <h5 class="header-title-text">Profile</h5>
+                </div>
+                <div class="profile-top-content">
+                  <div class="h-80 w-80 d-flex-center b-r-50 overflow-hidden">
+                    <img src="assets/images/dashboard/education/01.png" alt="" class="img-fluid">
                   </div>
-                  <div class="profile-top-content">
-                    <div class="h-80 w-80 d-flex-center b-r-50 overflow-hidden">
-                      <img src="assets/images/dashboard/education/01.png" alt="" class="img-fluid">
-                    </div>
-                    <div>
-                      <a href="" target="_blank" role="button" class="btn btn-light-secondary">View Profile</a>
-                    </div>
+                  <div>
+                    <a href="" target="_blank" role="button" class="btn btn-light-secondary">View Profile</a>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div class="col-md-4">
+          <div class="col-md-4">
+            <a href="/result-upload">
               <div class="card courses-cards card-success">
                 <div class="card-body">
-                  <i class="ph-duotone ph-calendar-check icon-bg"></i>
+                  <i class="ph-duotone ph-upload icon-bg"></i>
                   <span class="bg-white h-50 w-50 d-flex-center b-r-15">
-                    <i class="ph-duotone ph-calendar-check text-success f-s-24"></i>
+                    <i class="ph-duotone ph-upload text-success f-s-24"></i>
                   </span>
                   <div class="mt-5">
-                    <h4>20</h4>
-                    <p class="f-w-500 mb-0">Completed Courses</p>
+                    <h4>+</h4>
+                    <p class="f-w-500 mb-0">Upload Result</p>
                   </div>
                 </div>
               </div>
-            </div>
-
+            </a>
+          </div>
+          @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("transcripts")){
             <div class="col-md-4">
               <div class="card courses-cards card-warning">
                 <div class="card-body">
@@ -71,64 +71,179 @@
                 </div>
               </div>
             </div>
-          </div>
+          }
         </div>
 
-        <!-- Second Row: Grading System & Set Grade -->
         <div class="row mt-4">
+          <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <h5>Generate Result CSV</h5>
+                  <form method="post" action="/api/result/result-temp">
+                    <label for="sessionId">Session:</label>
+                    <select id="sessionId" name="sessionId" class="form-control mb-2" required>
+                      @foreach (var session in Model.Sessions)
+                      {
+                      <option value="@session.Id">@session.Name</option>
+                      }
+                    </select>
+                    <label for="courseId">Course:</label>
+                    <input type="text" id="courseCode" name="courseCode" class="form-control mb-3" required placeholder="GST 111">
+                    <button type="submit" class="btn btn-primary w-100">Download CSV</button>
+                  </form>
+                </div>
+              </div>
+              <div class="mt-4">
+                @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("hod") || !string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("mbbs")){
+                  <div class="card">
+                    <div class="card-body">
+                      <h5>Set remarks for your department</h5>
+                      <a href="~/assets/remark_upload_template.csv" class="btn btn-success mb-3">
+                        <i class="fa fa-cloud-download"></i> Download Template
+                      </a>
+                      @if (Model != null && Model.Remarks.Any()){
+                          <p style="color: red;">Remarks has already been set for your department.-- If your wish to make any change, contact ICT for assistance</p>
+                      }else{
+                          <form action="/api/grade/upload-remark" enctype="multipart/form-data" method="post">
+                            <label>Upload Remarks</label>
+                            <input class="form-control mt-2 border p-2" type="text" id="type" value="@userRole" hidden name="type" required>
+                            <input class="form-control mt-2 border p-2" type="text" id="id" value="@userRole" hidden name="id" required>
+                            <input class="form-control mt-2 border p-2" type="file" id="file" name="file" accept=".csv" required>
+                            <button class="btn btn-primary w-100 mt-3" type="submit">Submit</button>
+                          </form>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+          </div>
+
           <div class="col-md-6">
             <div class="card">
               <div class="card-body">
                 <h5>UG Grading System</h5>
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>From</th>
-                      <th>To</th>
-                      <th>Grade</th>
-                      <th>Status</th>
-                      @* <th>Actions</th> *@
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach (var grade in Model.UgGrades)
-                    {
-                      <tr>
-                        <td>@grade.MinScore</td>
-                        <td>@grade.MaxScore</td>
-                        <td>@grade.GradeName</td>
-                        <td>@(grade.Approved ? "Approved" : "Pending")</td>
-                        @* <td>
-                          <button class="btn btn-sm btn-warning">Edit</button>
-                        </td> *@
-                      </tr>
-                    }
-                  </tbody>
-                </table>
+               <table class="table table-bordered" id="gradesTable">
+  <thead>
+    <tr>
+      <th>From</th>
+      <th>To</th>
+      <th>Grade</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var grade in Model.UgGrades)
+    {
+      <tr data-id="@grade.Id">
+        <td class="editable" data-field="MinScore">@grade.MinScore</td>
+        <td class="editable" data-field="MaxScore">@grade.MaxScore</td>
+        <td class="editable" data-field="GradeName">@grade.GradeName</td>
+        <td>@(grade.Approved ? "Approved" : "Pending")</td>
+        @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("hod"))
+        {
+          <td>
+            <button class="btn btn-sm btn-warning edit-btn">Edit</button>
+            <button class="btn btn-sm btn-success save-btn d-none">Save</button>
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>
+
+@section Scripts {
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+
+      // Enable editing when Edit is clicked
+      $('.edit-btn').click(function () {
+        const row = $(this).closest('tr');
+        row.find('.editable').each(function () {
+          const value = $(this).text().trim();
+          const field = $(this).data('field');
+          $(this).html(`<input class="form-control form-control-sm" data-field="${field}" value="${value}" />`);
+        });
+
+        row.find('.edit-btn').addClass('d-none');
+        row.find('.save-btn').removeClass('d-none');
+      });
+
+      // Save changes to backend
+      $('.save-btn').click(function () {
+        const row = $(this).closest('tr');
+        const id = row.data('id');
+        const data = { Id: id };
+
+        row.find('input').each(function () {
+          const field = $(this).data('field');
+          const value = $(this).val();
+          data[field] = value;
+        });
+
+        $.ajax({
+          url: '/api/Grade/UpdateGrade', // 👈 Update to your backend endpoint
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: function (response) {
+            // Replace inputs with updated text
+            row.find('input').each(function () {
+              const value = $(this).val();
+              $(this).parent().text(value);
+            });
+
+            row.find('.save-btn').addClass('d-none');
+            row.find('.edit-btn').removeClass('d-none');
+            alert('Grade updated successfully!');
+          },
+          error: function (xhr, status, error) {
+            alert('Failed to update grade: ' + error);
+          }
+        });
+      });
+    });
+  </script>
+}
+
+
               </div>
             </div>
           </div>
-           <div class="col-md-6">
-               <div class="card">
-              <div class="card-body">
-                <h5>Generate Result CSV</h5>
-                <form method="post" action="/api/result/result-temp">
-                  <label for="sessionId">Session:</label>
-                  <select id="sessionId" name="sessionId" class="form-control mb-2" required>
-                    @foreach (var session in Model.Sessions)
-                    {
-                    <option value="@session.Id">@session.Name</option>
-                    }
-                  </select>
-                  <label for="courseId">Course:</label>
-                  <input type="text" id="courseCode" name="courseCode" class="form-control mb-3" required placeholder="GST 111">
-                  <button type="submit" class="btn btn-primary w-100">Download CSV</button>
-                </form>
-              </div>
-            </div>
-          </div>
+        </div>
+        
+        <div class="row mt-4">
           <div class="col-md-6">
-              <div class="card">
+             @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("pg") || !string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("mbbs")){
+                <div class="card">
+                  <div class="card-body">
+                    <h5>Set grade for @userRole.ToUpper()</h5>
+                    <a href="~/assets/grade_upload_template.csv" class="btn btn-success mb-3">
+                      <i class="fa fa-cloud-download"></i> Download Template
+                    </a>
+                    @if (Model != null && Model.PgGrades.Any()){
+                        <p style="color: red;">Grade has already been set for your department.-- If your wish to make any change, contact ICT for assistance</p>
+                        }else{
+                            <form action="/api/grade/upload" enctype="multipart/form-data" method="post">
+                              <label>Upload Grades</label>
+                              <select class="form-control mt-2 border p-2" name="type" id="type">
+                                <option>--Select--</option>
+                                <option value="pgd">PGD</option>
+                                <option value="masters">Masters</option>
+                                <option value="phd">PhD</option>
+                              </select>
+                              <input class="form-control mt-2 border p-2" type="file" id="file" name="file" accept=".csv" required>
+                              <button class="btn btn-primary w-100 mt-3" type="submit">Submit</button>
+                            </form>
+                        }
+                  </div>
+                </div>
+              }
+          </div>
+
+          <div class="col-md-6">
+             <div class="card">
                 <div class="card-body">
                   <h5>PG Grading System</h5>
                   <table class="table table-bordered">
@@ -138,7 +253,6 @@
                         <th>To</th>
                         <th>Grade</th>
                         <th>Status</th>
-                        @* <th>Actions</th> *@
                       </tr>
                     </thead>
                     <tbody>
@@ -179,91 +293,11 @@
                       }
                 </div>
               </div>
-              @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("pg") || !string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("mbbs")){
-                <div class="card">
-                  <div class="card-body">
-                    <h5>Set grade for @userRole.ToUpper()</h5>
-                    <a href="~/assets/grade_upload_template.csv" class="btn btn-success mb-3">
-                      <i class="fa fa-cloud-download"></i> Download Template
-                    </a>
-                    @if (Model != null && Model.PgGrades.Any()){
-                        <p style="color: red;">Grade has already been set for your department.-- If your wish to make any change, contact ICT for assistance</p>
-                        }else{
-                            <form action="/api/grade/upload" enctype="multipart/form-data" method="post">
-                              <label>Upload Grades</label>
-                              <input class="form-control mt-2 border p-2" type="text" id="type" value="@userRole" hidden name="type" required>
-                              <input class="form-control mt-2 border p-2" type="file" id="file" name="file" accept=".csv" required>
-                              <button class="btn btn-primary w-100 mt-3" type="submit">Submit</button>
-                            </form>
-                        }
-                    
-                  </div>
-                </div>
-              }
+             
           </div>
-          @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("hod") || !string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("mbbs")){
-                <div class="card">
-                  <div class="card-body">
-                    <h5>Set remarks for your department</h5>
-                    <a href="~/assets/remark_upload_template.csv" class="btn btn-success mb-3">
-                      <i class="fa fa-cloud-download"></i> Download Template
-                    </a>
-                    @if (Model != null && Model.Remarks.Any()){
-                        <p style="color: red;">Remarks has already been set for your department.-- If your wish to make any change, contact ICT for assistance</p>
-                        }else{
-                            <form action="/api/grade/upload-remark" enctype="multipart/form-data" method="post">
-                              <label>Upload Remarks</label>
-                              <input class="form-control mt-2 border p-2" type="text" id="type" value="@userRole" hidden name="type" required>
-                              <input class="form-control mt-2 border p-2" type="text" id="id" value="@userRole" hidden name="id" required>
-                              <input class="form-control mt-2 border p-2" type="file" id="file" name="file" accept=".csv" required>
-                              <button class="btn btn-primary w-100 mt-3" type="submit">Submit</button>
-                            </form>
-                        }
-                    
-                  </div>
-                </div>
-              }
         </div>
-        
       </div>
     </main>
   </div>
 </div>
-
-    
-<script>
-function submitForm(event, form) {
-    event.preventDefault(); // Prevent normal form submission
-
-    const formData = new FormData(form);
-    const statusValue = formData.get("status") === "true"; // Convert to boolean
-    const statusMessage = statusValue ? "Approved" : "Rejected";
-
-    fetch(form.action, {
-        method: "POST",
-        body: formData
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.text().then(text => { throw new Error(text || "Unknown error"); });
-        }
-        return response.json().catch(() => ({ message: "Grade status updated" })); // Handle empty JSON response
-    })
-    .then(data => {
-        document.getElementById("status-message").innerHTML = 
-            `<div class="alert alert-success">${data.message}</div>`;
-        @* console.log("Success:", data); *@
-
-        // Refresh the page after 1 second
-        setTimeout(() => {
-            location.reload();
-        }, 300);
-    })
-    .catch(error => {
-        document.getElementById("status-message").innerHTML = 
-            `<div class="alert alert-danger">Error: ${error.message}</div>`;
-        @* console.error("Error:", error); *@
-    });
-}
-</script>
 

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "e5FimJj2zVmE/OYrSVFmNXFqoPH8vHootT3B5xyj1L0=",
+  "Hash": "DwkpR0yFi9BIyjIC1bdbm118tuAjjCpPKcaLfXeuRQI=",
   "Source": "rps",
   "BasePath": "_content/rps",
   "Mode": "Default",
@@ -1086,6 +1086,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/.DS_Store"
+    },
+    {
+      "Identity": "/Users/home/Documents/archive/rps/wwwroot/assets/.DS_Store",
+      "SourceId": "rps",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/home/Documents/archive/rps/wwwroot/",
+      "BasePath": "_content/rps",
+      "RelativePath": "assets/.DS_Store",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/assets/.DS_Store"
     },
     {
       "Identity": "/Users/home/Documents/archive/rps/wwwroot/assets/css/0dd1beebea590e49bc76.jpg",
@@ -47379,6 +47396,23 @@
       "OriginalItemSpec": "wwwroot/assets/icon/sprite.svg"
     },
     {
+      "Identity": "/Users/home/Documents/archive/rps/wwwroot/assets/images/.DS_Store",
+      "SourceId": "rps",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/home/Documents/archive/rps/wwwroot/",
+      "BasePath": "_content/rps",
+      "RelativePath": "assets/images/.DS_Store",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/assets/images/.DS_Store"
+    },
+    {
       "Identity": "/Users/home/Documents/archive/rps/wwwroot/assets/images/avtar/woman.jpg",
       "SourceId": "rps",
       "SourceType": "Discovered",
@@ -51814,6 +51848,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/assets/scss/style.scss"
+    },
+    {
+      "Identity": "/Users/home/Documents/archive/rps/wwwroot/assets/tc.pdf",
+      "SourceId": "rps",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/home/Documents/archive/rps/wwwroot/",
+      "BasePath": "_content/rps",
+      "RelativePath": "assets/tc.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/assets/tc.pdf"
     },
     {
       "Identity": "/Users/home/Documents/archive/rps/wwwroot/assets/vendor/animated_icon/iconify-icon.min.js",

@@ -42,7 +42,38 @@ namespace rps.Controllers
         
             return View();
         }
-    
+
+        [Route("dashboard")]
+        public async Task<IActionResult> Dashboard()
+        {
+            var loggedInUser = await _userHelper.GetLoggedInUser(Request);
+            if (loggedInUser == null)
+            {
+                return Redirect("/");
+            }
+
+            if (loggedInUser.IsActive == false)
+            {
+                return Forbid("Access Denied.");
+            }
+
+            var pendingTranscripts = await _context.TranscriptApplications.Where(x => x.Status == TranscriptStatus.Pending).ToListAsync();
+            ViewData["transcripts"]= pendingTranscripts.Count();
+
+            var sessions = await _context.Sessions.OrderByDescending(s => s.Id).ToListAsync();
+            var ugGrades = await _context.Grades.Where(x => x.Type == "ug" && x.DepartmentId == loggedInUser.DepartmentId).ToListAsync();
+            var pgOrMbbs = await _context.Grades.Where(x => x.Type == "pg").ToListAsync();
+            var remarks = await _context.Remarks.Where(x => x.DepartmentId == loggedInUser.DepartmentId).ToListAsync();
+            var viewModel =  new Dashboard
+            {
+                Sessions = sessions,
+                UgGrades = ugGrades,
+                PgGrades = pgOrMbbs,
+                Remarks = remarks
+            };
+            return View(viewModel);
+        }
+
         [Route("result-upload")]
         public async Task<IActionResult> Upload()
         {
@@ -53,7 +84,7 @@ namespace rps.Controllers
             }
             // API URL and API Key
             string apiUrl = $"https://edouniversity.edu.ng/api/v1/coursesapi?departmentId={loggedInUser.DepartmentId}";
-            string apiKey = "";
+            string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
 
             // Initialize an HTTP Client
             var client = _httpClientFactory.CreateClient();
@@ -94,37 +125,6 @@ namespace rps.Controllers
             }
         }
        
-        [Route("dashboard")]
-        public async Task<IActionResult> Dashboard()
-        {
-            var loggedInUser = await _userHelper.GetLoggedInUser(Request);
-            if (loggedInUser == null)
-            {
-                return Redirect("/");
-            }
-
-            if (loggedInUser.IsActive == false)
-            {
-                return Forbid("Access Denied.");
-            }
-
-            var pendingTranscripts = await _context.TranscriptApplications.Where(x => x.Status == TranscriptStatus.Pending).ToListAsync();
-            ViewData["transcripts"]= pendingTranscripts.Count();
-
-            var sessions = await _context.Sessions.OrderByDescending(s => s.Id).ToListAsync();
-            var ugGrades = await _context.Grades.Where(x => x.Type == "ug").ToListAsync();
-            var pgOrMbbs = await _context.Grades.Where(x => x.Type == "pg").ToListAsync();
-            var remarks = await _context.Remarks.Where(x => x.DepartmentId == loggedInUser.DepartmentId).ToListAsync();
-            var viewModel =  new Dashboard
-            {
-                Sessions = sessions,
-                UgGrades = ugGrades,
-                PgGrades = pgOrMbbs,
-                Remarks = remarks
-            };
-            return View(viewModel);
-        }
-
         [Route("user-roles")]
         public async Task<IActionResult> UserRoles()
         {
@@ -153,7 +153,7 @@ namespace rps.Controllers
         }
 
         [Route("preview-result")]
-        public async Task<IActionResult> Preview(int departmentId, int level, int session, int semester, string dptN)
+        public async Task<IActionResult> Preview(int refId, int level, int session, int semester, string reference)
         {
             var loggedInUser = await _userHelper.GetLoggedInUser(Request);
             if (loggedInUser == null)
@@ -162,12 +162,12 @@ namespace rps.Controllers
             }
             var sessions = await _context.Sessions.ToListAsync();
             ViewData["session"] = sessions;
-            ViewData["dpt"] = departmentId;
-            ViewData["dptN"] = dptN;
+            ViewData["dpt"] = refId;
+            ViewData["dptN"] = reference;
             TempData["semester"] = semester;
             // API URL and API Key
-            string apiUrl = $"https://edouniversity.edu.ng/api/v1/courseregistrationsapi/ugstudents?sessionId={session}&departmentId={departmentId}&levelId={level}&semester={semester}";
-           string apiKey = "";
+            string apiUrl = $"https://edouniversity.edu.ng/api/v1/courseregistrationsapi/ugstudents?sessionId={session}&departmentId={refId}&levelId={level}&semester={semester}";
+           string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
 
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
@@ -195,7 +195,7 @@ namespace rps.Controllers
             
             // Fetch results & grades in bulk for better performance
             var results = await _context.Results
-                .Where(r => r.DepartmentName == dptN && r.LevelId == level && r.Session == session && r.Semester == semester)
+                .Where(r => r.DepartmentName == reference && r.Session == session && r.Semester == semester)
                 .ToListAsync();
 
             if (results == null || results.Count == 0)
@@ -204,14 +204,14 @@ namespace rps.Controllers
                 return View();
             }
             // Create lookup dictionaries for fast access
-            var resultsDict = results.GroupBy(r => (r.StudentId, r.CourseId))
+            var resultsDict = results.GroupBy(r => (r.StudentName, r.CourseId))
                                     .ToDictionary(g => g.Key, g => g.First());
 
             var gradesDict = await _context.Grades
-                .Where(g => g.DepartmentId == departmentId)
+                .Where(g => g.Type == "ug" && g.DepartmentId == refId)
                 .ToDictionaryAsync(g => g.GradeName);
 
-            var remarks = await _context.Remarks.Where(r => r.DepartmentId == departmentId).ToListAsync();
+            var remarks = await _context.Remarks.Where(r => r.DepartmentId == refId).ToListAsync();
             // Process data efficiently
             var studentResults = registeredCourses.Select(student => new StudentResultViewModel
             {
@@ -219,7 +219,7 @@ namespace rps.Controllers
                 StudentName = student.StudentName,
                 Courses = student.RegisteredCourses.Select(course =>
                 {
-                    resultsDict.TryGetValue((student.MatNumber, course.Code), out var courseResult);
+                    resultsDict.TryGetValue((student.StudentName, course.Code), out var courseResult);
                     var gradeName = courseResult?.Grade;
                     gradesDict.TryGetValue(gradeName ?? "", out var departmentGrade);
 
@@ -241,7 +241,7 @@ namespace rps.Controllers
         }
         
         [Route("mycourse-preview")]
-         public async Task<IActionResult> MyCourse([FromQuery] string course, [FromQuery] int session, [FromQuery] string dpt)
+         public async Task<IActionResult> MyCourse([FromQuery] string reference, [FromQuery] int session)
         {
             var loggedInUser = await _userHelper.GetLoggedInUser(Request);
             if (loggedInUser == null)
@@ -249,49 +249,23 @@ namespace rps.Controllers
                 return Redirect("/");
             }
             
-             var results = await _context.Results.Where(x => x.CourseId == course && x.Session == session && x.DepartmentName == dpt).ToListAsync();
+             var results = await _context.Results.Where(x => x.ResultId == reference).ToListAsync();
              if (results.Any()){
-                ViewData["course"] = course;
+                ViewData["course"] = results.First().CourseId;
                 ViewData["dpt"] = results.First().DepartmentName;
-                 ViewData["count"] = results.Count();
-                 ViewData["level"] = results.First().LevelId + "00";
+                ViewData["count"] = results.Count();
+                ViewData["level"] = results.First().LevelId + "00";
              }
              var sessionName = await _context.Sessions.Where(x => x.Id == session).Select(x => x.Name).FirstOrDefaultAsync();
              ViewData["session"] = sessionName;
-            // Send this to the view so we can use it to upgrade result
-            // ViewData["course"]= course;
-            // ViewData["session"] = session;
-            // ViewData["dpt"] = dpt;
-
-            //hide upgrade based on this
-            // var res = await _context.DepartmentBatches.Where(x => x.DepartmentId == dpt && x.Session == session && x.CourseId == course)
-            // .Select(x => new 
-            //     {
-            //         lectuer = x.User,
-            //         HODStatus = x.HODStatus,
-            //         DeanStatus = x.DeanStatus,
-            //         LecturerStatus = x.LecturerStatus,
-            //         DepartmentName = x.DepartmentName
-            //     })
-            // .FirstOrDefaultAsync();
-
-            // check if the loggedIn user is the lecturer and the uploader of the course, if yes, then save and use it to display in the view
-            // if (res != null && loggedInUser.Id == res.lectuer){
-            //     ViewData["isLecturer"] = "Yes";
-            // }
-            // ViewData["HODStatus"] = res.HODStatus;
-            // ViewData["DeanStatus"] = res?.DeanStatus;
-            // ViewData["LecturerStatus"] = res?.LecturerStatus;
-            // ViewData["dpt"] = res?.DepartmentName;
-            // ViewData["course"] = course;
+             ViewData["lecturer"] = loggedInUser.Name;
             
-           
             return View(results);
         }
 
 
         [Route("result-details")]
-        public async Task<IActionResult> ResultDetails([FromQuery] string course, [FromQuery] int session, [FromQuery] int dpt)
+        public async Task<IActionResult> ResultDetails([FromQuery] string reference, [FromQuery] int session)
         {
             var loggedInUser = await _userHelper.GetLoggedInUser(Request);
             if (loggedInUser == null)
@@ -299,67 +273,64 @@ namespace rps.Controllers
                 return Redirect("/");
             }
 
-            var isDean = await _context.UserRoles
-                .Where(x => x.UserId == loggedInUser.Id && x.RoleId == "")
-                .Select(x => new { x.RoleId, x.RoleName }) // Ensure RoleName is fetched
+                var isDean = await _context.UserRoles
+                    .Where(x => x.UserId == loggedInUser.Id && x.RoleId == "2c370f7a-13fb-4e60-99ed-8140ac52566a")
+                    .Select(x => new { x.RoleId, x.RoleName }) // Ensure RoleName is fetched
+                    .FirstOrDefaultAsync();
+
+                if (isDean != null)
+                {
+                    ViewData["isDean"] = "Yes";
+                }
+                
+                //hide upgrade based on this
+                var res = await _context.DepartmentBatches.Where(x => x.ResultId == reference && x.Session == session)
+                .Select(x => new 
+                    {
+                        lectuer = x.User,
+                        HODStatus = x.HODStatus,
+                        DeanStatus = x.DeanStatus,
+                        LecturerStatus = x.LecturerStatus,
+                        DepartmentName = x.DepartmentName,
+                        CourseId = x.CourseId
+                    })
                 .FirstOrDefaultAsync();
 
-            if (isDean != null)
-            {
-                ViewData["isDean"] = "Yes";
-            }
-                
-            // Send this to the view so we can use it to upgrade result
-            ViewData["course"]= course;
-            ViewData["session"] = session;
-            // ViewData["dpt"] = dpt;
-
-            //hide upgrade based on this
-            var res = await _context.DepartmentBatches.Where(x => x.DepartmentId == dpt && x.Session == session && x.CourseId == course)
-            .Select(x => new 
-                {
-                    lectuer = x.User,
-                    HODStatus = x.HODStatus,
-                    DeanStatus = x.DeanStatus,
-                    LecturerStatus = x.LecturerStatus,
-                    DepartmentName = x.DepartmentName
-                })
-            .FirstOrDefaultAsync();
-
-            // check if the loggedIn user is the lecturer and the uploader of the course, if yes, then save and use it to display in the view
-            if (res != null && loggedInUser.Id == res.lectuer){
-                ViewData["isLecturer"] = "Yes";
-            }
-            ViewData["HODStatus"] = res.HODStatus;
-            ViewData["DeanStatus"] = res?.DeanStatus;
-            ViewData["LecturerStatus"] = res?.LecturerStatus;
-            ViewData["dpt"] = res?.DepartmentName;
-            ViewData["course"] = course;
+                // check if the loggedIn user is the lecturer and the uploader of the course, if yes, then save and use it to display in the view
+                if (res != null && loggedInUser.Id == res.lectuer){
+                    ViewData["isLecturer"] = "Yes";
+                }
+                var results = await _context.Results.Where(x => x.ResultId == reference && x.Session == session).ToListAsync();
             
-            var results = await _context.Results.Where(x => x.CourseId == course && x.Session == session && x.DepartmentName == res.DepartmentName).ToListAsync();
-            return View(results);
+                ViewData["HODStatus"] = res?.HODStatus;
+                ViewData["DeanStatus"] = res?.DeanStatus;
+                ViewData["LecturerStatus"] = res?.LecturerStatus;
+                ViewData["dpt"] = res?.DepartmentName;
+                ViewData["course"] = res?.CourseId;
+                ViewData["session"] = session;
+               
+             return View(results);
         }
 
         [Route("edit")]
-        public async Task<IActionResult> Edit([FromQuery] string course, [FromQuery] int session, [FromQuery] string dpt)
+        public async Task<IActionResult> Edit([FromQuery] string reference, [FromQuery] int session)
         {
             var loggedInUser = await _userHelper.GetLoggedInUser(Request);
             if (loggedInUser == null)
             {
                 return Redirect("/");
             }
-    
-            ViewData["course"]= course;
-            ViewData["session"] = session;
+            
 
-            var res = await _context.DepartmentBatches.Where(x => x.DepartmentName == dpt && x.Session == session && x.CourseId == course)
+            var res = await _context.DepartmentBatches.Where(x => x.ResultId == reference && x.Session == session)
             .Select(x => new 
                 {
                     lectuer = x.User,
                     HODStatus = x.HODStatus,
                     DeanStatus = x.DeanStatus,
                     LecturerStatus = x.LecturerStatus,
-                    DepartmentName = x.DepartmentName
+                    DepartmentName = x.DepartmentName,
+                    CourseId = x.CourseId,
                 })
             .FirstOrDefaultAsync();
 
@@ -367,13 +338,15 @@ namespace rps.Controllers
             if (res != null && loggedInUser.Id == res.lectuer){
                 ViewData["isLecturer"] = "Yes";
             }
-            ViewData["HODStatus"] = res.HODStatus;
+            ViewData["HODStatus"] = res?.HODStatus;
             ViewData["DeanStatus"] = res?.DeanStatus;
             ViewData["LecturerStatus"] = res?.LecturerStatus;
             ViewData["dpt"] = res?.DepartmentName;
-            ViewData["course"] = course;
+            ViewData["course"] = res?.CourseId;
+            ViewData["session"] = session;
+            ViewData["reference"] = reference;
             
-            var results = await _context.Results.Where(x => x.CourseId == course && x.Session == session && x.DepartmentName == dpt).ToListAsync();
+            var results = await _context.Results.Where(x => x.ResultId == reference && x.Session == session).ToListAsync();
             return View(results);
         }
 
@@ -386,36 +359,41 @@ namespace rps.Controllers
                 return Redirect("/");
             }
 
+            // Ensure the user is a Dean
             var isDean = await _context.UserRoles
-                .FirstOrDefaultAsync(x => x.UserId == loggedInUser.Id && x.RoleId == "2c370f7a-13fb-4e60-99ed-8140ac52566a");
-            
-            if (isDean == null)
+                .AnyAsync(x => x.UserId == loggedInUser.Id && x.RoleId == "2c370f7a-13fb-4e60-99ed-8140ac52566a");
+
+            if (!isDean)
             {
                 return BadRequest("User is not a dean of a faculty");
             }
 
-            // Fetch all faculty batches first
-            var facultyBatches = await _context.FacultyBatches
-                .Include(s => s.Sessions)
-                .Where(x => x.Faculty == loggedInUser.Faculty)
-                .ToListAsync(); // Fetch into memory before grouping
+            ViewData["FacultyId"] = loggedInUser.Faculty;
+            // API URL and API Key
+            string apiUrl = $"https://edouniversity.edu.ng/api/v1/departmentsapi";
+            string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
 
-            // Group by DepartmentId to ensure only unique departments are returned
-            var uniqueDepartments = facultyBatches
-                .GroupBy(x => x.DepartmentId)
-                .Select(g => g.First()) // Get one record per department
-                .ToList();
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
 
-            // Dictionary to store the total count of records per department
-            var departmentCourseCounts = facultyBatches
-                .GroupBy(x => x.DepartmentId)
-                .ToDictionary(g => g.Key, g => g.Count());
+            try
+            {
+                var response = await client.GetAsync(apiUrl);
+                response.EnsureSuccessStatusCode();
 
-            ViewData["number"] = uniqueDepartments.Count();
+                var content = await response.Content.ReadAsStringAsync();
+                var departments = JsonConvert.DeserializeObject<List<Departments>>(content);
 
-            return View(uniqueDepartments);
+                return View(departments);
+            }
+            catch (HttpRequestException ex)
+            {
+                // Log error if needed
+                ModelState.AddModelError(string.Empty, $"An error occurred while fetching departments: {ex.Message}");
+                return View("Error");
+            }
         }
-   
+
         [Route("departmental-result")]
         public async Task<IActionResult> DepartmentResult([FromQuery] string? reference)
         {
@@ -446,14 +424,8 @@ namespace rps.Controllers
                 .Where(x => x.DepartmentName == departmentId)
                 .Include(s => s.Sessions)
                 .ToListAsync();
-                if (dptBatches.Any())
-                {
-                    ViewData["DepartmentName"] = dptBatches.First().DepartmentName ?? ""; // Assuming 'DepartmentName' is a field
-                }
-                else
-                {
-                    ViewData["DepartmentName"] = "Department Not Found"; // Fallback value
-                }
+                ViewData["DepartmentName"] = reference;
+                
             ViewData["code"] = departmentId;
             return View(dptBatches);
         }
@@ -514,9 +486,6 @@ namespace rps.Controllers
             {
                 return Forbid("Access Denied.");
             }
-
-           
-
             return View();
         }
 
@@ -531,7 +500,7 @@ namespace rps.Controllers
             }
             // API URL and API Key
             string apiUrl = $"https://edouniversity.edu.ng/api/v1/staffapi/academic";
-            string apiKey = "";
+            string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
 
             // Initialize an HTTP Client
             var client = _httpClientFactory.CreateClient();

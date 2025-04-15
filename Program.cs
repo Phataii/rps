@@ -9,6 +9,7 @@ using rps.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+DotNetEnv.Env.Load();
 
 // Database Configuration
 var connectionString = configuration.GetConnectionString("DefaultConnection");

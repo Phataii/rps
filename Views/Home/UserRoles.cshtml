@@ -186,3 +186,63 @@
         }
     });
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* @model IEnumerable<rps.Models.Departments>
+
+@{
+    ViewData["Title"] = "Faculty Departments";
+    var serialNumber = 1;
+}
+
+<div class="container mt-4">
+    <h4 class="mb-3">Departments under Faculty ID 5</h4>
+
+    @if (TempData["message"] != null)
+    {
+        <div class="alert alert-success">@TempData["message"]</div>
+    }
+    @if (TempData["error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["error"]</div>
+    }
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Department Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dept in Model)
+            {
+                <tr>
+                    <td>@serialNumber++</td>
+                    <td>@dept.Name</td>
+                    <td>@dept.FacultyId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div> *@

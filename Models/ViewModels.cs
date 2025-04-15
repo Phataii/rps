@@ -61,7 +61,7 @@ public class CoursesAllocated
         public int Id { get; set; }
         public string? Name {get; set; }
         public string? ShortCode {get; set; }
-        public Faculty? Faculty {get; set; }
+        public int FacultyId { get; set; }
     }
 
     public class Faculty
@@ -112,5 +112,11 @@ public class CoursesAllocated
          public List<Grade> UgGrades { get; set; }
          public List<Grade> PgGrades { get; set; }
          public List<Remark> Remarks{ get; set; }
+    }
+
+    public class DeanView
+    {
+        public List<Result> Results {get; set;}
+        public List<Departments> Departments {get; set;}
     }
 }

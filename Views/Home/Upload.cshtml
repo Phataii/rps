@@ -19,6 +19,7 @@
                     </div>
 
                     <div class="card">
+                   
                     <div class="card-header d-flex flex-column gap-2">
                         <h5>Upload Your Result Here </h5>
                         <div class="card-body">
@@ -96,7 +97,7 @@
                                     <div class="form-check d-flex flex-wrap gap-1">
                                     <input class="form-check-input mg-2" type="checkbox" value="" id="invalidCheck" required>
                                     <label class="form-check-label" for="invalidCheck">
-                                        Agree to terms and conditions
+                                        Agree to <a href="~/assets/tc.pdf" class="text-info" download="TermsAndConditions.pdf">terms and conditions</a>
                                     </label>
                                     <div class="invalid-feedback">
                                         You must agree before submitting.
@@ -173,10 +174,10 @@
                                                                 <i class="ti ti-dots-vertical"></i>
                                                             </button>
                                                             <ul class="dropdown-menu">
-                                                                <li><a class="dropdown-item" href="/edit?course=@result.CourseId&session=@result.Session&dpt=@result.DepartmentName"><i
+                                                                <li><a class="dropdown-item" href="/edit?reference=@result.ResultId&session=@result.Session"><i
                                                                         class="ti ti-eye"></i> View </a></li>
-                                                                <li><a class="dropdown-item" href="/mycourse-preview?course=@result.CourseId&session=@result.Session&dpt=@result.DepartmentName"><i
-                                                                        class="ti ti-eye"></i> Spreadsheet </a></li>
+                                                                <li><a class="dropdown-item" href="/mycourse-preview?reference=@result.ResultId&session=@result.Session"><i
+                                                                        class="ti ti-file"></i> Summary </a></li>
 
                                                             </ul>
                                                         </div>

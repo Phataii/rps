@@ -77,11 +77,11 @@
                             <div class="mb-3">
                                 <label for="department" class="form-label">Department</label>
                                 <input type="text" class="form-control" id="department" name="department" required readonly>
-                                <input type="text" class="form-control" id="departmentId" name="departmentId" required readonly>
+                                <input type="text" class="form-control" id="departmentId" name="departmentId" hidden required readonly>
                             </div>
                             <div class="mb-3">
-                                <label for="faculty" class="form-label">Faculty</label>
-                                <input type="text" class="form-control" id="faculty" name="faculty" required readonly>
+                                @* <label for="faculty" class="form-label">Faculty</label> *@
+                                <input type="text" class="form-control" id="faculty" name="faculty" hidden required readonly>
                             </div>
 
                             <button type="submit" class="btn btn-primary">Save</button>
@@ -108,7 +108,7 @@
                                     <input type="text" class="form-control" id="user" name="user" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="editUserEmail" class="form-label">Role</label>
+                                    <label for="editUserEmail" class="form-label">Department</label>
                                     <input type="email" class="form-control" id="editUserEmail" name="Email" required>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -183,4 +183,25 @@
             document.getElementById('faculty').value = selectedOption.getAttribute('data-faculty') || "";
         });
     });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    // Select all edit buttons
+    const editButtons = document.querySelectorAll("[data-bs-target='#editUserModal']");
+
+    editButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            // Get user data from button attributes
+            const userId = this.getAttribute("data-id");
+            const userName = this.getAttribute("data-name");
+            const userEmail = this.getAttribute("data-email");
+
+            // Populate modal form fields
+            document.getElementById("editUserId").value = userId;
+            document.getElementById("user").value = userName;
+            document.getElementById("editUserEmail").value = userEmail;
+        });
+    });
+});
+
 </script>

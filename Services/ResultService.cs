@@ -27,7 +27,7 @@ namespace rps.Services
             public int Count { get; set; }
         }
 
-        public async Task<UploadResultResponse> UploadResultFromCsvAsync(IFormFile file, string courseId, int sessionId, int semesterId, int levelId, string uploader, string userId)
+        public async Task<UploadResultResponse> UploadResultFromCsvAsync(IFormFile file, string courseId, int sessionId, int semesterId, int levelId, string uploader, string userId, int departmentId)
         {
             try
             {
@@ -41,8 +41,10 @@ namespace rps.Services
 
                     // Fetch grading system for the department
                     var gradeScale = await _context.Grades
-                        .Where(g => g.Type == "ug" && g.Approved)
+                        .Where(g => g.Type == "ug" && g.DepartmentId == departmentId && g.Approved)
                         .ToListAsync();
+
+                    string resultId =Guid.NewGuid().ToString();
 
                     var results = records.Select(record =>
                     {
@@ -52,14 +54,14 @@ namespace rps.Services
                         // Determine the grade
                         var grade = gradeScale.FirstOrDefault(g => totalScore >= g.MinScore && totalScore <= g.MaxScore);
                         string gradeName = grade?.GradeName ?? "N/A";
-
+                        
                         return new Result
                         {
                             UploadedBy = uploader,
                             LevelId = levelId,
                             //DepartmentId = departmentId,
                             DepartmentName = record.Department,
-                            ResultId = Guid.NewGuid().ToString(),
+                            ResultId = resultId,
                             CourseId = courseId,
                             Session = sessionId,
                             Semester = semesterId,
@@ -85,8 +87,7 @@ namespace rps.Services
 
                         foreach (var department in departmentGroups)
                         {
-                            // int departmentId = await GetDepartmentIdByName(department.DepartmentName); // Implement this method to fetch the department ID
-                            await SaveDepartmentalBatch(courseId, semesterId, sessionId, department.DepartmentName, department.StudentsCount, userId);
+                            await SaveDepartmentalBatch(courseId, semesterId, sessionId, department.DepartmentName, department.StudentsCount, userId, resultId);
                         }
                     return new UploadResultResponse
                     {
@@ -106,7 +107,55 @@ namespace rps.Services
                 };
             }
         }
-        public async Task<string> SaveDepartmentalBatch(string courseId, int semesterId, int sessionId, string departmentName, int studentsCount, string userId)
+        public async Task<UploadResultResponse> AddSingleResult(string studentId, string StudentName, string courseId, int session, int semester, double ca, double exam, int levelId, string uploader, string dptN, int departmentId, string reference)
+        {
+            try{
+                  double totalScore = ca + exam;
+
+                 var gradeScale = await _context.Grades
+                        .Where(g => g.Type == "ug" && g.Approved)
+                        .ToListAsync();
+
+                         // Determine the grade
+                        var grade = gradeScale.FirstOrDefault(g => totalScore >= g.MinScore && totalScore <= g.MaxScore);
+                        string gradeName = grade?.GradeName ?? "N/A";
+
+                    var result = new Result{
+                        ResultId = reference,
+                        StudentId = studentId,
+                        CourseId = courseId,
+                        Session = session,
+                        Semester = semester,
+                        CA = ca,
+                        Exam = exam,
+                        Upgrade = 0,
+                        Created = DateTime.Now,
+                        LevelId = levelId,
+                        UploadedBy = uploader,
+                        Total = totalScore,
+                        Grade = gradeName,
+                        IsCO = gradeName == "F",
+                        DepartmentName = dptN,
+                        StudentName = StudentName
+                };
+                        await _context.Results.AddAsync(result);
+                        await _context.SaveChangesAsync();
+                        return new UploadResultResponse
+                    {
+                        Success = true,
+                        Message = $"A record for {StudentName} has been uploadeded successfully for {courseId}.",
+                    };
+            }catch(Exception ex){
+                return new UploadResultResponse
+                {
+                    Success = false,
+                    Message = $"Error: {ex.Message} - Contact ICT for support",
+                    Count = 0
+                };
+            }
+        }
+
+        public async Task<string> SaveDepartmentalBatch(string courseId, int semesterId, int sessionId, string departmentName, int studentsCount, string userId, string resultId)
         {
             try
             {
@@ -118,7 +167,7 @@ namespace rps.Services
                     CourseId = courseId,
                     Semester = semesterId,
                     Session = sessionId,
-                    // DepartmentId = departmentId,
+                    ResultId = resultId,
                     DepartmentName = departmentName,
                     LecturerStatus = "Pending",
                     HODStatus = "Pending",
@@ -129,8 +178,6 @@ namespace rps.Services
 
                 await _context.DepartmentBatches.AddAsync(departmentBatch);
                 await _context.SaveChangesAsync();
-
-                
 
                 return "Record updated successfully.";
             }
@@ -219,7 +266,7 @@ namespace rps.Services
             return "Done";
         }
         
-       public async Task<string> UpgradeBulkResult(string course, int session, int score, int dptId)
+       public async Task<string> UpgradeBulkResult(string course, int session, int score)
         {
             try
             {
@@ -254,7 +301,7 @@ namespace rps.Services
 
                         // Fetch the grade scale for the department
                         var gradeScale = await _context.Grades
-                            .Where(g => g.DepartmentId == dptId && g.Approved)
+                            .Where(g => g.Type == "ug" && g.Approved)
                             .ToListAsync();
 
                         // Update the grades based on the new scores
@@ -273,11 +320,9 @@ namespace rps.Services
 
                         // Save the changes to the database again
                         await _context.SaveChangesAsync();
-
-                        // Commit the transaction
                         await transaction.CommitAsync();
 
-                        return "Scores and grades updated successfully.";
+                        return "Done";
                     }
                     catch (Exception)
                     {
@@ -350,6 +395,26 @@ namespace rps.Services
                 return $"An error occurred: {ex.Message}";
             }
         }
+        public async Task<string> UpdateDptRecord(string courseId, int sessionId, string departmentName, int studentsCount)
+        {
+            try
+            {
+                // Create a new DepartmentBatch object with the provided parameters
+                var departmentBatch = await _context.DepartmentBatches.FirstOrDefaultAsync(x => x.CourseId == courseId && x.Session == sessionId && x.DepartmentName == departmentName);
+                departmentBatch.NoOfStudents += 1;
+                await _context.SaveChangesAsync();
+
+                return "Record updated successfully.";
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (you might want to use a logging framework here)
+                // For now, we'll just return an error message
+                return $"An error occurred: {ex.Message}";
+            }
+        }
+
+
 
 
 }

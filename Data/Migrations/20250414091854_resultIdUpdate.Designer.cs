@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using rps.Data;
 
@@ -10,9 +11,10 @@ using rps.Data;
 namespace rps.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250414091854_resultIdUpdate")]
+    partial class resultIdUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,9 +267,8 @@ namespace rps.Data.Migrations
                     b.Property<int>("NoOfStudents")
                         .HasColumnType("int");
 
-                    b.Property<string>("ResultId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("ResultId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Semester")
                         .HasColumnType("int");

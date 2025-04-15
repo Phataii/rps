@@ -108,7 +108,7 @@
                     </div>
                   </li>
 
-                  <li class="header-profile">
+                  @* <li class="header-profile">
                     <a href="#" class="d-block head-icon" role="button" data-bs-toggle="offcanvas"
                       data-bs-target="#profilecanvasRight" aria-controls="profilecanvasRight">
                       <img src="assets/images/avtar/woman.jpg" alt="avtar" class="b-r-10 h-35 w-35">
@@ -125,7 +125,7 @@
                               </span>
                             </div>
                             <div class="text-center mt-2">
-                              <h6 class="mb-0"> Laura Monaldo</h6>
+                              <h6 class="mb-0"> -- </h6>
                               <p class="f-s-12 mb-0 text-secondary"><span>@userEmail</span></p>
                             </div>
                           </li>
@@ -139,7 +139,7 @@
                         </ul>
                       </div>
                     </div>
-                  </li>
+                  </li> *@
                 </ul>
               </div>
             </div>
@@ -170,47 +170,52 @@
                 <i class="ph-duotone  ph-upload"></i> Result Upload
               </a>
             </li>
-            @if (userRole == "hod") // Only show if user is a Dean
-              {
-            <li class="no-sub">
-              <a class="" href="/departmental-result">
-                <i class="ph-duotone  ph-file"></i> Department
-              </a>
-            </li>
-            }
-             @if (userRole == "dean") // Only show if user is a Dean
-              {
-                  <li class="no-sub">
-                      <a class="" href="/faculty-result">
-                          <i class="ph-duotone ph-squares-four"></i> Faculty
-                      </a>
-                  </li>
-              }
-              @* <li class="no-sub">
-                <a class="" href="/preview-result">
-                  <i class="ph-duotone ph-eye"></i> SpreadSheet Preview
+            @if (userRole == "hod"){
+              <li class="no-sub">
+                <a class="" href="/departmental-result">
+                  <i class="ph-duotone  ph-file"></i> Department
                 </a>
-            </li> *@
+              </li>
+            }
+            @if (userRole == "dean"){
+              <li class="no-sub">
+                  <a class="" href="/faculty-result">
+                      <i class="ph-duotone ph-squares-four"></i> Faculty
+                  </a>
+              </li>
+            }
+            @if (userRole == "admin" || userRole == "dev"){
             <li class="no-sub">
                 <a class="" href="/roles">
                   <i class="ph-duotone  ph-lock"></i>Manage Roles
                 </a>
               </li>
+            
               <li class="no-sub">
                 <a class="" href="/users">
                   <i class="ph-duotone  ph-users"></i> Manage Users
                 </a>
               </li>
+            
               <li class="no-sub">
                 <a class="" href="/logs">
                   <i class="ph-duotone  ph-list"></i> Activity Logs
                 </a>
               </li>
+            
               <li class="no-sub">
                 <a class="" href="/settings">
                   <i class="ph-duotone  ph-gear"></i>Settings
                 </a>
               </li>
+            }
+            @if (userRole == "dev"){
+              <li class="no-sub">
+                <a class="" href="/dev">
+                  <i class="ph-duotone  ph-gear"></i>Developer
+                </a>
+              </li>
+            }
             <li class="no-sub">
               <form method="post" action="api/auth/logout">
                 <button type="submit" class="btn btn-secondary mx-4"> <i class="ph-duotone  ph-sign-out"></i> Logout</button>
@@ -243,7 +248,7 @@
             <div class="col-md-9 col-12">
               <ul class="footer-text">
                 <li>
-                  <p class="mb-0">Copyright © 2024. All rights reserved</p>
+                  <p class="mb-0">Copyright © @DateTime.Now.Year All rights reserved</p>
                 </li>
               </ul>
             </div>

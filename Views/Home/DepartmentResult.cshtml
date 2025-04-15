@@ -13,21 +13,20 @@
                     <h2>@ViewBag.DepartmentName</h2>
                     <div class="col-12">
                         <div class="card">
-                            
                             <div class="card-body p-0">
                                 <div class="app-scroll table-responsive app-datatable-default">
                                     <table id="exampledatatable1" class="w-100 display student-list-table table table-bordered table-striped align-middle">
                                         <thead>
-                                        <tr>
-                                            <th>#</th> <!-- Serial Number Column -->
-                                            <th>Course</th>
-                                            <th>Semester</th>
-                                            <th>Session</th>
-                                            <th>No. Of Students</th>
-                                            <th>HOD</th>
-                                            <th>Dean</th>
-                                            <th>Action</th>
-                                        </tr>
+                                            <tr>
+                                                <th>#</th> <!-- Serial Number Column -->
+                                                <th>Course</th>
+                                                <th>Semester</th>
+                                                <th>Session</th>
+                                                <th>No. Of Students</th>
+                                                <th>HOD</th>
+                                                <th>Dean</th>
+                                                <th>Action</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
                                              @{
@@ -54,10 +53,16 @@
                                                                 <i class="ti ti-dots-vertical"></i>
                                                             </button>
                                                             <ul class="dropdown-menu">
-                                                                <li><a class="dropdown-item" href="/result-details?course=@result.CourseId&session=@result.Session&dpt=@result.DepartmentId"><i
-                                                                        class="ti ti-eye"></i> View </a></li>
-                                                            @* <li></li> *@
-
+                                                                <li>
+                                                                    <a class="dropdown-item" href="/result-details?reference=@result.ResultId&session=@result.Session"><i
+                                                                        class="ti ti-eye"></i>View
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a class="dropdown-item" href="/mycourse-preview?reference=@result.ResultId&session=@result.Session"><i
+                                                                        class="ti ti-file"></i>Clean Sheet
+                                                                    </a>
+                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </td>

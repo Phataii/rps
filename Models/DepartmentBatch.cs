@@ -11,8 +11,7 @@ namespace rps.Models
         public int Session { get; set;}
         public Session? Sessions { get; set;}
         public string? DepartmentName { get; set;}
-        public int DepartmentId { get; set;}
-        public int FacultyId { get; set;}
+        public string ResultId { get; set;}
         [ForeignKey("Users")]
         public string? User { get; set;}  // Course Lecturer
         public User? Users { get; set;}

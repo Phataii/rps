@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grade Status Update</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .header {
+            padding: 10px 0;
+            border-bottom: 2px solid #004080;
+        }
+        .logo {
+            width: 120px;
+        }
+        .content {
+            padding: 20px;
+        }
+        h4 {
+            color: #004080;
+            font-size: 20px;
+        }
+        p {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .footer {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 14px;
+            color: #777;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- School Logo -->
+        <div class="header">
+            <img src="https://edouniversity.edu.ng/portal/images/nav/logo%201.png" alt="School Logo" class="logo">
+        </div>
+
+        <!-- Email Content -->
+        <div class="content">
+            <h4>Hello,</h4>
+            <p>You change the status of {{course}} to {{status}} as a {{who}}.</p>
+            <p>If you didn't take this action, kindly contact the ICT unit as soon as possible.</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; {{CurrentYear}} Edo University Iyamho. All rights reserved.</p>
+        </div>
+    </div>
+
+</body>
+</html>

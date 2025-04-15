@@ -21,41 +21,86 @@
                 <h2 class="main-title">@ViewBag.dpt -- @ViewBag.course</h2><hr>
                 <!-- Add Departments Form start -->
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-6">
-                            <h5 class="mb-1">Lecturer: <small  class="bg-secondary p-1 rounded">@ViewBag.LecturerStatus</small></h5>
-                            <h5 class="mb-1">HOD: <small  class="bg-secondary p-1 rounded">@ViewBag.HODStatus</small></h5>
-                            <h5>Dean: <small class="bg-secondary p-1 rounded">@ViewBag.DeanStatus</small></h5> 
-                        </div>
-                        <div class="col-6">
-                            <div class="col-6">
-                                @if (@ViewBag.isLecturer == "Yes"){ // Only the course lecturer can upgrade 
-                                    <div class="row card">
-                                        @if (@ViewBag.DeanStatus != "Approved" && @ViewBag.HODStatus != "Approved"){
+                    <div class="row g-4">
+                        <!-- Left Column -->
+                        <div class="col-md-4">
+                            @if (@ViewBag.isLecturer == "Yes" && @ViewBag.LecturerStatus != "Approved"){ // Only the course lecturer can upgrade 
+                                <div class="card h-100">
+                                    @if (@ViewBag.DeanStatus != "Approved" && @ViewBag.HODStatus != "Approved"){
                                         <div class="card-body">
-                                            <h4 class="">Upgrade for all students</h4>
+                                            <h4 class="mb-3">Upgrade for all students</h4>
                                             <form action="/api/result/upgradeBulkResult" method="post">
-                                                @* <input type="text" class="form-control" id="uploader" name="uploader" hidden readonly> *@
-                                                <input type="text" value="@ViewBag.dpt" name="dptCode" readonly class="form-control my-2"/>
-                                                <input type="text" value="@ViewBag.course" name="course" readonly class="form-control my-2"/>
-                                                <input type="text" value="@ViewBag.session" name="session" hidden class="form-control my-2"/>
-                                                <input type="text" name="score" class="form-control my-2" placeholder="score to add for all students"/>
-                                                <button class="btn btn-primary w-100 mb-3" type="submit">Upgrade Now!</button>
+                                                <input type="text" value="@ViewBag.dpt" name="dptCode" readonly class="form-control mb-2"/>
+                                                <input type="text" value="@ViewBag.course" name="course" readonly class="form-control mb-2"/>
+                                                <input type="text" value="@ViewBag.session" name="session" hidden class="form-control mb-2"/>
+                                                <input type="text" name="score" class="form-control mb-2" placeholder="Score to add for all students"/>
+                                                <button class="btn btn-primary w-100" type="submit">Upgrade Now!</button>
                                             </form>
                                         </div>
-                                        }
-                                    </div>
-                                    @if(@ViewBag.LecturerStatus != "Approved" ){
-                                        <form asp-action="ApproveOrDecline" asp-controller="Result" style="display:inline;">
-                                            <input type="hidden" name="who" value="lecturer">
-                                            <input type="hidden" name="status" value="Approved">
-                                            <input type="hidden" name="course" value="@ViewBag.course">
-                                            <input type="hidden" name="session" value="@ViewBag.session">
-                                            <input type="hidden" name="dpt" value="@ViewBag.dpt">
-                                            <button class="btn btn-primary w-100 mb-3" type="submit">APPROVE @ViewBag.course</button>
-                                        </form>
-                                    }else if(@ViewBag.LecturerStatus == "Approved" && @ViewBag.HODStatus != "Approved"){
-                                        <form asp-action="ApproveOrDecline" asp-controller="Result" style="display:inline;">
+                                    }
+                                </div>
+                               }
+                        </div>
+
+                        <!-- Middle Column -->
+                        <div class="col-md-4">
+                            @if (@ViewBag.isLecturer == "Yes" && @ViewBag.LecturerStatus != "Approved"){
+                                <div class="card h-100">
+                                    @if (@ViewBag.DeanStatus != "Approved" && @ViewBag.HODStatus != "Approved"){
+                                        <div class="card-body">
+                                            <h4 class="mb-3">Add a new record</h4>
+                                            <form action="/api/result/add-result" method="post">
+                                                <input type="text" name="studentId" placeholder="MAT/NO/123456" class="form-control mb-2"/>
+                                                <input type="text" name="studentName" placeholder="Otti Daniel" class="form-control mb-2"/>
+                                                <input type="text" name="courseId" value="@ViewBag.course" hidden class="form-control mb-2"/>
+                                                <input type="text" name="session" value="@ViewBag.session" hidden class="form-control mb-2"/>
+                                                <input type="text" name="dptN" value="@ViewBag.dpt" hidden class="form-control mb-2"/>
+                                                <input type="text" name="reference" value="@ViewBag.reference" hidden class="form-control mb-2"/>
+                                                <input type="text" name="ca" class="form-control mb-2" placeholder="CA"/>
+                                                <input type="text" name="exam" class="form-control mb-2" placeholder="Exam"/>
+                                                <button class="btn btn-primary w-100" type="submit">Submit</button>
+                                            </form>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="col-md-4">
+                            <div class="card h-100 p-3">
+                               <h5>
+                                    Lecturer: 
+                                    <small class="@(ViewBag.LecturerStatus == "Approved" ? "bg-light-success" : "bg-light-secondary") p-1 rounded">
+                                        @ViewBag.LecturerStatus
+                                    </small>
+                                </h5>
+                                <h5>
+                                    HOD: 
+                                    <small class="@(ViewBag.HODStatus == "Approved" ? "bg-light-success" : "bg-light-secondary") p-1 rounded">
+                                        @ViewBag.HODStatus
+                                    </small>
+                                </h5>
+                                <h5>
+                                    Dean: 
+                                    <small class="@(ViewBag.DeanStatus == "Approved" ? "bg-light-success" : "bg-light-secondary") p-1 rounded">
+                                        @ViewBag.DeanStatus
+                                    </small>
+                                </h5>
+                               
+                                 <!-- Approval/Decline -->
+                                @if(@ViewBag.LecturerStatus != "Approved"){
+                                    <form asp-action="ApproveOrDecline" asp-controller="Result" class="mt-3">
+                                        <input type="hidden" name="who" value="lecturer">
+                                        <input type="hidden" name="status" value="Approved">
+                                        <input type="hidden" name="course" value="@ViewBag.course">
+                                        <input type="hidden" name="session" value="@ViewBag.session">
+                                        <input type="hidden" name="dpt" value="@ViewBag.dpt">
+                                        <button class="btn btn-primary w-100" type="submit">APPROVE @ViewBag.course</button>
+                                    </form>
+                                }
+                                else if(@ViewBag.LecturerStatus == "Approved" && @ViewBag.HODStatus != "Approved"){
+                                    <form asp-action="ApproveOrDecline" asp-controller="Result" class="mt-2">
                                         <input type="hidden" name="who" value="lecturer">
                                         <input type="hidden" name="status" value="Pending">
                                         <input type="hidden" name="course" value="@ViewBag.course">
@@ -63,13 +108,11 @@
                                         <input type="hidden" name="dpt" value="@ViewBag.dpt">
                                         <button class="btn btn-danger w-100" type="submit">DECLINE @ViewBag.course</button>
                                     </form>
-                                    }
                                 }
+                            
                             </div>
                         </div>
                     </div>
-                    
-                    
                     
                     @if(@ViewBag.HODStatus == "Approved"){
                         <div class="row m-1">

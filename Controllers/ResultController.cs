@@ -35,7 +35,7 @@ namespace rps.Controllers
         }
 
         [HttpPost("upload")]
-       public async Task<IActionResult> UploadResult(IFormFile file, [FromForm] string courseId, [FromForm] int sessionId, [FromForm] int semesterId, [FromForm] int levelId)
+        public async Task<IActionResult> UploadResult(IFormFile file, [FromForm] string courseId, [FromForm] int sessionId, [FromForm] int semesterId, [FromForm] int levelId)
         {
             try
             {
@@ -68,15 +68,12 @@ namespace rps.Controllers
                 var departmentName = loggedInUser.DepartmentName;
 
                 // Process the uploaded file
-                var result = await _resultService.UploadResultFromCsvAsync(file, courseId, sessionId, semesterId, levelId, uploader, loggedInUser.Id);
+                var result = await _resultService.UploadResultFromCsvAsync(file, courseId, sessionId, semesterId, levelId, uploader, loggedInUser.Id, departmentId);
 
                 if (result.Success)
                 {
                     TempData["message"] = result.Message;
                     int studentsCount = result.Count;
-
-                    // Save departmental batch
-                    // await _resultService.SaveDepartmentalBatch(courseId, semesterId, sessionId, departmentId, departmentName, studentsCount, loggedInUser.Id);
 
                     // Save faculty batch
                     await _resultService.SaveFacultyBatch(semesterId, sessionId, departmentId, departmentName, facultyId);
@@ -100,7 +97,65 @@ namespace rps.Controllers
             }
         }
 
- 
+        [HttpPost("add-result")]
+        public async Task<IActionResult> AddSingleResult(
+            [FromForm] string studentId,
+            [FromForm] string studentName,
+            [FromForm] string courseId,
+            [FromForm] double ca,
+            [FromForm] double exam,
+            [FromForm] int session,
+            [FromForm] int semester,
+            [FromForm] string dptN,
+            [FromForm] int levelId,
+            [FromForm] string reference)
+        {
+            try
+            {
+                var loggedInUser = await _userHelper.GetLoggedInUser(Request);
+                if (loggedInUser == null)
+                {
+                    return Redirect("/");
+                }
+
+                var resultExist = await _context.Results.FirstOrDefaultAsync(x =>
+                    x.StudentId == studentId &&
+                    x.CourseId == courseId &&
+                    x.Session == session);
+
+                if (resultExist != null)
+                {
+                    TempData["error"] = $"A record for {studentName} for {courseId} already exists for this session.";
+                    return Redirect("/result-upload");
+                }
+
+                var uploader = loggedInUser.Email;
+                var result = await _resultService.AddSingleResult(
+                    studentId, studentName, courseId,
+                    session, semester, ca, exam, levelId, uploader, dptN, loggedInUser.DepartmentId, reference);
+
+                if (result.Success)
+                {
+                    TempData["message"] = result.Message;
+                    var updateDptBatchCount = await _resultService.UpdateDptRecord(courseId, session, dptN, 1);
+                    await _activityTrackerService.LogActivity(loggedInUser.Id, loggedInUser.Email, $"Added a record to {courseId} for {studentName}");
+                    // await _emailService.SendEmailAsync(loggedInUser.Email, "Added result record", templatePath, placeholders, true);
+                    return Redirect(Request.Headers["Referer"].ToString());
+                }
+                else
+                {
+                    TempData["error"] = result.Message;
+                    return Redirect(Request.Headers["Referer"].ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while uploading the result.");
+                TempData["error"] = "An error occurred while processing your request. Please try again later.";
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+        }
+
         // [HttpPut("hod/status/{course}/{session}")]
         // For HOD or Dean to approve or reject result
         public async Task<IActionResult> ApproveOrDecline([FromForm] string course, [FromForm] int session, [FromForm] string status, [FromForm] string who, [FromForm] string dpt)
@@ -117,10 +172,22 @@ namespace rps.Controllers
 
                 if (result == "Done")
                 {
-                    
                     // grab logs
                     await _activityTrackerService.LogActivity(loggedInUser.Id, loggedInUser.Email, $"changed the status of {course}, in the {session} session to {status}");
                     TempData["message"] = $"Result Status changed to {status} for {course}";
+
+                    // Send email to user after successful upgrade
+                    string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Views/Home/EmailTemp", "ResultStatus.html");
+                    var placeholders = new Dictionary<string, string>
+                    {
+                       
+                        { "course", course },
+                        { "status", status },
+                        { "who", who},
+                        { "CurrentYear", DateTime.Now.Year.ToString() }
+                    };
+
+                    await _emailService.SendEmailAsync(loggedInUser.Email, $"Result Status Changed", templatePath, placeholders, true);
                     return Redirect(Request.Headers["Referer"].ToString());
                 }
                 else
@@ -167,7 +234,7 @@ namespace rps.Controllers
             }
         }  
         [HttpPost("upgradeBulkResult")]
-        public async Task<IActionResult> UpgradeBulkResult([FromForm] string course, [FromForm] int session, [FromForm] int score, [FromForm] int dptId, [FromForm] string uploader)
+        public async Task<IActionResult> UpgradeBulkResult([FromForm] string course, [FromForm] int session, [FromForm] int score)
         {
             try
             {
@@ -177,17 +244,17 @@ namespace rps.Controllers
                     return Redirect("/");
                 }
 
-                string result = await _resultService.UpgradeBulkResult(course, session, score, dptId);
+                string result = await _resultService.UpgradeBulkResult(course, session, score);
 
                 //getting the fistname of the lecturer just for the sake of the email template
-                string firstName = uploader.Split('@')[0].Split('.')[0];
+                string firstName = loggedInUser.Email.Split('@')[0].Split('.')[0];
                 string formattedName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(firstName.ToLower());
 
                 if (result == "Done")
                 {
                     
                     // Send email to user after successful upgrade
-                    string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Views/Home", "EmailTemplateUpgrade.html");
+                    string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Views/Home/EmailTemp", "EmailTemplateUpgrade.html");
                     var placeholders = new Dictionary<string, string>
                     {
                         { "UserName", formattedName },
@@ -198,8 +265,9 @@ namespace rps.Controllers
                         { "CurrentYear", DateTime.Now.Year.ToString() }
                     };
 
-                    await _emailService.SendEmailAsync(uploader, "Result Record Upgrade", templatePath, placeholders, true);
-                    return Redirect("/result-upload");
+                    await _emailService.SendEmailAsync(loggedInUser.Email, "Result Record Upgrade", templatePath, placeholders, true);
+
+                   return Redirect(Request.Headers["Referer"].ToString());
                 }
                 else
                 {
@@ -235,7 +303,7 @@ namespace rps.Controllers
                 if (result == "Done")
                 {
                     // Send email to user after successful upgrade
-                    string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Views/Home", "EmailTemplateUpgrade.html");
+                    string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Views/Home/EmailTemp", "EmailTemplateUpgrade.html");
                     var placeholders = new Dictionary<string, string>
                     {
                         { "UserName", formattedName },
@@ -269,7 +337,7 @@ namespace rps.Controllers
             // API URL and API Key
             string encodedCourseCode = Uri.EscapeDataString(courseCode);
             string apiUrl = $"https://edouniversity.edu.ng/api/v1/courseregistrationsapi/ugstudents?sessionId={sessionId}&courseCode={encodedCourseCode}"; 
-            string apiKey = "";
+            string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
 
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("X-API-Key", apiKey);

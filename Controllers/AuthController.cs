@@ -98,8 +98,8 @@ namespace rps.Controllers
         public IActionResult LoginWithGoogle()
         {
             // var clientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
-            var clientId = "472518449698-aa0f036e7mgpfce18ltj1m2hothmphtf.apps.googleusercontent.com";
-            var redirectUri = "https://localhost:7011/api/auth/signin-google";
+            var clientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
+            var redirectUri = Environment.GetEnvironmentVariable("GOOGLE_REDIRECT_URI");
             var state = Guid.NewGuid().ToString(); // Optional for CSRF protection
             var scope = "openid email profile";
 
@@ -120,9 +120,9 @@ namespace rps.Controllers
                 return BadRequest("Authorization code not provided.");
             }
 
-                var clientId = "472518449698-aa0f036e7mgpfce18ltj1m2hothmphtf.apps.googleusercontent.com";
-                    var clientSecret = "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";
-                    var redirectUri = "https://localhost:7011/api/auth/signin-google";
+                var clientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
+                var clientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
+                var redirectUri = Environment.GetEnvironmentVariable("GOOGLE_REDIRECT_URI");
 
             using (var httpClient = new HttpClient())
             {

@@ -1,4 +1,4 @@
-@model IEnumerable<rps.Models.FacultyBatch>
+@model IEnumerable<rps.Models.Departments>
 @{
     ViewData["Title"] = "Faculty";
 }
@@ -26,7 +26,7 @@
                 <!-- Breadcrumb end -->
 
                 <!-- Bootstrap Tabs -->
-                <ul class="nav nav-tabs" id="facultyTabs" role="tablist">
+                @* <ul class="nav nav-tabs" id="facultyTabs" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="pending-tab" data-bs-toggle="tab" href="#pending" role="tab" aria-controls="pending" aria-selected="true">Pending</a>
                     </li>
@@ -36,13 +36,13 @@
                     <li class="nav-item">
                         <a class="nav-link" id="subject-tab" data-bs-toggle="tab" href="#subject" role="tab" aria-controls="subject" aria-selected="false">Subject to Correction</a>
                     </li>
-                </ul>
+                </ul> *@
 
                 <!-- Tab Content -->
-                <div class="tab-content" id="facultyTabsContent">
+                @* <div class="tab-content" id="facultyTabsContent">
                     @foreach (var status in new[] { "Pending", "Approved", "Subject" })
                     {
-                        <div class="tab-pane fade @(status == "Pending" ? "show active" : "")" id="@status.Replace(" ", "").ToLower()" role="tabpanel">
+                        <div class="tab-pane fade @(status == "Pending" ? "show active" : "")" id="@status.Replace(" ", "").ToLower()" role="tabpanel"> *@
                             <div class="card">
                                 <div class="card-body p-0">
                                     <div class="app-scroll app-datatable-default">
@@ -51,11 +51,8 @@
                                                 <tr>
                                                     <th>#</th> <!-- Serial Number Column -->
                                                     <th>Department</th>
-                                                    <th>Semester</th>
-                                                    <th>Session</th>
-                                                    @* <th>No. Of Courses</th> *@
-                                                    <th>Dean Status</th>
-                                                    <th>Senate Status</th>
+                                                    @* <th>Dean Status</th>
+                                                    <th>Senate Status</th> *@
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -63,18 +60,13 @@
                                                 @{
                                                     var serialNumber = 1; // Initialize serial number
                                                 }
-                                                @foreach (var result in Model.Where(x => x.Status == status))
+                                                @foreach (var result in Model.Where(x => x.FacultyId == @ViewBag.FacultyId))
                                                 {
                                                     <tr>
                                                         <td>@serialNumber</td> <!-- Display Serial Number -->
-                                                        <td>@result.DepartmentName</td>
-                                                        <td>@(result.Semester == 1 ? "First" : "Second")</td>
-                                                        <td>@result.Sessions.Name</td>
-                                                        @* <td>
-                                                            @ViewBag.number
-                                                        </td> *@
-                                                        <td>@result.Status</td>
-                                                        <td>@result.Registry</td>
+                                                        <td>@result.Name</td>
+                                                        @* <td>@result.Status</td>
+                                                        <td>@result.Registry</td> *@
                                                         <td>
                                                             <div class="btn-group dropdown-icon-none">
                                                                 <button
@@ -84,15 +76,20 @@
                                                                     <i class="ti ti-dots-vertical"></i>
                                                                 </button>
                                                                 <ul class="dropdown-menu" style="height: 100px;">
-                                                                    @if(@result.Status == "Approved"){
-                                                                        <li><a class="dropdown-item" href="/preview-result?departmentId=@result.DepartmentId&session=@result.Session&semester=@result.Semester&level=1&dptN=@result.DepartmentName"><i
-                                                                            class="ti ti-file"></i> Spreadsheet Preview </a></li>
-                                                                    }
-                                                                    
-                                                                    <li><a class="dropdown-item" href="/departmental-result?reference=@result.DepartmentName">
-                                                                            <i class="ti ti-eye"></i> View</a></li>
-
                                                                     <li>
+                                                                        <a class="dropdown-item" href="/departmental-result?reference=@result.Name">
+                                                                            <i class="ti ti-eye"></i> View
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a class="dropdown-item" href="/preview-result?refId=@result.Id&session=10&semester=1&level=1&reference=@result.Name">
+                                                                            <i class="ti ti-file"></i> Spreadsheet 
+                                                                        </a>
+                                                                    </li>
+                                                                   
+                                                                   
+
+                                                                    @* <li>
                                                                          @if(@result.Status == "Approved"){
                                                                             <form action="/api/result/dean-approval" method="POST" style="display:inline;">
                                                                                 <input type="hidden" name="dptId" value="@result.DepartmentId">
@@ -112,7 +109,7 @@
                                                                                 </button>
                                                                             </form>
                                                                             }
-                                                                    </li>
+                                                                    </li> *@
 
                                                                 </ul>
                                                             </div>
@@ -125,9 +122,9 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @* </div>
                     }
-                </div>
+                </div> *@
                 <!-- Tabs end -->
             </div>
         </main>

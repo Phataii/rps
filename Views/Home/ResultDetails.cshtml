@@ -22,20 +22,36 @@
                 <!-- Add Departments Form start -->
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-6">
-                            <h5 class="mb-1">Lecturer: <small  class="bg-secondary p-1 rounded">@ViewBag.LecturerStatus</small></h5>
-                            <h5 class="mb-1">HOD: <small  class="bg-secondary p-1 rounded">@ViewBag.HODStatus</small></h5>
-                            <h5>Dean: <small class="bg-secondary p-1 rounded">@ViewBag.DeanStatus</small></h5> 
+                        <div class="col-4 p-2 card">
+                            <h5>
+                                Lecturer: 
+                                <small class="@(ViewBag.LecturerStatus == "Approved" ? "bg-light-success" : "bg-light-secondary") p-1 rounded">
+                                    @ViewBag.LecturerStatus
+                                </small>
+                            </h5>
+                            <h5>
+                                HOD: 
+                                <small class="@(ViewBag.HODStatus == "Approved" ? "bg-light-success" : "bg-light-secondary") p-1 rounded">
+                                    @ViewBag.HODStatus
+                                </small>
+                            </h5>
+                            <h5>
+                                Dean: 
+                                <small class="@(ViewBag.DeanStatus == "Approved" ? "bg-light-success" : "bg-light-secondary") p-1 rounded">
+                                    @ViewBag.DeanStatus
+                                </small>
+                            </h5>
                         </div>
                         <div class="col-6">
                             <div class="col-6"> 
-                                @if (userRole == "hod"){
+                                @if (userRole == "hod" && @ViewBag.LecturerStatus == "Approved"){
                                     @if(@ViewBag.HODStatus != "Approved"){
                                         <form asp-action="ApproveOrDecline" asp-controller="Result" style="display:inline;">
                                             <input type="hidden" name="who" value="hod">
                                             <input type="hidden" name="status" value="Approved">
                                             <input type="hidden" name="course" value="@ViewBag.course">
                                             <input type="hidden" name="session" value="@ViewBag.session">
+                                            <input type="hidden" name="dpt" value="@ViewBag.dpt">
                                             <button class="btn btn-primary w-100 mb-3" type="submit">APPROVE RESULT (HOD)</button>
                                         </form>
                                     }else if (@ViewBag.HODStatus == "Approved" && @ViewBag.DeanStatus != "Approved"){
@@ -44,19 +60,40 @@
                                             <input type="hidden" name="status" value="Pending">
                                             <input type="hidden" name="course" value="@ViewBag.course">
                                             <input type="hidden" name="session" value="@ViewBag.session">
+                                            <input type="hidden" name="dpt" value="@ViewBag.dpt">
                                             <button class="btn btn-danger w-100" type="submit">DECLINE RESULT (HOD)</button>
                                         </form> 
                                     }
+                                }else if(userRole == "dean" && @ViewBag.HODStatus == "Approved"){
+                                     @if(@ViewBag.DeanStatus != "Approved"){
+                                        <form asp-action="ApproveOrDecline" asp-controller="Result" style="display:inline;">
+                                            <input type="hidden" name="who" value="dean">
+                                            <input type="hidden" name="status" value="Approved">
+                                            <input type="hidden" name="course" value="@ViewBag.course">
+                                            <input type="hidden" name="session" value="@ViewBag.session">
+                                            <input type="hidden" name="dpt" value="@ViewBag.dpt">
+                                            <button class="btn btn-primary w-100 mb-3" type="submit">APPROVE (Dean)</button>
+                                        </form>
+                                    }else{
+                                        <form asp-action="ApproveOrDecline" asp-controller="Result" style="display:inline;">
+                                        <input type="hidden" name="who" value="dean">
+                                        <input type="hidden" name="status" value="Pending">
+                                        <input type="hidden" name="course" value="@ViewBag.course">
+                                        <input type="hidden" name="session" value="@ViewBag.session">
+                                        <input type="hidden" name="dpt" value="@ViewBag.dpt">
+                                        <button class="btn btn-danger w-100" type="submit">DECLINE (Dean)</button>
+                                    </form>
+                                    }
                                 }
                             </div>       
-                            <div class="col-6">
-                                @if (@ViewBag.isLecturer == "Yes"){ // Only the course lecturer can upgrade 
+                            @* <div class="col-6">
+                                @if (@ViewBag.isLecturer == "Yes"){ 
                                     <div class="row card">
                                         @if (@ViewBag.DeanStatus != "Approved" && @ViewBag.HODStatus != "Approved"){
                                         <div class="card-body">
                                             <h4 class="">Upgrade for all students</h4>
                                             <form action="/api/result/upgradeBulkResult" method="post">
-                                                @* <input type="text" class="form-control" id="uploader" name="uploader" hidden readonly> *@
+                                             
                                                 <input type="text" value="@ViewBag.dpt" name="dptCode" readonly class="form-control my-2"/>
                                                 <input type="text" value="@ViewBag.course" name="course" readonly class="form-control my-2"/>
                                                 <input type="text" value="@ViewBag.session" name="session" hidden class="form-control my-2"/>
@@ -84,55 +121,13 @@
                                     </form>
                                     }
                                 }
-                            </div>
+                            </div> *@
                         </div>
                     </div>
-                    
-                    
-                    
-                    @if(@ViewBag.HODStatus == "Approved"){
-                        <div class="row m-1">
-                            <div class="col-8">
-                                
-                                <div class="row">
-                                    <div class="col-6 mt-2">
-                                        @if (userRole == "dean") // Only show if user is a Dean
-                                        {   
-                                            @if(@ViewBag.DeanStatus != "Approved"){
-                                                <form asp-action="ApproveOrDecline" asp-controller="Result" style="display:inline;">
-                                                    <input type="hidden" name="who" value="dean">
-                                                    <input type="hidden" name="status" value="Approved">
-                                                    <input type="hidden" name="course" value="@ViewBag.course">
-                                                    <input type="hidden" name="session" value="@ViewBag.session">
-                                                    <button class="btn btn-primary w-100 mb-3" type="submit">APPROVE @ViewBag.course</button>
-                                                </form>
-                                            }else{
-                                                <form asp-action="ApproveOrDecline" asp-controller="Result" style="display:inline;">
-                                                <input type="hidden" name="who" value="dean">
-                                                <input type="hidden" name="status" value="Pending">
-                                                <input type="hidden" name="course" value="@ViewBag.course">
-                                                <input type="hidden" name="session" value="@ViewBag.session">
-                                                <button class="btn btn-danger w-100" type="submit">DECLINE @ViewBag.course</button>
-                                            </form>
-                                            }
-                                    }
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    }
 
-                    <!-- Breadcrumb end -->
-
-                    <!-- ready to use table start -->
                     <div class="row">
-                        <!-- student list tabel 2-->
-
                         <div class="col-12">
-                        
                             <div class="card">
-                                
                                 <div class="card-body p-0">
                                     <div class="app-scroll table-responsive app-datatable-default">
                                         <table id="exampledatatable1" class="w-100 display student-list-table table table-bordered table-striped align-middle">
@@ -168,9 +163,7 @@
                                                         {
                                                             <td>@((result.CA) + (result.Upgrade))</td>
                                                         }
-                                                        
-                                                        
-                                                        
+                                                    
                                                         @if(@ViewBag.isDean != "Yes")
                                                         {
                                                             <td>@result.CA</td>
@@ -192,7 +185,7 @@
                                                                         data-bs-auto-close="true" aria-expanded="false">
                                                                     <i class="ti ti-dots-vertical"></i>
                                                                 </button>
-                                                                @if (@ViewBag.isLecturer == "Yes") // Only the course lecturer can upgrade
+                                                                @* @if (@ViewBag.isLecturer == "Yes") // Only the course lecturer can upgrade
                                                                 { 
                                                                     @if(@ViewBag.HODStatus != "Approved" && @ViewBag.DeanStatus != "Approved"){
                                                                     <ul class="dropdown-menu">
@@ -203,7 +196,7 @@
                                                                         </li>
                                                                     </ul>
                                                                     }
-                                                                }
+                                                                } *@
                                                             </div>
                                                         </td>
                                                     </tr>

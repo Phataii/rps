@@ -43,11 +43,7 @@ namespace rps.Controllers
                 return BadRequest("Invalid file or type ID.");
             }
 
-            var result = await _gradeService.UploadGradesFromCsvAsync(file, type);
-            
-            // Record activity logs
-            //  var log = await _trackerService.AddLogAsync(1, "Added bulk grade data using csv");
-            
+            var result = await _gradeService.UploadGradesFromCsvAsync(file, type, loggedInUser.Email);
             if (result.Contains("successfully"))
             {
                 // grab logs
@@ -57,6 +53,18 @@ namespace rps.Controllers
 
             return BadRequest(result);
         }
+
+        [HttpPost("UpdateGrade")]
+        public IActionResult UpdateGrade([FromBody] Grade grade)
+        {
+            Console.WriteLine(">>>>>> got here");
+            var updated = _gradeService.UpdateGrade(grade);
+            if (!updated)
+                return NotFound(new { message = "Grade not found" });
+
+            return Ok(new { message = "Grade updated successfully" });
+        }
+
 
         [HttpPost("upload-remark")]
         public async Task<IActionResult> UploadRemarks(IFormFile file, [FromForm] int dpt)
@@ -115,7 +123,7 @@ namespace rps.Controllers
             // grab logs
             await _activityTrackerService.LogActivity(loggedInUser.Id, loggedInUser.Email, $"updated grade status to {status}");
             // Send email to user
-            string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Views/Home", "EmailTemplateGrade.html");
+            string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Views/Home/EmailTemp", "EmailTemplateGrade.html");
             var placeholders = new Dictionary<string, string>
             {
                 { "UserName", loggedInUser?.Name },
@@ -176,5 +184,7 @@ namespace rps.Controllers
 
             return NoContent();
         }
+
+        
     }
 }
