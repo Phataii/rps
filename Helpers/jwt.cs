@@ -10,7 +10,7 @@ public class JwtHelper
 {
     private readonly string _secretKey = "0$H1OM#0L3LargerKeyWithEnoughLengthToPassValidation12345"; // 64 characters // Secret key used to sign the JWT
     private readonly string _issuer = "EUI_RPS"; // Set your issuer (usually your app or API name)
-    private readonly string _audience = "https://localhost:7011/"; // Set the audience (who the token is intended for)
+    private readonly string _audience = "https://result.edouniversity.edu.ng"; // Set the audience (who the token is intended for)
 
     public string GenerateJwtToken(User user)
     {

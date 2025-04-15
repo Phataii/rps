@@ -37,7 +37,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
             ValidateIssuer = true,
             ValidIssuer = "EUI_RPS",
             ValidateAudience = true,
-            ValidAudience = "https://localhost:7011/",
+            ValidAudience = "https://result.edouniversity.edu.ng",
             ValidateLifetime = true,
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes("0$H1OM#0L3LargerKeyWithEnoughLengthToPassValidation12345"))
