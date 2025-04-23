@@ -58,11 +58,13 @@
                                                                         class="ti ti-eye"></i>View
                                                                     </a>
                                                                 </li>
+                                                                @if(result.LecturerStatus == "Approved"){
                                                                 <li>
                                                                     <a class="dropdown-item" href="/mycourse-preview?reference=@result.ResultId&session=@result.Session"><i
                                                                         class="ti ti-file"></i>Clean Sheet
                                                                     </a>
                                                                 </li>
+                                                                }
                                                             </ul>
                                                         </div>
                                                     </td>
