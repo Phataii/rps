@@ -222,7 +222,7 @@
                                                                 </button>
                                                                 @if (@ViewBag.isLecturer == "Yes") // Only the course lecturer can upgrade
                                                                 { 
-                                                                    @if(@ViewBag.HODStatus != "Approved" && @ViewBag.DeanStatus != "Approved"){
+                                                                    @if(@ViewBag.HODStatus != "Approved" && @ViewBag.DeanStatus != "Approved" && @ViewBag.LecturerStatus != "Approved"){
                                                                     <ul class="dropdown-menu">
                                                                         <li>
                                                                             <a type="button" class="" data-bs-toggle="modal" data-bs-target="#myModal" data-result-Id="@result.Id" data-student-name="@result.StudentId" data-uploader="@result.UploadedBy" style="margin-left: 30px;">

@@ -44,7 +44,8 @@
                         </div>
                         <div class="col-6">
                             <div class="col-6"> 
-                                @if (userRole == "hod" && @ViewBag.LecturerStatus == "Approved"){
+                                @* @if (userRole == "hod" && @ViewBag.LecturerStatus == "Approved"){ *@
+                                @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("hod") && @ViewBag.LecturerStatus == "Approved"){
                                     @if(@ViewBag.HODStatus != "Approved"){
                                         <form asp-action="ApproveOrDecline" asp-controller="Result" style="display:inline;">
                                             <input type="hidden" name="who" value="hod">
@@ -64,7 +65,7 @@
                                             <button class="btn btn-danger w-100" type="submit">DECLINE RESULT (HOD)</button>
                                         </form> 
                                     }
-                                }else if(userRole == "dean" && @ViewBag.HODStatus == "Approved"){
+                                }else if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("dean") && @ViewBag.HODStatus == "Approved"){
                                      @if(@ViewBag.DeanStatus != "Approved"){
                                         <form asp-action="ApproveOrDecline" asp-controller="Result" style="display:inline;">
                                             <input type="hidden" name="who" value="dean">

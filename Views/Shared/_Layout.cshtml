@@ -170,21 +170,21 @@
                 <i class="ph-duotone  ph-upload"></i> Result Upload
               </a>
             </li>
-            @if (userRole == "hod"){
+            @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("hod") || !string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("dev")){
               <li class="no-sub">
                 <a class="" href="/departmental-result">
                   <i class="ph-duotone  ph-file"></i> Department
                 </a>
               </li>
             }
-            @if (userRole == "dean"){
+            @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("dean")){
               <li class="no-sub">
                   <a class="" href="/faculty-result">
                       <i class="ph-duotone ph-squares-four"></i> Faculty
                   </a>
               </li>
             }
-            @if (userRole == "admin" || userRole == "dev"){
+           @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("dev")){
             <li class="no-sub">
                 <a class="" href="/roles">
                   <i class="ph-duotone  ph-lock"></i>Manage Roles
@@ -212,7 +212,7 @@
             @if (userRole == "dev"){
               <li class="no-sub">
                 <a class="" href="/dev">
-                  <i class="ph-duotone  ph-gear"></i>Developer
+                  <i class="ph-duotone  ph-code"></i>Developer
                 </a>
               </li>
             }

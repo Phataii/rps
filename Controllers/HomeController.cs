@@ -417,7 +417,7 @@ namespace rps.Controllers
             }
             else
             {
-                departmentId = reference; // If a dean, use the provided department code
+                departmentId = loggedInUser.DepartmentName; // If a dean, use the provided department code
             }
 
             var dptBatches = await _context.DepartmentBatches

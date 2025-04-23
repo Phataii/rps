@@ -15,7 +15,7 @@ namespace rps.Services
             _context = context;
         }
 
-        public async Task<string> UploadGradesFromCsvAsync(IFormFile file, string type, string approvedby)
+        public async Task<string> UploadGradesFromCsvAsync(IFormFile file, string type, int departmentId, string approvedby)
         {
             if (file == null || file.Length == 0)
             {
@@ -31,7 +31,7 @@ namespace rps.Services
 
                     var grades = records.Select(record => new Grade
                     {
-                        //DepartmentId = departmentId,
+                        DepartmentId = departmentId,
                         Type = type, // Type of grade; PG or MBBS
                         GradeName = record?.GradeName?.ToUpper(),
                         GradePoint = record.GradePoint,

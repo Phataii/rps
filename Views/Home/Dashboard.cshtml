@@ -107,7 +107,7 @@
                           <form action="/api/grade/upload-remark" enctype="multipart/form-data" method="post">
                             <label>Upload Remarks</label>
                             <input class="form-control mt-2 border p-2" type="text" id="type" value="@userRole" hidden name="type" required>
-                            <input class="form-control mt-2 border p-2" type="text" id="id" value="@userRole" hidden name="id" required>
+                            @* <input class="form-control mt-2 border p-2" type="text" id="id" value="@userRole" hidden name="id" required> *@
                             <input class="form-control mt-2 border p-2" type="file" id="file" name="file" accept=".csv" required>
                             <button class="btn btn-primary w-100 mt-3" type="submit">Submit</button>
                           </form>
@@ -123,90 +123,34 @@
               <div class="card-body">
                 <h5>UG Grading System</h5>
                <table class="table table-bordered" id="gradesTable">
-  <thead>
-    <tr>
-      <th>From</th>
-      <th>To</th>
-      <th>Grade</th>
-      <th>Status</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    @foreach (var grade in Model.UgGrades)
-    {
-      <tr data-id="@grade.Id">
-        <td class="editable" data-field="MinScore">@grade.MinScore</td>
-        <td class="editable" data-field="MaxScore">@grade.MaxScore</td>
-        <td class="editable" data-field="GradeName">@grade.GradeName</td>
-        <td>@(grade.Approved ? "Approved" : "Pending")</td>
-        @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("hod"))
-        {
-          <td>
-            <button class="btn btn-sm btn-warning edit-btn">Edit</button>
-            <button class="btn btn-sm btn-success save-btn d-none">Save</button>
-          </td>
-        }
-      </tr>
-    }
-  </tbody>
-</table>
-
-@section Scripts {
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    $(document).ready(function () {
-
-      // Enable editing when Edit is clicked
-      $('.edit-btn').click(function () {
-        const row = $(this).closest('tr');
-        row.find('.editable').each(function () {
-          const value = $(this).text().trim();
-          const field = $(this).data('field');
-          $(this).html(`<input class="form-control form-control-sm" data-field="${field}" value="${value}" />`);
-        });
-
-        row.find('.edit-btn').addClass('d-none');
-        row.find('.save-btn').removeClass('d-none');
-      });
-
-      // Save changes to backend
-      $('.save-btn').click(function () {
-        const row = $(this).closest('tr');
-        const id = row.data('id');
-        const data = { Id: id };
-
-        row.find('input').each(function () {
-          const field = $(this).data('field');
-          const value = $(this).val();
-          data[field] = value;
-        });
-
-        $.ajax({
-          url: '/api/Grade/UpdateGrade', // 👈 Update to your backend endpoint
-          type: 'POST',
-          contentType: 'application/json',
-          data: JSON.stringify(data),
-          success: function (response) {
-            // Replace inputs with updated text
-            row.find('input').each(function () {
-              const value = $(this).val();
-              $(this).parent().text(value);
-            });
-
-            row.find('.save-btn').addClass('d-none');
-            row.find('.edit-btn').removeClass('d-none');
-            alert('Grade updated successfully!');
-          },
-          error: function (xhr, status, error) {
-            alert('Failed to update grade: ' + error);
-          }
-        });
-      });
-    });
-  </script>
-}
-
+                <thead>
+                  <tr>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Grade</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach (var grade in Model.UgGrades)
+                  {
+                    <tr data-id="@grade.Id">
+                      <td class="editable" data-field="MinScore">@grade.MinScore</td>
+                      <td class="editable" data-field="MaxScore">@grade.MaxScore</td>
+                      <td class="editable" data-field="GradeName">@grade.GradeName</td>
+                      <td>@(grade.Approved ? "Approved" : "Pending")</td>
+                      @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("hod"))
+                      {
+                        <td>
+                          <button class="btn btn-sm btn-warning edit-btn">Edit</button>
+                          <button class="btn btn-sm btn-success save-btn d-none">Save</button>
+                        </td>
+                      }
+                    </tr>
+                  }
+                </tbody>
+              </table>
 
               </div>
             </div>
@@ -218,7 +162,7 @@
              @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("pg") || !string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("mbbs")){
                 <div class="card">
                   <div class="card-body">
-                    <h5>Set grade for @userRole.ToUpper()</h5>
+                    <h5>Set grade</h5>
                     <a href="~/assets/grade_upload_template.csv" class="btn btn-success mb-3">
                       <i class="fa fa-cloud-download"></i> Download Template
                     </a>
@@ -301,3 +245,57 @@
   </div>
 </div>
 
+@section Scripts {
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+
+      // Enable editing when Edit is clicked
+      $('.edit-btn').click(function () {
+        const row = $(this).closest('tr');
+        row.find('.editable').each(function () {
+          const value = $(this).text().trim();
+          const field = $(this).data('field');
+          $(this).html(`<input class="form-control form-control-sm" data-field="${field}" value="${value}" />`);
+        });
+
+        row.find('.edit-btn').addClass('d-none');
+        row.find('.save-btn').removeClass('d-none');
+      });
+
+      // Save changes to backend
+      $('.save-btn').click(function () {
+        const row = $(this).closest('tr');
+        const id = row.data('id');
+        const data = { Id: id };
+
+        row.find('input').each(function () {
+          const field = $(this).data('field');
+          const value = $(this).val();
+          data[field] = value;
+        });
+
+        $.ajax({
+          url: '/api/Grade/UpdateGrade', // 👈 Update to your backend endpoint
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: function (response) {
+            // Replace inputs with updated text
+            row.find('input').each(function () {
+              const value = $(this).val();
+              $(this).parent().text(value);
+            });
+
+            row.find('.save-btn').addClass('d-none');
+            row.find('.edit-btn').removeClass('d-none');
+            alert('Grade updated successfully!');
+          },
+          error: function (xhr, status, error) {
+            alert('Failed to update grade: ' + error);
+          }
+        });
+      });
+    });
+  </script>
+}

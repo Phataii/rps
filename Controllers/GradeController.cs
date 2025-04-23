@@ -43,7 +43,7 @@ namespace rps.Controllers
                 return BadRequest("Invalid file or type ID.");
             }
 
-            var result = await _gradeService.UploadGradesFromCsvAsync(file, type, loggedInUser.Email);
+            var result = await _gradeService.UploadGradesFromCsvAsync(file, type, loggedInUser.DepartmentId, loggedInUser.Email);
             if (result.Contains("successfully"))
             {
                 // grab logs
@@ -57,7 +57,6 @@ namespace rps.Controllers
         [HttpPost("UpdateGrade")]
         public IActionResult UpdateGrade([FromBody] Grade grade)
         {
-            Console.WriteLine(">>>>>> got here");
             var updated = _gradeService.UpdateGrade(grade);
             if (!updated)
                 return NotFound(new { message = "Grade not found" });
@@ -67,7 +66,7 @@ namespace rps.Controllers
 
 
         [HttpPost("upload-remark")]
-        public async Task<IActionResult> UploadRemarks(IFormFile file, [FromForm] int dpt)
+        public async Task<IActionResult> UploadRemarks(IFormFile file)
         {
             var loggedInUser = await _userHelper.GetLoggedInUser(Request);
             if (loggedInUser == null)
@@ -80,7 +79,7 @@ namespace rps.Controllers
                 return BadRequest("Invalid file or type ID.");
             }
 
-            var remark = await _gradeService.UploadRemarkFromCsvAsync(file, dpt);
+            var remark = await _gradeService.UploadRemarkFromCsvAsync(file, loggedInUser.DepartmentId);
             
             // Record activity logs
             //  var log = await _trackerService.AddLogAsync(1, "Added bulk grade data using csv");
