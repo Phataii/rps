@@ -32,7 +32,13 @@
                             <h5>
                                 HOD: 
                                 <small class="@(ViewBag.HODStatus == "Approved" ? "bg-light-success" : "bg-light-secondary") p-1 rounded">
-                                    @ViewBag.HODStatus
+                                    @if(@ViewBag.HODStatus == "Pending")
+                                    {
+                                        <span>Pending/Locked</span>
+                                    }else{
+                                         @ViewBag.HODStatus
+                                    }
+                                   
                                 </small>
                             </h5>
                             <h5>
@@ -43,8 +49,7 @@
                             </h5>
                         </div>
                         <div class="col-6">
-                            <div class="col-6"> 
-                                @* @if (userRole == "hod" && @ViewBag.LecturerStatus == "Approved"){ *@
+                            <div class="col-6">
                                 @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("hod") && @ViewBag.LecturerStatus == "Approved"){
                                     @if(@ViewBag.HODStatus != "Approved"){
                                         <form asp-action="ApproveOrDecline" asp-controller="Result" style="display:inline;">
@@ -87,42 +92,29 @@
                                     }
                                 }
                             </div>       
-                            @* <div class="col-6">
-                                @if (@ViewBag.isLecturer == "Yes"){ 
-                                    <div class="row card">
-                                        @if (@ViewBag.DeanStatus != "Approved" && @ViewBag.HODStatus != "Approved"){
-                                        <div class="card-body">
-                                            <h4 class="">Upgrade for all students</h4>
-                                            <form action="/api/result/upgradeBulkResult" method="post">
-                                             
-                                                <input type="text" value="@ViewBag.dpt" name="dptCode" readonly class="form-control my-2"/>
-                                                <input type="text" value="@ViewBag.course" name="course" readonly class="form-control my-2"/>
-                                                <input type="text" value="@ViewBag.session" name="session" hidden class="form-control my-2"/>
-                                                <input type="text" name="score" class="form-control my-2" placeholder="score to add for all students"/>
-                                                <button class="btn btn-primary w-100 mb-3" type="submit">Upgrade Now!</button>
-                                            </form>
-                                        </div>
-                                        }
-                                    </div>
-                                    @if(@ViewBag.LecturerStatus != "Approved" ){
+                            <div class="col-6">
+                                @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("hod") && @ViewBag.HODStatus != "Approved"){
+                                    @if((@ViewBag.HODStatus == "Locked" || @ViewBag.HODStatus == "Pending") && @ViewBag.DeanStatus != "Approved"){
                                         <form asp-action="ApproveOrDecline" asp-controller="Result" style="display:inline;">
-                                            <input type="hidden" name="who" value="lecturer">
-                                            <input type="hidden" name="status" value="Approved">
+                                            <input type="hidden" name="who" value="hod">
+                                            <input type="hidden" name="status" value="Unlocked">
                                             <input type="hidden" name="course" value="@ViewBag.course">
                                             <input type="hidden" name="session" value="@ViewBag.session">
-                                            <button class="btn btn-primary w-100 mb-3" type="submit">APPROVE @ViewBag.course</button>
+                                            <input type="hidden" name="dpt" value="@ViewBag.dpt">
+                                            <button class="btn btn-primary w-100 mb-3" type="submit">UNLOCK RESULT</button>
                                         </form>
-                                    }else if(@ViewBag.LecturerStatus == "Approved" && @ViewBag.HODStatus != "Approved"){
+                                    }else if (@ViewBag.HODStatus == "Unlocked" && @ViewBag.DeanStatus != "Approved"){
                                         <form asp-action="ApproveOrDecline" asp-controller="Result" style="display:inline;">
-                                        <input type="hidden" name="who" value="lecturer">
-                                        <input type="hidden" name="status" value="Pending">
-                                        <input type="hidden" name="course" value="@ViewBag.course">
-                                        <input type="hidden" name="session" value="@ViewBag.session">
-                                        <button class="btn btn-danger w-100" type="submit">DECLINE @ViewBag.course</button>
-                                    </form>
+                                            <input type="hidden" name="who" value="hod">
+                                            <input type="hidden" name="status" value="Locked">
+                                            <input type="hidden" name="course" value="@ViewBag.course">
+                                            <input type="hidden" name="session" value="@ViewBag.session">
+                                            <input type="hidden" name="dpt" value="@ViewBag.dpt">
+                                            <button class="btn btn-danger w-100" type="submit">LOCK RESULT</button>
+                                        </form> 
                                     }
                                 }
-                            </div> *@
+                             </div>  
                         </div>
                     </div>
 

@@ -24,20 +24,21 @@
                     <div class="row g-4">
                         <!-- Left Column -->
                         <div class="col-md-4">
-                            @if (@ViewBag.isLecturer == "Yes" && @ViewBag.LecturerStatus != "Approved"){ // Only the course lecturer can upgrade 
+                            @if (@ViewBag.isLecturer == "Yes" && @ViewBag.HODStatus == "Unlocked"){ // Only the course lecturer can upgrade when HOD unlocks
                                 <div class="card h-100">
-                                    @if (@ViewBag.DeanStatus != "Approved" && @ViewBag.HODStatus != "Approved"){
+                                    @* @if (@ViewBag.DeanStatus != "Approved" && @ViewBag.HODStatus != "Approved"){ *@
                                         <div class="card-body">
                                             <h4 class="mb-3">Upgrade for all students</h4>
                                             <form action="/api/result/upgradeBulkResult" method="post">
                                                 <input type="text" value="@ViewBag.dpt" name="dptCode" readonly class="form-control mb-2"/>
+                                                @* <input type="text" value="@ViewBag.dpt" name="departmentId" readonly class="form-control mb-2"/> *@
                                                 <input type="text" value="@ViewBag.course" name="course" readonly class="form-control mb-2"/>
                                                 <input type="text" value="@ViewBag.session" name="session" hidden class="form-control mb-2"/>
                                                 <input type="text" name="score" class="form-control mb-2" placeholder="Score to add for all students"/>
                                                 <button class="btn btn-primary w-100" type="submit">Upgrade Now!</button>
                                             </form>
                                         </div>
-                                    }
+                                    @* } *@
                                 </div>
                                }
                         </div>
@@ -78,7 +79,12 @@
                                 <h5>
                                     HOD: 
                                     <small class="@(ViewBag.HODStatus == "Approved" ? "bg-light-success" : "bg-light-secondary") p-1 rounded">
-                                        @ViewBag.HODStatus
+                                        @if(@ViewBag.HODStatus == "Pending")
+                                    {
+                                        <span>Pending/Locked</span>
+                                    }else{
+                                         @ViewBag.HODStatus
+                                    }
                                     </small>
                                 </h5>
                                 <h5>
@@ -113,42 +119,6 @@
                             </div>
                         </div>
                     </div>
-                    
-                    @if(@ViewBag.HODStatus == "Approved"){
-                        <div class="row m-1">
-                            <div class="col-8">
-                                
-                                <div class="row">
-                                    <div class="col-6 mt-2">
-                                        @if (userRole == "dean") // Only show if user is a Dean
-                                        {   
-                                            @if(@ViewBag.DeanStatus != "Approved"){
-                                                <form asp-action="ApproveOrDecline" asp-controller="Result" style="display:inline;">
-                                                    <input type="hidden" name="who" value="dean">
-                                                    <input type="hidden" name="status" value="Approved">
-                                                    <input type="hidden" name="course" value="@ViewBag.course">
-                                                    <input type="hidden" name="session" value="@ViewBag.session">
-                                                    <button class="btn btn-primary w-100 mb-3" type="submit">APPROVE @ViewBag.course</button>
-                                                </form>
-                                            }else{
-                                                <form asp-action="ApproveOrDecline" asp-controller="Result" style="display:inline;">
-                                                <input type="hidden" name="who" value="dean">
-                                                <input type="hidden" name="status" value="Pending">
-                                                <input type="hidden" name="course" value="@ViewBag.course">
-                                                <input type="hidden" name="session" value="@ViewBag.session">
-                                                <button class="btn btn-danger w-100" type="submit">DECLINE @ViewBag.course</button>
-                                            </form>
-                                            }
-                                    }
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    }
-
-                    <!-- Breadcrumb end -->
-
                     <!-- ready to use table start -->
                     <div class="row">
                         <!-- student list tabel 2-->
@@ -220,17 +190,26 @@
                                                                         data-bs-auto-close="true" aria-expanded="false">
                                                                     <i class="ti ti-dots-vertical"></i>
                                                                 </button>
-                                                                @if (@ViewBag.isLecturer == "Yes") // Only the course lecturer can upgrade
+                                                                @if (@ViewBag.isLecturer == "Yes" && @ViewBag.HODStatus == "Unlocked") // Only the course lecturer can upgrade
                                                                 { 
-                                                                    @if(@ViewBag.HODStatus != "Approved" && @ViewBag.DeanStatus != "Approved" && @ViewBag.LecturerStatus != "Approved"){
+                                                                    @* @if(@ViewBag.HODStatus != "Approved" && @ViewBag.DeanStatus != "Approved" && @ViewBag.LecturerStatus != "Approved"){ *@
                                                                     <ul class="dropdown-menu">
                                                                         <li>
-                                                                            <a type="button" class="" data-bs-toggle="modal" data-bs-target="#myModal" data-result-Id="@result.Id" data-student-name="@result.StudentId" data-uploader="@result.UploadedBy" style="margin-left: 30px;">
+                                                                            <a type="button"
+                                                                            class=""
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#myModal"
+                                                                            data-department-id="@result.DepartmentId"
+                                                                            data-result-id="@result.Id"
+                                                                            data-student-id="@result.StudentId"
+                                                                            data-uploader="@result.UploadedBy"
+                                                                            style="margin-left: 30px;">
                                                                                 <i class="ti ti-edit"></i> Upgrade
                                                                             </a>
                                                                         </li>
                                                                     </ul>
-                                                                    }
+
+                                                                    @* } *@
                                                                 }
                                                             </div>
                                                         </td>
@@ -254,21 +233,25 @@
                                     </div>
                                     <div class="modal-body">
                                         <form action="/api/result/upgradeSingleResult" method="post">
-                                            <input type="text" class="form-control" id="resultId" name="id" hidden readonly>
-                                            <input type="text" class="form-control" value="@ViewBag.course" id="course" name="course" hidden readonly>
-                                            <input type="text" class="form-control" id="uploader" name="uploader" hidden readonly>
+                                            <input type="hidden" class="form-control" id="resultId" name="id">
+                                            <input type="hidden" class="form-control" id="departmentId" name="departmentId">
+                                            <input type="hidden" class="form-control" id="uploader" name="uploader">
+                                            <input type="hidden" class="form-control" value="@ViewBag.course" id="course" name="course">
+
                                             <div class="mb-3">
                                                 <label for="studentName" class="form-label">Mat. No.</label>
                                                 <input type="text" class="form-control" id="studentName" name="studentId" readonly>
                                             </div>
+
                                             <div class="mb-3">
                                                 <label for="score" class="form-label">Score</label>
-                                                <input type="text" class="form-control" id="score" name="score" placeholder="Score to upgrade with">
+                                                <input type="number" step="0.01" class="form-control" id="score" name="score" placeholder="Score to upgrade with" required>
                                             </div>
-                                            
+
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                         </form>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -285,16 +268,16 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Listen for the modal trigger button click
         $('a[data-bs-target="#myModal"]').on('click', function () {
-            // Get the student name from the data attribute
-            var studentName = $(this).data('student-name');
-             var resultId = $(this).data('result-id'); // this is the row id in the result table
-             var uploader = $(this).data('uploader');
-            // Update the modal's input field with the student name
-            $('#studentName').val(studentName);
+            var studentId = $(this).data('student-id');
+            var resultId = $(this).data('result-id');
+            var uploader = $(this).data('uploader');
+            var departmentId = $(this).data('department-id');
+
+            $('#studentName').val(studentId);
             $('#resultId').val(resultId);
             $('#uploader').val(uploader);
+            $('#departmentId').val(departmentId);
         });
     });
 </script>

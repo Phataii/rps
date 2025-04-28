@@ -7,6 +7,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc;
 using CsvHelper.TypeConversion;
+using Newtonsoft.Json;
 
 
 namespace rps.Services
@@ -14,9 +15,11 @@ namespace rps.Services
     public class ResultService
     {
         private readonly ApplicationDbContext _context;
-        public ResultService(ApplicationDbContext context)
+        private readonly IHttpClientFactory _httpClientFactory;
+        public ResultService(ApplicationDbContext context, IHttpClientFactory httpClientFactory)
         {
             _context = context;
+             _httpClientFactory = httpClientFactory;
         }
 
 
@@ -27,10 +30,25 @@ namespace rps.Services
             public int Count { get; set; }
         }
 
-        public async Task<UploadResultResponse> UploadResultFromCsvAsync(IFormFile file, string courseId, int sessionId, int semesterId, int levelId, string uploader, string userId, int departmentId)
+        public async Task<UploadResultResponse> UploadResultFromCsvAsync(IFormFile file, string courseId, int sessionId, int semesterId, int levelId, string uploader, string userId)
         {
-            try
+           try
             {
+                // FETCH DEPARTMENTS FROM API
+                string apiUrl = $"https://edouniversity.edu.ng/api/v1/departmentsapi";
+                string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
+
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
+
+                var response = await client.GetAsync(apiUrl);
+                response.EnsureSuccessStatusCode();
+
+                var content = await response.Content.ReadAsStringAsync();
+                var departments = JsonConvert.DeserializeObject<List<Departments>>(content);
+
+                // Create Department Name -> Id dictionary for faster lookup
+                var departmentDict = departments.ToDictionary(d => d.Name.ToLower(), d => d.Id);
 
                 using (var reader = new StreamReader(file.OpenReadStream()))
                 using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)))
@@ -39,27 +57,32 @@ namespace rps.Services
                     csv.Context.TypeConverterOptionsCache.AddOptions<double>(options);
                     var records = csv.GetRecords<ResultCsvRecord>().ToList();
 
-                    // Fetch grading system for the department
-                    var gradeScale = await _context.Grades
-                        .Where(g => g.Type == "ug" && g.DepartmentId == departmentId && g.Approved)
+                    // Fetch all grades for all departments once
+                    var allGrades = await _context.Grades
+                        .Where(g => g.Type == "ug" && g.Approved)
                         .ToListAsync();
 
-                    string resultId =Guid.NewGuid().ToString();
+                    string resultId = Guid.NewGuid().ToString();
 
                     var results = records.Select(record =>
                     {
                         double totalScore = record.CA + record.Exam;
-                        // double roundedUpTotal = Math.Ceiling(totalScore);
-                      
-                        // Determine the grade
-                        var grade = gradeScale.FirstOrDefault(g => totalScore >= g.MinScore && totalScore <= g.MaxScore);
+
+                        // Find DepartmentId
+                        var matchedDepartmentId = departmentDict.TryGetValue(record.Department.ToLower(), out var deptId) ? deptId : 0;
+
+                        // Fetch grade scale for this student's department
+                        var departmentGrades = allGrades.Where(g => g.DepartmentId == matchedDepartmentId).ToList();
+
+                        // Determine grade
+                        var grade = departmentGrades.FirstOrDefault(g => totalScore >= g.MinScore && totalScore <= g.MaxScore);
                         string gradeName = grade?.GradeName ?? "N/A";
-                        
+
                         return new Result
                         {
                             UploadedBy = uploader,
                             LevelId = levelId,
-                            //DepartmentId = departmentId,
+                            DepartmentId = matchedDepartmentId,
                             DepartmentName = record.Department,
                             ResultId = resultId,
                             CourseId = courseId,
@@ -70,7 +93,7 @@ namespace rps.Services
                             CA = record.CA,
                             Exam = record.Exam,
                             Total = totalScore,
-                            Grade = gradeName, // Assign grade or "N/A" if not found
+                            Grade = gradeName,
                             IsCO = gradeName == "F",
                             Created = DateTime.Now,
                         };
@@ -78,17 +101,17 @@ namespace rps.Services
 
                     await _context.Results.AddRangeAsync(results);
                     await _context.SaveChangesAsync();
-                    
 
-                     var departmentGroups = results
+                    var departmentGroups = results
                         .GroupBy(r => r.DepartmentName)
                         .Select(g => new { DepartmentName = g.Key, StudentsCount = g.Count() })
                         .ToList();
 
-                        foreach (var department in departmentGroups)
-                        {
-                            await SaveDepartmentalBatch(courseId, semesterId, sessionId, department.DepartmentName, department.StudentsCount, userId, resultId);
-                        }
+                    foreach (var department in departmentGroups)
+                    {
+                        await SaveDepartmentalBatch(courseId, semesterId, sessionId, department.DepartmentName, department.StudentsCount, userId, resultId);
+                    }
+
                     return new UploadResultResponse
                     {
                         Success = true,
@@ -106,6 +129,7 @@ namespace rps.Services
                     Count = 0
                 };
             }
+
         }
         public async Task<UploadResultResponse> AddSingleResult(string studentId, string StudentName, string courseId, int session, int semester, double ca, double exam, int levelId, string uploader, string dptN, int departmentId, string reference)
         {
@@ -113,7 +137,7 @@ namespace rps.Services
                   double totalScore = ca + exam;
 
                  var gradeScale = await _context.Grades
-                        .Where(g => g.Type == "ug" && g.Approved)
+                        .Where(g => g.Type == "ug" && g.Approved && g.DepartmentId == departmentId)
                         .ToListAsync();
 
                          // Determine the grade
@@ -266,7 +290,7 @@ namespace rps.Services
             return "Done";
         }
         
-       public async Task<string> UpgradeBulkResult(string course, int session, int score)
+       public async Task<string> UpgradeBulkResult(string course, int session, int score, int departmentId)
         {
             try
             {
@@ -301,7 +325,7 @@ namespace rps.Services
 
                         // Fetch the grade scale for the department
                         var gradeScale = await _context.Grades
-                            .Where(g => g.Type == "ug" && g.Approved)
+                            .Where(g => g.Type == "ug" && g.DepartmentId == departmentId && g.Approved)
                             .ToListAsync();
 
                         // Update the grades based on the new scores
@@ -341,7 +365,7 @@ namespace rps.Services
         }
 
 
-        public async Task<string> UpgradeSingleResult(int id, string studentId, double score, int dptId)
+        public async Task<string> UpgradeSingleResult(int id, string studentId, double score, int departmentId)
         {
             try
             {
@@ -367,8 +391,8 @@ namespace rps.Services
                         resultToUpgrade.Upgrade = score;
                         await _context.SaveChangesAsync();
 
-                        var gradeScale = await _context.Grades
-                            .Where(g => g.DepartmentId == dptId && g.Approved)
+                         var gradeScale = await _context.Grades
+                            .Where(g => g.Type == "ug" && g.DepartmentId == departmentId && g.Approved)
                             .ToListAsync();
 
                         double totalScore = resultToUpgrade.CA + resultToUpgrade.Exam + resultToUpgrade.Upgrade;

@@ -68,7 +68,7 @@ namespace rps.Controllers
                 var departmentName = loggedInUser.DepartmentName;
 
                 // Process the uploaded file
-                var result = await _resultService.UploadResultFromCsvAsync(file, courseId, sessionId, semesterId, levelId, uploader, loggedInUser.Id, departmentId);
+                var result = await _resultService.UploadResultFromCsvAsync(file, courseId, sessionId, semesterId, levelId, uploader, loggedInUser.Id);
 
                 if (result.Success)
                 {
@@ -244,7 +244,7 @@ namespace rps.Controllers
                     return Redirect("/");
                 }
 
-                string result = await _resultService.UpgradeBulkResult(course, session, score);
+                string result = await _resultService.UpgradeBulkResult(course, session, score, loggedInUser.DepartmentId);
 
                 //getting the fistname of the lecturer just for the sake of the email template
                 string firstName = loggedInUser.Email.Split('@')[0].Split('.')[0];
@@ -282,7 +282,7 @@ namespace rps.Controllers
         }  
 
         [HttpPost("upgradeSingleResult")]
-        public async Task<IActionResult> UpgradeSingleResult([FromForm] int id, [FromForm] string studentId, [FromForm] double score, [FromForm] string uploader, [FromForm] string course)
+        public async Task<IActionResult> UpgradeSingleResult([FromForm] int id, [FromForm] string studentId, [FromForm] double score, [FromForm] string uploader, [FromForm] string course, [FromForm] int departmentId)
         {
             try
             {
@@ -293,7 +293,7 @@ namespace rps.Controllers
                 }
 
                 int dptId = loggedInUser.DepartmentId;
-                string result = await _resultService.UpgradeSingleResult(id, studentId, score, dptId);
+                string result = await _resultService.UpgradeSingleResult(id, studentId, score, departmentId);
 
                 //getting the fistname of the lecturer just for the sake of the email template
                 string firstName = uploader.Split('@')[0].Split('.')[0];
@@ -371,7 +371,7 @@ namespace rps.Controllers
             }
 
             // Prepare CSV content
-            var csvRecords = registeredCourses.Select(s => new CsvRecord { Department = s.Department.Name, MatNo = s.MatNumber, Name = s.StudentName,  CA = "", Exam = ""}).ToList();
+            var csvRecords = registeredCourses.Select(s => new CsvRecord { Department = s.Department.Name, MatNo = s.MatNumber, Name = s.StudentName,  CA = "", Exam = ""}).OrderBy(r => r.Department).ToList();
 
             using var memoryStream = new MemoryStream();
             using var writer = new StreamWriter(memoryStream, Encoding.UTF8);

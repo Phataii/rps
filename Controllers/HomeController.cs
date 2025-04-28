@@ -265,7 +265,7 @@ namespace rps.Controllers
 
 
         [Route("result-details")]
-        public async Task<IActionResult> ResultDetails([FromQuery] string reference, [FromQuery] int session)
+        public async Task<IActionResult> ResultDetails([FromQuery] string reference, [FromQuery] string sortby,[FromQuery] int session)
         {
             var loggedInUser = await _userHelper.GetLoggedInUser(Request);
             if (loggedInUser == null)
@@ -284,7 +284,7 @@ namespace rps.Controllers
                 }
                 
                 //hide upgrade based on this
-                var res = await _context.DepartmentBatches.Where(x => x.ResultId == reference && x.Session == session)
+                var res = await _context.DepartmentBatches.Where(x => x.ResultId == reference && x.DepartmentName == sortby && x.Session == session)
                 .Select(x => new 
                     {
                         lectuer = x.User,
@@ -300,7 +300,7 @@ namespace rps.Controllers
                 if (res != null && loggedInUser.Id == res.lectuer){
                     ViewData["isLecturer"] = "Yes";
                 }
-                var results = await _context.Results.Where(x => x.ResultId == reference && x.Session == session).ToListAsync();
+                var results = await _context.Results.Where(x => x.ResultId == reference  && x.DepartmentName == sortby && x.Session == session).ToListAsync();
             
                 ViewData["HODStatus"] = res?.HODStatus;
                 ViewData["DeanStatus"] = res?.DeanStatus;
@@ -313,7 +313,7 @@ namespace rps.Controllers
         }
 
         [Route("edit")]
-        public async Task<IActionResult> Edit([FromQuery] string reference, [FromQuery] int session)
+        public async Task<IActionResult> Edit([FromQuery] string reference,[FromQuery] string sortby, [FromQuery] int session)
         {
             var loggedInUser = await _userHelper.GetLoggedInUser(Request);
             if (loggedInUser == null)
@@ -322,7 +322,7 @@ namespace rps.Controllers
             }
             
 
-            var res = await _context.DepartmentBatches.Where(x => x.ResultId == reference && x.Session == session)
+            var res = await _context.DepartmentBatches.Where(x => x.ResultId == reference && x.DepartmentName == sortby && x.Session == session)
             .Select(x => new 
                 {
                     lectuer = x.User,
@@ -346,7 +346,7 @@ namespace rps.Controllers
             ViewData["session"] = session;
             ViewData["reference"] = reference;
             
-            var results = await _context.Results.Where(x => x.ResultId == reference && x.Session == session).ToListAsync();
+            var results = await _context.Results.Where(x => x.ResultId == reference && x.DepartmentName == sortby && x.Session == session).ToListAsync();
             return View(results);
         }
 
