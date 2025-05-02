@@ -386,5 +386,67 @@ namespace rps.Controllers
             var fileName = $"{courseCode}_Results_Template.csv";
             return File(memoryStream.ToArray(), "text/csv", fileName);
         }
+
+        [HttpGet("UpdateAllResultGrades")]
+        public async Task<IActionResult> UpdateAllResultGrades()
+        {
+            try
+            {
+                var loggedInUser = await _userHelper.GetLoggedInUser(Request);
+                if (loggedInUser == null)
+                {
+                    return Redirect("/");
+                }
+
+                string result = await _resultService.UpdateAllResultGrades();
+
+                if (result == "Done")
+                {
+                    await _activityTrackerService.LogActivity(loggedInUser.Id, loggedInUser.Email, $"Updated all result grades");
+                    // TempData["message"] = $"Department Status changed to {status}";
+                    return Redirect(Request.Headers["Referer"].ToString());
+                }
+                else
+                {
+                    return NotFound(new { message = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating the approval status.");
+                return StatusCode(500, "An error occurred while processing your request. Please try again later.");
+            }
+        }
+
+        [HttpDelete("records/{id}")]
+        public async Task<IActionResult> DeleteRecords(string id)
+        {
+            var loggedInUser = await _userHelper.GetLoggedInUser(Request);
+            if (loggedInUser == null)
+            {
+                return Redirect("/");
+            }
+            var records = await _context.Results.Where(x => x.ResultId == id).ToListAsync();
+            var dptBatch = await _context.DepartmentBatches.Where(x => x.ResultId == id).ToListAsync();
+
+            if (records == null || !records.Any())
+            {
+                return NotFound(new { message = "records not found." });
+            }
+
+            _context.Results.RemoveRange(records);
+
+            if (dptBatch == null || !dptBatch.Any())
+            {
+                return NotFound(new { message = "records not found." });
+               
+            }
+            var course = string.Join(", ", dptBatch.Select(b => b.CourseId));
+            _context.DepartmentBatches.RemoveRange(dptBatch);
+            await _context.SaveChangesAsync();
+            await _activityTrackerService.LogActivity(loggedInUser.Id, loggedInUser.Email, $"Deleted records for {course}");
+            return NoContent();
+        }
+
     }
 }

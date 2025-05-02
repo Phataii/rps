@@ -184,6 +184,31 @@ namespace rps.Controllers
             return NoContent();
         }
 
+
+        [HttpPost("upload-for-all")]
+        public async Task<IActionResult> UploadGradesForAllDpt(IFormFile file, [FromForm] string type)
+        {
+            var loggedInUser = await _userHelper.GetLoggedInUser(Request);
+            if (loggedInUser == null)
+            {
+                return Redirect("/");
+            }
+
+            if (file == null || type == null)
+            {
+                return BadRequest("Invalid file or type ID.");
+            }
+
+            var result = await _gradeService.UploadGradesForDptsFromCsvAsync(file, type, loggedInUser.Email);
+            if (result.Contains("successfully"))
+            {
+                // grab logs
+                await _activityTrackerService.LogActivity(loggedInUser.Id, loggedInUser.Email, $"uploaded grade for {loggedInUser.DepartmentName}");
+                return Redirect("/dashboard");
+            }
+
+            return BadRequest(result);
+        }
         
     }
 }

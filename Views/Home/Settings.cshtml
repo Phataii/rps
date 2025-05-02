@@ -1,6 +1,5 @@
-@model RolesViewModel
 @{
-    ViewData["Title"] = "Roles";
+    ViewData["Title"] = "Admin Settings";
 }
 <div class="app-wrapper">
     <div class="app-content">
@@ -8,43 +7,71 @@
         <main>
             <div class="container">
                 <div class="row">
-                     <h2 class="mb-3">Manage Result System</h2>
-                    <div class="col-md-4">
-                        <div class="card courses-cards card-warning">
-                            <div class="card-body">
-                            <i class="ph-duotone ph-pencil-line icon-bg"></i>
-                            <span class="bg-white h-50 w-50 d-flex-center b-r-15">
-                                <a href="remarks">
-                                <i class="ph-duotone ph-pencil-line text-warning f-s-24"></i>
-                                </a>
-                            </span>
-                            <div class="mt-5">
-                                <h4>@ViewBag.transcripts</h4>
-                                <p class="f-w-500 mb-0">Set Remarks</p>
-                            </div>
-                            </div>
-                        </div>
+                    <h2 class="mb-4">Manage Result System</h2>
+
+                    <!-- Button block -->
+                    <div class="col-md-4 mb-3">
+                        <a href="/api/result/UpdateAllResultGrades" class="btn btn-warning w-100">
+                            Update all result grades
+                        </a>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card courses-cards card-warning">
-                            <div class="card-body">
-                            <i class="ph-duotone ph-pencil-line icon-bg"></i>
-                            <span class="bg-white h-50 w-50 d-flex-center b-r-15">
-                                <a href="admin/transcripts">
-                                <i class="ph-duotone ph-pencil-line text-warning f-s-24"></i>
-                                </a>
-                            </span>
-                            <div class="mt-5">
-                                <h4>@ViewBag.transcripts</h4>
-                                <p class="f-w-500 mb-0">Pending Transcript(s)</p>
-                            </div>
-                            </div>
-                        </div>
+
+                    <div class="col-md-4 mb-3">
+                        <a href="admin/transcripts" class="btn btn-warning w-100">
+                            Pending Transcripts
+                        </a>
                     </div>
+
+                    <div class="col-md-4 mb-3">
+                        <a href="admin/uploadresults" class="btn btn-warning w-100">
+                            Upload Results
+                        </a>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <a href="admin/managegrades" class="btn btn-warning w-100">
+                            Manage Grades
+                        </a>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <a href="admin/approvals" class="btn btn-warning w-100">
+                            Approve Results
+                        </a>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <a href="admin/users" class="btn btn-warning w-100">
+                            Manage Users
+                        </a>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <a href="admin/resetpasswords" class="btn btn-warning w-100">
+                            Reset Passwords
+                        </a>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <a href="admin/viewlogs" class="btn btn-warning w-100">
+                            View Logs
+                        </a>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <a href="admin/settings" class="btn btn-warning w-100">
+                            System Settings
+                        </a>
+                    </div>
+                     @* <form action="/api/grade/upload-for-all" enctype="multipart/form-data" method="post">
+                              <label>Upload Grades </label>
+                              <input class="form-control mt-2 border p-2" type="text" id="type" name="type" value="ug" required>
+                              <input class="form-control mt-2 border p-2" type="file" id="file" name="file" accept=".csv" required>
+                              <button class="btn btn-primary w-100 mt-3" type="submit">Submit</button>
+                    </form> *@
+                    <!-- End button block -->
                 </div>
-               
             </div>
         </main>
     </div>
-    <!-- Body main section ends -->
 </div>

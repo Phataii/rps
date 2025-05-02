@@ -10,6 +10,7 @@ using rps.Data;
 using rps.Models;
 using Microsoft.AspNetCore.Session;
 using Microsoft.Extensions.Caching.Memory;
+using rps.Services;
 
 namespace rps.Controllers
 {
@@ -19,10 +20,12 @@ namespace rps.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMemoryCache _cache;
-        public AuthController(ApplicationDbContext context, IMemoryCache cache)
+        private readonly IEmailService _emailService;
+        public AuthController(ApplicationDbContext context, IMemoryCache cache,IEmailService emailService)
         {
             _context = context;
             _cache = cache;
+            _emailService = emailService;
         }
 
         [HttpPost("add-user")]
@@ -161,8 +164,18 @@ namespace rps.Controllers
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userInfo.Email);
                 if (user == null)
                 {
-                    return Unauthorized($"The email '{userInfo.Email}' could be not found on the result processing system.");
+                    return Unauthorized($"The email '{userInfo.Email}' could be not found on the result processing system. Contact ICT");
                 }
+
+                // Send OTP
+                // string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Views/Home/EmailTemp", "OTP.html");
+                // var placeholders = new Dictionary<string, string>
+                // {
+                    
+                //     { "OTP", "2345" },
+                //     { "CurrentYear", DateTime.Now.Year.ToString() }
+                // };
+                // await _emailService.SendEmailAsync(userInfo.Email, "Login Attempt", templatePath, placeholders, true);
 
                 // Step 4: Generate JWT token
                 var jwtHelper = new JwtHelper();
@@ -223,6 +236,39 @@ namespace rps.Controllers
             return Ok(role);
         }
         
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUserRole(string id)
+        {
+            var role = await _context.UserRoles.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (role == null)
+            {
+                return NotFound(new { message = "Role not found." });
+            }
+
+            _context.UserRoles.Remove(role);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("role/{id}")]
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            var role = await _context.Roles.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (role == null)
+            {
+                return NotFound(new { message = "Role not found." });
+            }
+
+            _context.Roles.Remove(role);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
         [HttpPost]
         [Route("logout")]
         public async Task<IActionResult> Logout()

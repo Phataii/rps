@@ -115,10 +115,34 @@
                                         <button class="btn btn-danger w-100" type="submit">DECLINE @ViewBag.course</button>
                                     </form>
                                 }
-                            
+                                @if(@ViewBag.HODStatus != "Approved"){
+                                    <button type="button" class="btn btn-danger btn-sm mt-3" data-record-id="@ViewBag.reference" data-bs-toggle="modal" data-bs-target="#deleteRoleModal">
+                                        <i class="ti ti-trash"></i> Delete @ViewBag.course
+                                    </button>
+                                }
                             </div>
                         </div>
                     </div>
+
+                    @* Delete result records *@
+                    <div class="modal fade" id="deleteRoleModal" tabindex="-1" aria-labelledby="deleteRoleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteRoleModalLabel">Confirm Delete</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete all records for @ViewBag.course?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- ready to use table start -->
                     <div class="row">
                         <!-- student list tabel 2-->
@@ -279,5 +303,36 @@
             $('#uploader').val(uploader);
             $('#departmentId').val(departmentId);
         });
+    });
+</script>
+<script>
+    let selectedRecord = null;
+
+    // Capture role ID when opening the modal
+    document.querySelectorAll('[data-bs-target="#deleteRoleModal"]').forEach(button => {
+        button.addEventListener('click', function () {
+            selectedRecord = this.getAttribute('data-record-id');
+        });
+    });
+
+    // Handle delete confirmation
+    document.getElementById('confirmDeleteBtn').addEventListener('click', async function () {
+        if (selectedRecord) {
+            try {
+                const response = await fetch(`/api/result/records/${selectedRecord}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.status === 204) {
+                    // Success – optionally remove the row from DOM
+                    window.location.href = "/result-upload";
+                } else {
+                    alert("Failed to delete records.");
+                }
+            } catch (error) {
+                console.error("Delete error:", error);
+                alert("Error deleting records.");
+            }
+        }
     });
 </script>

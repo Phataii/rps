@@ -4,15 +4,18 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using rps.Data;
 using System.Globalization;
+using Newtonsoft.Json;
 
 namespace rps.Services
 {
     public class GradeService
     {
         private readonly ApplicationDbContext _context;
-        public GradeService(ApplicationDbContext context)
+          private readonly IHttpClientFactory _httpClientFactory;
+        public GradeService(ApplicationDbContext context, IHttpClientFactory httpClientFactory)
         {
             _context = context;
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<string> UploadGradesFromCsvAsync(IFormFile file, string type, int departmentId, string approvedby)
@@ -187,20 +190,66 @@ namespace rps.Services
                 return $"Error uploading CSV: {ex.Message}";
             }
         }
-        // public async Task<string> Update([FromBody] GradeUpdateDto model)
-        // {
-            
 
-        //     var grade = _context.Grades.Find(model.Id);
-        //     if (grade == null) return NotFound();
+        // ADMIN SET DEFAULT GRADE FOR ALL DEPARTMENTS
+        public async Task<string> UploadGradesForDptsFromCsvAsync(IFormFile file, string type, string approvedby)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return "No file selected";
+            }
 
-        //     grade.GradeName = model.GradeName;
-        //     grade.MinScore = model.MinScore;
-        //     grade.MaxScore = model.MaxScore;
+            // FETCH DEPARTMENTS FROM API
+            string apiUrl = $"https://edouniversity.edu.ng/api/v1/departmentsapi";
+            string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
 
-        //     _context.SaveChanges();
-        //     return Ok();
-        // }
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
+
+            var response = await client.GetAsync(apiUrl);
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            var departments = JsonConvert.DeserializeObject<List<Departments>>(content);
+
+            try
+            {
+                using (var reader = new StreamReader(file.OpenReadStream()))
+                using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)))
+                {
+                    var records = csv.GetRecords<GradeCsvRecord>().ToList();
+
+                    var allGrades = new List<Grade>();
+
+                    foreach (var dept in departments)
+                    {
+                        var deptGrades = records.Select(record => new Grade
+                        {
+                            DepartmentId = dept.Id,
+                            Type = type,
+                            GradeName = record?.GradeName?.ToUpper(),
+                            GradePoint = record.GradePoint,
+                            MinScore = record.MinScore,
+                            MaxScore = record.MaxScore,
+                            Approved = true,
+                            ApprovedBy = approvedby,
+                            CreatedAt = DateTime.Now,
+                        }).ToList();
+
+                        allGrades.AddRange(deptGrades);
+                    }
+
+                    await _context.Grades.AddRangeAsync(allGrades);
+                    await _context.SaveChangesAsync();
+
+                    return $"{allGrades.Count} records uploaded successfully for {departments.Count} departments.";
+                }
+            }
+            catch (Exception ex)
+            {
+                return $"Error uploading CSV: {ex.Message}";
+            }
+        }
 
 
     }

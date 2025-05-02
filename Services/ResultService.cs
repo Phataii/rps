@@ -438,9 +438,61 @@ namespace rps.Services
             }
         }
 
+        public async Task<string> UpdateAllResultGrades()
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
 
+            try
+            {
+                // FETCH DEPARTMENTS FROM API
+                string apiUrl = $"https://edouniversity.edu.ng/api/v1/departmentsapi";
+                string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
 
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
 
+                var response = await client.GetAsync(apiUrl);
+                response.EnsureSuccessStatusCode();
+
+                var content = await response.Content.ReadAsStringAsync();
+                var departments = JsonConvert.DeserializeObject<List<Departments>>(content);
+
+                foreach (var dept in departments)
+                {
+                    // Get grade scale for department
+                    var gradeScale = await _context.Grades
+                        .Where(g => g.Type == "ug" && g.DepartmentId == dept.Id && g.Approved)
+                        .ToListAsync();
+
+                    if (!gradeScale.Any()) continue;
+
+                    // Get all results for department
+                    var resultGrades = await _context.Results
+                        .Where(r => r.DepartmentId == dept.Id)
+                        .ToListAsync();
+
+                    foreach (var result in resultGrades)
+                    {
+                        double totalScore = result.CA + result.Exam + result.Upgrade;
+                        var grade = gradeScale.FirstOrDefault(g => totalScore >= g.MinScore && totalScore <= g.MaxScore);
+
+                        result.Total = totalScore;
+                        result.Grade = grade?.GradeName ?? "N/A";
+                        result.IsCO = result.Grade == "F";
+                        result.UpdatedAt = DateTime.Now;
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return "Done";
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
 }
 
     public class ResultCsvRecord
