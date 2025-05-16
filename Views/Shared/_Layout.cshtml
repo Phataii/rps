@@ -177,7 +177,14 @@
                 </a>
               </li>
             }
-            @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("dean")){
+             @* @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("adviser") || !string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("dev")){
+              <li class="no-sub">
+                <a class="" href="/level-adviser">
+                  <i class="ph-duotone  ph-file"></i> My Level
+                </a>
+              </li>
+            } *@
+            @if (!string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("dean") || !string.IsNullOrEmpty(userRole) && userRole.Split(',').Contains("dev")){
               <li class="no-sub">
                   <a class="" href="/faculty-result">
                       <i class="ph-duotone ph-squares-four"></i> Faculty

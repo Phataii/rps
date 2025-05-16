@@ -108,11 +108,21 @@
                                 <input type="hidden" id="editUserId" name="Id">
                                 <div class="mb-3">
                                     <label for="user" class="form-label">User</label>
-                                    <input type="text" class="form-control" id="user" name="user" required>
+                                    <input type="text" class="form-control" id="user" disabled name="user" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="editUserDpt" class="form-label">Department</label>
-                                    <input type="email" class="form-control" id="editUserDpt" name="Email" required>
+                                    <select class="form-select" id="editUserDpt" name="editUserDpt" required>
+                                        <option selected disabled value="">Choose...</option>
+                                        @foreach (var department in Model.Departments)
+                                        {
+                                            <option value="@department.Id" 
+                                                    data-name="@department.Name">
+                                                    @department.Name
+                                            </option>
+                                        }
+                                    </select>
+                                    @* <input type="email" class="form-control" id="editUserDpt" name="Email" required> *@
                                 </div>
                                 <button type="submit" class="btn btn-primary">Save Changes</button>
                             </form>
@@ -179,7 +189,7 @@
         // Populate form fields when selecting a user
         document.getElementById('name').addEventListener('change', function () {
             const selectedOption = this.options[this.selectedIndex];
-            
+        
             document.getElementById('email').value = selectedOption.getAttribute('data-email') || "";
             document.getElementById('department').value = selectedOption.getAttribute('data-department') || "";
             document.getElementById('departmentId').value = selectedOption.getAttribute('data-departmentId') || "";
@@ -206,5 +216,48 @@
         });
     });
 });
+</script>
 
+@* Edit user department *@
+<script>
+  document.getElementById('editUserForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const id = document.getElementById('editUserId').value;
+    const selectElement = document.getElementById('editUserDpt');
+    const departmentId = selectElement.value;
+
+    // Get the selected option and extract data-name
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+    const departmentName = selectedOption.getAttribute('data-name');
+
+    if (!id || !departmentId || !departmentName) {
+      alert('Please fill out all required fields.');
+      return;
+    }
+
+    const data = { id, departmentId, departmentName };
+
+    try {
+      const response = await fetch(`/api/auth/update-user`, {
+        method: 'POST', // or PATCH depending on your API
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update user.');
+      }
+
+      const result = await response.json();
+      alert('User updated successfully.');
+      // Optionally, reload or redirect
+    location.reload();
+    } catch (error) {
+      console.error(error);
+      alert('An error occurred while updating the user.');
+    }
+  });
 </script>

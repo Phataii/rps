@@ -72,19 +72,21 @@ public class CoursesAllocated
     public class UsersVM
     {
         public List<User>? Users { get; set; }
-        public List<Staff>? Staff{ get; set; }
+        public List<LevelAdviser>? LevelAdvisers { get; set; }
+        public List<Staff>? Staff { get; set; }
+        public List<Departments>? Departments { get; set; }
     }
 
     public class RegisteredCoursesList
     {
-        public int StudentId { get; set;}
-        public string? StudentName { get; set;}
+        public int StudentId { get; set; }
+        public string? StudentName { get; set; }
         public string? MatNumber { get; set; }
         public string? Level { get; set; }
         public string? SessionOfRegistration { get; set; }
         public List<Course>? RegisteredCourses { get; set; }
-
-        public Departments? Department{ get; set; }
+        public Departments? Department { get; set; }
+        public string? Sex { get; set; }
     }
 
     public class StudentResultViewModel

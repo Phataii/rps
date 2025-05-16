@@ -21,11 +21,13 @@ namespace rps.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IMemoryCache _cache;
         private readonly IEmailService _emailService;
-        public AuthController(ApplicationDbContext context, IMemoryCache cache,IEmailService emailService)
+        private readonly UserHelper _userHelper;
+        public AuthController(ApplicationDbContext context, IMemoryCache cache, IEmailService emailService, UserHelper userHelper)
         {
             _context = context;
             _cache = cache;
             _emailService = emailService;
+            _userHelper = userHelper;
         }
 
         [HttpPost("add-user")]
@@ -60,7 +62,23 @@ namespace rps.Controllers
 
             return Ok(user);
         }
+        [HttpPost("update-user")]
+        public async Task<IActionResult> UpdateUserDepartmentAsync([FromBody] EditUserDto model)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == model.Id);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found.");
+            }
 
+            user.DepartmentId = model.DepartmentId;
+            user.DepartmentName = model.DepartmentName;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "user updated successfully." });
+        }
 
         [HttpPost("add-user-to-role")]
         public async Task<IActionResult> AddUserToRole([FromBody] UserRoleDto userRole)
@@ -235,7 +253,55 @@ namespace rps.Controllers
             // Return a created response with the user
             return Ok(role);
         }
-        
+
+        [HttpPost("add-adviser")]
+        public async Task<IActionResult> AddAdviser([FromBody] LevelAdviserDto r)
+        {
+            Console.Write(r.name);
+            var loggedInUser = await _userHelper.GetLoggedInUser(Request);
+            if (loggedInUser == null)
+            {
+                return Redirect("/");
+            }
+            // Check if email already exists
+            if (await _context.LevelAdvisers.AnyAsync(u => u.Level == r.level && u.DepartmentId == loggedInUser.DepartmentId))
+            {
+                return Conflict("There is already an adviser for this level, try to edit.");
+            }
+            
+            var adviser = new LevelAdviser
+            {
+                StaffId = r.name,
+                Level = r.level,
+                DepartmentId = loggedInUser.DepartmentId,
+                DepartmentName = loggedInUser.DepartmentName,
+                IsActive = true
+            };
+
+            // Add the user to the database
+            _context.LevelAdvisers.Add(adviser);
+            await _context.SaveChangesAsync();
+
+            // Return a created response with the user
+            return Ok(adviser);
+        }
+
+        [HttpDelete("adviser/{id}")]
+        public async Task<IActionResult> DeleteAdviser(string id)
+        {
+            var adviser = await _context.LevelAdvisers.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (adviser == null)
+            {
+                return NotFound(new { message = "adviser not found." });
+            }
+
+            _context.LevelAdvisers.Remove(adviser);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserRole(string id)
         {
@@ -298,6 +364,12 @@ namespace rps.Controllers
         public string name { get; set; }
     }
 
+    public class LevelAdviserDto
+    {
+        public string? name { get; set; }
+         public int level { get; set; }
+    }
+
     public class UserRoleDto
     {
         public string user { get; set; }
@@ -354,6 +426,13 @@ namespace rps.Controllers
     {
         public string Id { get; set; }
         public string Role { get; set; }
+    }
+
+       public class EditUserDto
+    {
+        public string Id { get; set; }
+        public int DepartmentId { get; set; }
+        public string DepartmentName { get; set; }
     }
 
 }

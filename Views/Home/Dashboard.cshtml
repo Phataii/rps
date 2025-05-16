@@ -80,6 +80,11 @@
                 <div class="card-body">
                   <h5>Generate Result CSV</h5>
                   <form method="post" action="/api/result/result-temp">
+                  @* <label for="program">Program:</label> *@
+                    @* <select id="program" name="program" class="form-control mb-2" required>
+                      <option value="ug">Undergraduate</option>
+                      <option value="conversion">Conversion</option>
+                    </select> *@
                     <label for="sessionId">Session:</label>
                     <select id="sessionId" name="sessionId" class="form-control mb-2" required>
                       @foreach (var session in Model.Sessions)

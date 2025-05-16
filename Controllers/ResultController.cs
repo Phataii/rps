@@ -371,7 +371,19 @@ namespace rps.Controllers
             }
 
             // Prepare CSV content
-            var csvRecords = registeredCourses.Select(s => new CsvRecord { Department = s.Department.Name, MatNo = s.MatNumber, Name = s.StudentName,  CA = "", Exam = ""}).OrderBy(r => r.Department).ToList();
+            var csvRecords = registeredCourses
+                .Select(s => new CsvRecord 
+                { 
+                    Department = s.Department.Name, 
+                    MatNo = s.MatNumber, 
+                    Name = s.Sex?.ToUpper() == "F" ? $"{s.StudentName} (MISS)" : s.StudentName, 
+                    CA = "", 
+                    Exam = "" 
+                })
+                .OrderBy(r => r.Department)
+                .ToList();
+//   var csvRecords = registeredCourses.Select(s => new CsvRecord { Department = s.Department.Name, MatNo = s.MatNumber, Name = s.StudentName,  CA = "", Exam = ""}).OrderBy(r => r.Department).ToList();
+
 
             using var memoryStream = new MemoryStream();
             using var writer = new StreamWriter(memoryStream, Encoding.UTF8);

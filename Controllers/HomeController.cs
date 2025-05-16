@@ -83,6 +83,7 @@ namespace rps.Controllers
                 return Redirect("/");
             }
             // API URL and API Key
+            // string apiUrl = $"https://edouniversity.edu.ng/api/v1/courseallocationsapi?lecturerId={loggedInUser.DepartmentId}";
             string apiUrl = $"https://edouniversity.edu.ng/api/v1/coursesapi?departmentId={loggedInUser.DepartmentId}";
             string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
 
@@ -167,7 +168,7 @@ namespace rps.Controllers
             TempData["semester"] = semester;
             // API URL and API Key
             string apiUrl = $"https://edouniversity.edu.ng/api/v1/courseregistrationsapi/ugstudents?sessionId={session}&departmentId={refId}&levelId={level}&semester={semester}";
-           string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
+            string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
 
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
@@ -425,7 +426,7 @@ namespace rps.Controllers
                 .Include(s => s.Sessions)
                 .ToListAsync();
                 ViewData["DepartmentName"] = reference;
-                
+            ViewData["dpt"] = loggedInUser.DepartmentId;
             ViewData["code"] = departmentId;
             return View(dptBatches);
         }
@@ -493,55 +494,45 @@ namespace rps.Controllers
         [Route("users")]
         public async Task<IActionResult> User()
         {
-             var loggedInUser = await _userHelper.GetLoggedInUser(Request);
-            if (loggedInUser == null)
-            {
-                return Redirect("/");
-            }
-            // API URL and API Key
-            string apiUrl = $"https://edouniversity.edu.ng/api/v1/staffapi/academic";
-            string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
-
-            // Initialize an HTTP Client
-            var client = _httpClientFactory.CreateClient();
-
-            // Add API Key to the 'X-API-Key' header
-            client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
-
-            try
-            {
-                // Make GET request to fetch courses
-                var response = await client.GetAsync(apiUrl);
-
-                // Ensure a successful response
-                response.EnsureSuccessStatusCode();
-
-                // Read response content
-                var content = await response.Content.ReadAsStringAsync();
-                
-                //Deserialize JSON content if necessary (optional);
-                var academicStaff = JsonConvert.DeserializeObject<List<Staff>>(content);
-                var users = await _context.Users.ToListAsync();
-                var model = new UsersVM
-                {
-                    Staff = academicStaff,
-                    Users = users
-                };
-                return View(model);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while fetching Users.");
-                return RedirectToAction("Error", "Home");
-            }
-            
+        var loggedInUser = await _userHelper.GetLoggedInUser(Request);
+        if (loggedInUser == null)
+        {
+            return Redirect("/"); // Or perhaps a more appropriate action like Challenge(), Forbid(), or a dedicated login page.
         }
-        // [Route("result-status")]
-        // public async Task<IActionResult> Approval()
-        // {
-        //     // var roles = await _context.Roles.ToListAsync();
-        //     return View();
-        // }
+
+        string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
+        if (string.IsNullOrEmpty(apiKey))
+        {
+            _logger.LogError("API Key is missing from environment variables.");
+            return Problem("API Key is missing.", statusCode: 500); // Return a ProblemResult
+        }
+
+        try
+        {
+            // Fetch departments
+            var departments = await FetchApiData<List<Departments>>("https://edouniversity.edu.ng/api/v1/departmentsapi", apiKey);
+
+            // Fetch academic staff
+            var academicStaff = await FetchApiData<List<Staff>>("https://edouniversity.edu.ng/api/v1/staffapi/academic", apiKey);
+
+
+            var users = await _context.Users.ToListAsync(); // No need to check for null here, Empty list is fine.
+
+
+            var model = new UsersVM
+            {
+                Departments = departments,
+                Staff = academicStaff,
+                Users = users
+            };
+            return View(model);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred in the User action.");
+            return RedirectToAction("Error", "Home"); //Or a more specific error page
+        }
+    }
 
         // TRANSCRIPT
         [Route("transcripts")]
@@ -566,6 +557,91 @@ namespace rps.Controllers
             }
             var transcripts = await _context.TranscriptApplications.ToListAsync();
             return View(transcripts);
+        }
+
+        [HttpGet("level-adviser")]
+        public async Task<IActionResult> LevelAdviserss()
+        {
+            var loggedInUser = await _userHelper.GetLoggedInUser(Request);
+            if (loggedInUser == null)
+            {
+                return Redirect("/");
+            }
+
+            var staff = await _context.LevelAdvisers.FirstOrDefaultAsync(x => x.StaffId == loggedInUser.Id);
+             string apiUrl = $"https://edouniversity.edu.ng/api/v1/coursesapi?departmentId={loggedInUser.DepartmentId}";
+            string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
+
+            // Initialize an HTTP Client
+            var client = _httpClientFactory.CreateClient();
+
+            // Add API Key to the 'X-API-Key' header
+            client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
+
+            try
+            {
+                // Make GET request to fetch courses
+                var response = await client.GetAsync(apiUrl);
+
+                // Ensure a successful response
+                response.EnsureSuccessStatusCode();
+
+                // Read response content
+                var content = await response.Content.ReadAsStringAsync();
+
+                //Deserialize JSON content if necessary (optional);
+                var courses = JsonConvert.DeserializeObject<List<Course>>(content);
+                return View(courses);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred in the User action.");
+                return RedirectToAction("Error", "Home"); //Or a more specific error page
+            }
+            
+        }
+
+        [HttpGet("level-advisers")]
+        public async Task<IActionResult> LevelAdvisers()
+        {
+            var loggedInUser = await _userHelper.GetLoggedInUser(Request);
+            if (loggedInUser == null)
+            {
+                return Redirect("/");
+            }
+
+           string apiKey = Environment.GetEnvironmentVariable("EUI_API_KEY");
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                _logger.LogError("API Key is missing from environment variables.");
+                return Problem("API Key is missing.", statusCode: 500); // Return a ProblemResult
+            }
+
+            try
+            {
+                // Fetch departments
+                var departments = await FetchApiData<List<Departments>>("https://edouniversity.edu.ng/api/v1/departmentsapi", apiKey);
+
+                // Fetch academic staff
+                var academicStaff = await FetchApiData<List<Staff>>("https://edouniversity.edu.ng/api/v1/staffapi/academic", apiKey);
+
+                var users = await _context.LevelAdvisers.ToListAsync(); // No need to check for null here, Empty list is fine.
+
+                ViewData["dpt"] = loggedInUser.DepartmentId;
+                var model = new UsersVM
+                {
+                    Departments = departments,
+                    Staff = academicStaff,
+                    LevelAdvisers = users
+                };
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred in the User action.");
+                return RedirectToAction("Error", "Home"); //Or a more specific error page
+            }
+            
         }
 
        [HttpGet("transcript/application")]
@@ -623,7 +699,15 @@ namespace rps.Controllers
         // {
         //     return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         // }
-        
+        private async Task<T> FetchApiData<T>(string apiUrl, string apiKey)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
+            var response = await client.GetAsync(apiUrl);
+            response.EnsureSuccessStatusCode(); // Throw on non-success
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<T>(content);
+        }   
     }
     public class CsvRecord
     {
@@ -632,5 +716,6 @@ namespace rps.Controllers
         public string? Department { get; set; }
         public string CA { get; set; }
         public string Exam { get; set; }
+        
     }
 }

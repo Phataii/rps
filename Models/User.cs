@@ -9,6 +9,7 @@ namespace rps.Models
          public string? DepartmentName { get; set;}
         public int DepartmentId { get; set;}
         public int Faculty { get; set;}
-        public bool? IsActive { get; set;}
+         public int AISID { get; set;}
+        public bool? IsActive { get; set; }
     }
 }
