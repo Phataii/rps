@@ -22,12 +22,14 @@ namespace rps.Controllers
         private readonly IMemoryCache _cache;
         private readonly IEmailService _emailService;
         private readonly UserHelper _userHelper;
-        public AuthController(ApplicationDbContext context, IMemoryCache cache, IEmailService emailService, UserHelper userHelper)
+        private readonly ILogger<AuthController> _logger;
+        public AuthController(ApplicationDbContext context, IMemoryCache cache, IEmailService emailService, UserHelper userHelper, ILogger<AuthController> logger)
         {
             _context = context;
             _cache = cache;
             _emailService = emailService;
             _userHelper = userHelper;
+            _logger = logger;
         }
 
         [HttpPost("add-user")]
@@ -159,9 +161,13 @@ namespace rps.Controllers
 
                 var tokenResponse = await httpClient.PostAsync("https://oauth2.googleapis.com/token", tokenRequest);
                 if (!tokenResponse.IsSuccessStatusCode)
-                {
-                    return BadRequest("Error retrieving access token.");
-                }
+                    {
+                        var errorDetails = await tokenResponse.Content.ReadAsStringAsync();
+                        _logger.LogError("Google token exchange failed. Status: {StatusCode}, Response: {Response}",
+                                        tokenResponse.StatusCode, errorDetails);
+                        return BadRequest("Error retrieving access token.");
+                    }
+
 
                 var tokenContent = await tokenResponse.Content.ReadAsStringAsync();
                 var tokenResult = JsonSerializer.Deserialize<GoogleTokenResponse>(tokenContent);
